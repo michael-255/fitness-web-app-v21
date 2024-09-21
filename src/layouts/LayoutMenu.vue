@@ -22,7 +22,7 @@ const isDesktop = computed(() => $q.screen.gt.xs)
                     no-caps
                     :icon="workoutsPageIcon"
                     exact
-                    :to="{ name: RouteNameEnum.DASHBOARD }"
+                    :to="{ name: RouteNameEnum.WORKOUTS_DASHBOARD }"
                 >
                     <template v-if="isDesktop">Workouts</template>
                 </q-route-tab>
@@ -31,7 +31,7 @@ const isDesktop = computed(() => $q.screen.gt.xs)
                     no-caps
                     :icon="exercisesPageIcon"
                     exact
-                    :to="{ name: RouteNameEnum.DASHBOARD }"
+                    :to="{ name: RouteNameEnum.EXERCISES_DASHBOARD }"
                 >
                     <template v-if="isDesktop">Exercises</template>
                 </q-route-tab>
@@ -40,7 +40,7 @@ const isDesktop = computed(() => $q.screen.gt.xs)
                     no-caps
                     :icon="measurementsPageIcon"
                     exact
-                    :to="{ name: RouteNameEnum.DASHBOARD }"
+                    :to="{ name: RouteNameEnum.MEASUREMENTS_DASHBOARD }"
                 >
                     <template v-if="isDesktop">Measurements</template>
                 </q-route-tab>

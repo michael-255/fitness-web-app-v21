@@ -1,5 +1,5 @@
 import LayoutMenu from '@/layouts/LayoutMenu.vue'
-import PageDashboard from '@/pages/PageDashboard.vue'
+import PageDashboardWorkouts from '@/pages/PageDashboardWorkouts.vue'
 import { RouteNameEnum } from '@/shared/enums'
 import { createRouter, createWebHistory } from 'vue-router'
 
@@ -8,14 +8,24 @@ const router = createRouter({
     routes: [
         {
             path: '/',
-            redirect: `/dashboard`, // Your default route
+            redirect: `/workouts`, // Your default route
             name: RouteNameEnum.MENU_LAYOUT,
             component: LayoutMenu, // Must use a different layout for other primary routes
             children: [
                 {
-                    path: '/dashboard',
-                    name: RouteNameEnum.DASHBOARD,
-                    component: PageDashboard,
+                    path: '/workouts',
+                    name: RouteNameEnum.WORKOUTS_DASHBOARD,
+                    component: PageDashboardWorkouts,
+                },
+                {
+                    path: '/exercises',
+                    name: RouteNameEnum.EXERCISES_DASHBOARD,
+                    component: () => import('@/pages/PageDashboardExercises.vue'),
+                },
+                {
+                    path: '/measurements',
+                    name: RouteNameEnum.MEASUREMENTS_DASHBOARD,
+                    component: () => import('@/pages/PageDashboardMeasurements.vue'),
                 },
                 {
                     path: '/settings',
@@ -51,14 +61,29 @@ const router = createRouter({
             component: () => import('@/pages/PageTableLogs.vue'),
         },
         {
-            path: '/examples-table',
-            name: RouteNameEnum.EXAMPLES_TABLE,
-            component: () => import('@/pages/PageTableExamples.vue'),
+            path: '/workouts-table',
+            name: RouteNameEnum.WORKOUTS_TABLE,
+            component: () => import('@/pages/PageTableWorkouts.vue'),
         },
         {
-            path: '/example-results-table',
-            name: RouteNameEnum.EXAMPLE_RESULTS_TABLE,
-            component: () => import('@/pages/PageTableExampleResults.vue'),
+            path: '/workout-results-table',
+            name: RouteNameEnum.WORKOUT_RESULTS_TABLE,
+            component: () => import('@/pages/PageTableWorkoutResults.vue'),
+        },
+        {
+            path: '/exercises-table',
+            name: RouteNameEnum.EXERCISES_TABLE,
+            component: () => import('@/pages/PageTableExercises.vue'),
+        },
+        {
+            path: '/exercise-results-table',
+            name: RouteNameEnum.EXERCISE_RESULTS_TABLE,
+            component: () => import('@/pages/PageTableExerciseResults.vue'),
+        },
+        {
+            path: '/measurements-table',
+            name: RouteNameEnum.MEASUREMENTS_TABLE,
+            component: () => import('@/pages/PageTableMeasurements.vue'),
         },
     ],
 })

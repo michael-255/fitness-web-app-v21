@@ -3,11 +3,18 @@
  */
 export enum RouteNameEnum {
     MENU_LAYOUT = 'MenuLayout',
-    DASHBOARD = 'Dashboard',
+    WORKOUTS_DASHBOARD = 'WorkoutsDashboard',
+    EXERCISES_DASHBOARD = 'ExercisesDashboard',
+    MEASUREMENTS_DASHBOARD = 'MeasurementsDashboard',
     SETTINGS_TABLE = 'SettingsTable',
     LOGS_TABLE = 'LogsTable',
     EXAMPLES_TABLE = 'ExamplesTable',
     EXAMPLE_RESULTS_TABLE = 'ExampleResultsTable',
+    WORKOUTS_TABLE = 'WorkoutsTable',
+    WORKOUT_RESULTS_TABLE = 'WorkoutResultsTable',
+    EXERCISES_TABLE = 'ExercisesTable',
+    EXERCISE_RESULTS_TABLE = 'ExerciseResultsTable',
+    MEASUREMENTS_TABLE = 'MeasurementsTable',
     SETTINGS = 'Settings',
     ABOUT = 'About',
     DONATE = 'Donate',
@@ -15,7 +22,7 @@ export enum RouteNameEnum {
 }
 
 /**
- * Shortened string representations of user data database tables. Used as prefixes for Ids.
+ * Shortened string representations of database tables. Used as prefixes for Ids.
  * This can help with database operations and debugging.
  */
 export enum TableEnum {
@@ -23,6 +30,11 @@ export enum TableEnum {
     LOGS = 'logs', // Standalone
     EXAMPLES = 'exp', // Parent
     EXAMPLE_RESULTS = 'exr', // Child
+    WORKOUTS = 'wop', // Parent
+    WORKOUT_RESULTS = 'wor', // Child
+    EXERCISES = 'exp', // Parent
+    EXERCISE_RESULTS = 'exr', // Child
+    MEASUREMENTS = 'mea', // Standalone
 }
 
 /**

@@ -1,7 +1,10 @@
-import Example from '@/models/Example'
-import ExampleResult from '@/models/ExampleResult'
+import Exercise from '@/models/Exercise'
+import ExerciseResult from '@/models/ExerciseResult'
 import Log from '@/models/Log'
+import Measurement from '@/models/Measurements'
 import Setting from '@/models/Setting'
+import Workout from '@/models/Workout'
+import WorkoutResult from '@/models/WorkoutResult'
 import { appDatabaseVersion, appName } from '@/shared/constants'
 import { TableEnum } from '@/shared/enums'
 import Dexie, { type Table } from 'dexie'
@@ -18,9 +21,11 @@ export class Database extends Dexie {
     // Required for easier TypeScript usage
     [TableEnum.SETTINGS]!: Table<Setting>;
     [TableEnum.LOGS]!: Table<Log>;
-    [TableEnum.EXAMPLES]!: Table<Example>;
-    [TableEnum.EXAMPLE_RESULTS]!: Table<ExampleResult>
-    // Table changes should be reflected here...
+    [TableEnum.MEASUREMENTS]!: Table<Measurement>;
+    [TableEnum.WORKOUTS]!: Table<Workout>;
+    [TableEnum.EXERCISES]!: Table<Exercise>;
+    [TableEnum.WORKOUT_RESULTS]!: Table<WorkoutResult>;
+    [TableEnum.EXERCISE_RESULTS]!: Table<ExerciseResult>
 
     constructor(name: string) {
         super(name)
@@ -29,17 +34,21 @@ export class Database extends Dexie {
             // Required indexes
             [TableEnum.SETTINGS]: '&key',
             [TableEnum.LOGS]: '++autoId, createdAt',
-            [TableEnum.EXAMPLES]: '&id, name, *tags',
-            [TableEnum.EXAMPLE_RESULTS]: '&id, createdAt, parentId',
-            // Table changes should be reflected here...
+            [TableEnum.MEASUREMENTS]: '&id, field, createdAt',
+            [TableEnum.WORKOUTS]: '&id, name, *tags',
+            [TableEnum.EXERCISES]: '&id, name, *tags',
+            [TableEnum.WORKOUT_RESULTS]: '&id, exerciseId, createdAt',
+            [TableEnum.EXERCISE_RESULTS]: '&id, workoutId, createdAt',
         })
 
         // Required for converting objects to classes
         this[TableEnum.SETTINGS].mapToClass(Setting)
         this[TableEnum.LOGS].mapToClass(Log)
-        this[TableEnum.EXAMPLES].mapToClass(Example)
-        this[TableEnum.EXAMPLE_RESULTS].mapToClass(ExampleResult)
-        // Table changes should be reflected here...
+        this[TableEnum.MEASUREMENTS].mapToClass(Measurement)
+        this[TableEnum.WORKOUTS].mapToClass(Workout)
+        this[TableEnum.EXERCISES].mapToClass(Exercise)
+        this[TableEnum.WORKOUT_RESULTS].mapToClass(WorkoutResult)
+        this[TableEnum.EXERCISE_RESULTS].mapToClass(ExerciseResult)
     }
 
     static getSingleton(): Database {
