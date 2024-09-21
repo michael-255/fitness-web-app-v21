@@ -10,33 +10,6 @@ your workouts, exercises, and overall fitness journey.
 
 ## Post Cloning Steps
 
--   [ ] Update `package.json`
-
-    -   [ ] `name`
-    -   [ ] `description`
-    -   [ ] `version`
-    -   [ ] `repository`
-    -   [ ] `bugs`
-    -   [ ] `homepage`
-
--   [ ] Update specific files
-
-    -   [ ] `base` in `~/vite.config.ts` to your repository name for deployments to work
-    -   [ ] `AppName` and `AppDescription` in `~/src/constants/global.ts`
-    -   [ ] `name` and `short_name` in `~/public/manifest.json`
-    -   [ ] `start_url` in `~/public/manifest.json` to deployed website address
-
--   [ ] Update `GitHub` repository settings
-
-    -   [ ] Description
-    -   [ ] Website (Use GitHub Pages)
-    -   [ ] Topic keywords
-    -   [ ] Update the `Include in the home page` section
-
-        -   [ ] Uncheck `Releases`
-        -   [ ] Uncheck `Packages`
-        -   [ ] Keep `Deployments` (for GitHub Pages)
-
 -   [ ] Update `README.md`
 
     -   [ ] Change README main heading to your project name

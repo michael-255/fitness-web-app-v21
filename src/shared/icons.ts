@@ -3,6 +3,7 @@ import {
     symRoundedAdd,
     symRoundedAddCircle,
     symRoundedArrowForward,
+    symRoundedAssignment,
     symRoundedBugReport,
     symRoundedCalendarToday,
     symRoundedCancel,
@@ -17,6 +18,7 @@ import {
     symRoundedError,
     symRoundedEventAvailable,
     symRoundedFeatureSearch,
+    symRoundedFitnessCenter,
     symRoundedHourglass,
     symRoundedInfo,
     symRoundedKeyboardArrowDown,
@@ -38,6 +40,7 @@ import {
     symRoundedSmartToy,
     symRoundedStat2,
     symRoundedStickyNote2,
+    symRoundedStraighten,
     symRoundedTune,
     symRoundedUpload,
     symRoundedWarning,
@@ -59,6 +62,9 @@ export const errorIcon = symRoundedError
 export const donatePageIcon = symRoundedRedeem
 export const settingsPageIcon = symRoundedSettings
 export const examplesPageIcon = symRoundedSmartToy
+export const workoutsPageIcon = symRoundedAssignment
+export const exercisesPageIcon = symRoundedFitnessCenter
+export const measurementsPageIcon = symRoundedStraighten
 
 // Tables
 export const logsTableIcon = symRoundedFeatureSearch
