@@ -1,38 +1,51 @@
 import { TableEnum } from '@/shared/enums'
-import type { IdType, TextAreaType, TimestampType } from '@/shared/types'
+import type {
+    BloodPressureType,
+    BodyMassIndexType,
+    BodyMeasurementType,
+    BodyWeightType,
+    CaloriesType,
+    IdType,
+    MeasurementFieldType,
+    NutritionType,
+    PercentType,
+    TemperatureType,
+    TextAreaType,
+    TimestampType,
+} from '@/shared/types'
 import { createId } from '@/shared/utils'
 
 interface MeasurementParams {
     id?: IdType
     createdAt?: TimestampType
     note?: TextAreaType
-    field: any // TODO: MeasurementFieldType // Required, not defaulted
+    field: MeasurementFieldType // Required, not defaulted
     // Diet & Weight
-    calories?: any // TODO: CaloriesType
-    carbs?: any // TODO: CarbohydratesType
-    fat?: any // TODO: FatType
-    protein?: any // TODO: ProteinType
-    weight?: any // TODO: WeightType
-    bodyFat?: any // TODO: BodyFatType
-    bodyMassIndex?: any // TODO: BodyMassIndexType // Would this be calculated as needed?
+    calories?: CaloriesType
+    carbs?: NutritionType
+    fat?: NutritionType
+    protein?: NutritionType
+    weight?: BodyWeightType
+    bodyFat?: PercentType
+    bodyMassIndex?: BodyMassIndexType // Would this be calculated as needed?
     // Health
-    temperature?: any // TODO: TemperatureType
-    bloodPressure?: any // TODO: BloodPressureType
-    bloodOxygen?: any // TODO: BloodOxygenType
+    temperature?: TemperatureType
+    bloodPressure?: BloodPressureType
+    bloodOxygen?: PercentType
     // Body
-    height?: any // TODO: HeightType
-    neck?: any // TODO: NeckType
-    shoulders?: any // TODO: ShouldersType
-    chest?: any // TODO: ChestType
-    waist?: any // TODO: WaistType
-    leftBicep?: any // TODO: LeftBicepType
-    rightBicep?: any // TODO: RightBicepType
-    leftForearm?: any // TODO: LeftForearmType
-    rightForearm?: any // TODO: RightForearmType
-    leftThigh?: any // TODO: LeftThighType
-    rightThigh?: any // TODO: RightThighType
-    leftCalf?: any // TODO: LeftCalfType
-    rightCalf?: any // TODO: RightCalfType
+    height?: BodyMeasurementType
+    neck?: BodyMeasurementType
+    shoulders?: BodyMeasurementType
+    chest?: BodyMeasurementType
+    waist?: BodyMeasurementType
+    leftBicep?: BodyMeasurementType
+    rightBicep?: BodyMeasurementType
+    leftForearm?: BodyMeasurementType
+    rightForearm?: BodyMeasurementType
+    leftThigh?: BodyMeasurementType
+    rightThigh?: BodyMeasurementType
+    leftCalf?: BodyMeasurementType
+    rightCalf?: BodyMeasurementType
     // TODO: Lab Work
     // ...
 }
@@ -47,33 +60,33 @@ export default class Measurement {
     id: IdType
     createdAt: TimestampType
     note: TextAreaType
-    field: any // TODO: MeasurementFieldType
+    field: MeasurementFieldType
     // Diet & Weight
-    calories?: any // TODO: CaloriesType
-    carbs?: any // TODO: CarbohydratesType
-    fat?: any // TODO: FatType
-    protein?: any // TODO: ProteinType
-    weight?: any // TODO: WeightType
-    bodyFat?: any // TODO: BodyFatType
-    bodyMassIndex?: any // TODO: BodyMassIndexType // Would this be calculated as needed?
+    calories?: CaloriesType
+    carbs?: NutritionType
+    fat?: NutritionType
+    protein?: NutritionType
+    weight?: BodyWeightType
+    bodyFat?: PercentType
+    bodyMassIndex?: BodyMassIndexType // Would this be calculated as needed?
     // Health
-    temperature?: any // TODO: TemperatureType
-    bloodPressure?: any // TODO: BloodPressureType
-    bloodOxygen?: any // TODO: BloodOxygenType
+    temperature?: TemperatureType
+    bloodPressure?: BloodPressureType
+    bloodOxygen?: PercentType
     // Body
-    height?: any // TODO: HeightType
-    neck?: any // TODO: NeckType
-    shoulders?: any // TODO: ShouldersType
-    chest?: any // TODO: ChestType
-    waist?: any // TODO: WaistType
-    leftBicep?: any // TODO: LeftBicepType
-    rightBicep?: any // TODO: RightBicepType
-    leftForearm?: any // TODO: LeftForearmType
-    rightForearm?: any // TODO: RightForearmType
-    leftThigh?: any // TODO: LeftThighType
-    rightThigh?: any // TODO: RightThighType
-    leftCalf?: any // TODO: LeftCalfType
-    rightCalf?: any // TODO: RightCalfType
+    height?: BodyMeasurementType
+    neck?: BodyMeasurementType
+    shoulders?: BodyMeasurementType
+    chest?: BodyMeasurementType
+    waist?: BodyMeasurementType
+    leftBicep?: BodyMeasurementType
+    rightBicep?: BodyMeasurementType
+    leftForearm?: BodyMeasurementType
+    rightForearm?: BodyMeasurementType
+    leftThigh?: BodyMeasurementType
+    rightThigh?: BodyMeasurementType
+    leftCalf?: BodyMeasurementType
+    rightCalf?: BodyMeasurementType
 
     constructor(params: MeasurementParams) {
         this.id = params.id ?? createId(TableEnum.MEASUREMENTS)

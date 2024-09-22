@@ -1,26 +1,48 @@
 import type {
+    bloodPressureSchema,
+    bodyMassIndexSchema,
+    bodyMeasurementSchema,
+    bodyWeightSchema,
+    caloriesSchema,
+    cardioSetSchema,
+    checklistSetSchema,
+    climbingSetSchema,
     exampleResultSchema,
     exampleSchema,
+    exerciseGroupSchema,
+    exerciseInputSchema,
+    exerciseResultGroupSchema,
+    exerciseResultSchema,
+    exerciseSchema,
     idSchema,
-    idsSchema,
+    initialSetCountSchema,
     logAutoIdSchema,
     logDetailsSchema,
     logLabelSchema,
     logLevelSchema,
     logSchema,
+    measurementFieldSchema,
     mockDataSchema,
+    nutritionSchema,
     optionalTimestampSchema,
+    percentSchema,
+    restTimerSchema,
     routeNameSchema,
     settingKeySchema,
     settingSchema,
     settingValueSchema,
+    sidedWeightSetSchema,
+    tabataTimerSchema,
     tableSchema,
     tagSchema,
+    temperatureSchema,
     textAreaSchema,
     textLineSchema,
     timestampSchema,
+    weightSetSchema,
+    workoutResultSchema,
+    workoutSchema,
 } from '@/shared/schemas'
-import type { Component } from 'vue'
 import { z } from 'zod'
 
 //
@@ -66,8 +88,6 @@ export type MockDataType = z.infer<typeof mockDataSchema> // TODO: Remove
 //
 export type IdType = z.infer<typeof idSchema>
 
-export type IdsType = z.infer<typeof idsSchema>
-
 export type TimestampType = z.infer<typeof timestampSchema>
 
 export type OptionalTimestampType = z.infer<typeof optionalTimestampSchema>
@@ -79,6 +99,63 @@ export type TextAreaType = z.infer<typeof textAreaSchema>
 export type TagType = z.infer<typeof tagSchema>
 
 //
+// Measurements
+//
+export type MeasurementFieldType = z.infer<typeof measurementFieldSchema>
+
+export type CaloriesType = z.infer<typeof caloriesSchema>
+
+export type NutritionType = z.infer<typeof nutritionSchema>
+
+export type BodyWeightType = z.infer<typeof bodyWeightSchema>
+
+export type PercentType = z.infer<typeof percentSchema>
+
+export type BodyMassIndexType = z.infer<typeof bodyMassIndexSchema>
+
+export type TemperatureType = z.infer<typeof temperatureSchema>
+
+export type BloodPressureType = z.infer<typeof bloodPressureSchema>
+
+export type BodyMeasurementType = z.infer<typeof bodyMeasurementSchema>
+
+//
+// Workouts
+//
+export type WorkoutType = z.infer<typeof workoutSchema>
+
+export type WorkoutResultType = z.infer<typeof workoutResultSchema>
+
+export type ExerciseGroupType = z.infer<typeof exerciseGroupSchema>
+
+export type ExerciseResultGroupType = z.infer<typeof exerciseResultGroupSchema>
+
+//
+// Exercises
+//
+export type ExerciseType = z.infer<typeof exerciseSchema>
+
+export type ExerciseResultType = z.infer<typeof exerciseResultSchema>
+
+export type ExerciseInputType = z.infer<typeof exerciseInputSchema>
+
+export type InitialSetCountType = z.infer<typeof initialSetCountSchema>
+
+export type RestTimerType = z.infer<typeof restTimerSchema>
+
+export type TabataTimerType = z.infer<typeof tabataTimerSchema>
+
+export type ChecklistSetType = z.infer<typeof checklistSetSchema>
+
+export type CardioSetType = z.infer<typeof cardioSetSchema>
+
+export type WeightSetType = z.infer<typeof weightSetSchema>
+
+export type SidedWeightSetType = z.infer<typeof sidedWeightSetSchema>
+
+export type ClimbingSetType = z.infer<typeof climbingSetSchema>
+
+//
 // Database
 //
 export type BackupType = {
@@ -87,6 +164,9 @@ export type BackupType = {
     createdAt: number
     settings: SettingType[]
     logs: LogType[]
+    measurements: MeasurementFieldType[]
+    workouts: WorkoutType[]
+    exercises: ExerciseType[]
     examples: ExampleType[] // TODO: Remove
     exampleResults: ExampleResultType[] // TODO: Remove
 }
@@ -98,9 +178,4 @@ export type SelectOption = {
     value: IdType
     label: string
     disable: boolean
-}
-
-export type ModelComponent = {
-    component: Component
-    props?: Record<string, any>
 }

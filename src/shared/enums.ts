@@ -63,6 +63,49 @@ export enum TagEnum {
     LOCKED = 'Locked', // Shared
     ENABLED = 'Enabled', // Parent
     FAVORITED = 'Favorited', // Parent
+    MULTI_SET = 'Multi-Set', // Exercise
+}
+
+/**
+ * Used to determine the type of inputs available for an exercise.
+ */
+export enum ExerciseInputEnum {
+    CHECKLIST = 'Checklist', // Check boxes, all optional
+    CARDIO = 'Cardio Exercise', // Duration, Calories, RPE
+    WEIGHT = 'Weight Exercise', // Reps, Weight, RPE
+    SIDED_WEIGHT = 'Sided Weight Exercise', // Reps (R/L), Weight (R/L), RPE (R/L)
+    CLIMBING_SESSION = 'Climbing Session',
+}
+
+export enum MeasurementFieldEnum {
+    // Diet & Weight
+    CALORIES = 'Calories',
+    CARBOHYDRATES = 'Carbohydrates',
+    FAT = 'Fat',
+    PROTEIN = 'Protein',
+    WEIGHT = 'Weight',
+    BODY_FAT = 'Body Fat',
+    BODY_MASS_INDEX = 'Body Mass Index', // Based on if you have a Height measurement
+    // Health
+    TEMPERATURE = 'Temperature',
+    BLOOD_PRESSURE = 'Blood Pressure', // Systolic/Diastolic
+    BLOOD_OXYGEN = 'Blood Oxygen',
+    // Body
+    HEIGHT = 'Height', // Needed for BMI
+    NECK = 'Neck',
+    SHOULDERS = 'Shoulders',
+    CHEST = 'Chest',
+    WAIST = 'Waist',
+    LEFT_BICEP = 'Left Bicep',
+    RIGHT_BICEP = 'Right Bicep',
+    LEFT_FOREARM = 'Left Forearm',
+    RIGHT_FOREARM = 'Right Forearm',
+    LEFT_THIGH = 'Left Thigh',
+    RIGHT_THIGH = 'Right Thigh',
+    LEFT_CALF = 'Left Calf',
+    RIGHT_CALF = 'Right Calf',
+    // Lab Work
+    // ...
 }
 
 export enum LimitEnum {
@@ -71,6 +114,14 @@ export enum LimitEnum {
     MAX_TEXT_AREA = 250,
     MIN_TEXT_LINE = 1,
     MAX_TEXT_LINE = 50,
+    MIN_SETS = 1,
+    MAX_SETS = 30,
+    MIN_SET_WEIGHT = 0,
+    MAX_SET_WEIGHT = 9_000,
+    MIN_SET_REPS = 0,
+    MAX_SET_REPS = 9_000,
+    MIN_SET_RPE = 0,
+    MAX_SET_RPE = 10,
 }
 
 export enum DurationEnum {

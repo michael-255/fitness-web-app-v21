@@ -7,6 +7,7 @@ your workouts, exercises, and overall fitness journey.
 ## TODO
 
 -   Get the DB services for `Workouts`, `Exercises`, and `Measurements` working
+-   Figure out what you need to do for each of the schemas
 
 ## Post Cloning Steps
 

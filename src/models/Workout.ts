@@ -1,5 +1,13 @@
 import { TableEnum, TagEnum } from '@/shared/enums'
-import type { IdType, TagType, TextAreaType, TextLineType, TimestampType } from '@/shared/types'
+import type {
+    ExerciseGroupType,
+    IdType,
+    TagType,
+    TextAreaType,
+    TextLineType,
+    TimestampType,
+    WorkoutResultType,
+} from '@/shared/types'
 import { createId } from '@/shared/utils'
 
 interface WorkoutParams {
@@ -8,10 +16,10 @@ interface WorkoutParams {
     tags?: TagType[]
     name?: TextLineType
     desc?: TextAreaType
-    lastChild?: any // TODO: WorkoutResultType
-    warmupExerciseGroups?: any[] // TODO: ExerciseGroupType[]
-    cooldownExerciseGroups?: any[] // TODO: ExerciseGroupType[]
-    standardExerciseGroups?: any[] // TODO: ExerciseGroupType[]
+    lastChild?: WorkoutResultType
+    warmupGroups?: ExerciseGroupType[]
+    cooldownGroups?: ExerciseGroupType[]
+    exerciseGroups?: ExerciseGroupType[]
     nextWorkoutIds?: IdType[]
 }
 
@@ -26,10 +34,10 @@ export default class Workout {
     tags: TagType[]
     name: TextLineType
     desc: TextAreaType
-    lastChild?: any // TODO: WorkoutResultType
-    warmupExerciseGroups: any[] // TODO: ExerciseGroupType[]
-    cooldownExerciseGroups: any[] // TODO: ExerciseGroupType[]
-    standardExerciseGroups: any[] // TODO: ExerciseGroupType[]
+    lastChild?: WorkoutResultType
+    warmupGroups: ExerciseGroupType[]
+    cooldownGroups: ExerciseGroupType[]
+    exerciseGroups: ExerciseGroupType[]
     nextWorkoutIds: IdType[]
 
     constructor(params: WorkoutParams) {
@@ -39,9 +47,9 @@ export default class Workout {
         this.name = params.name ?? 'My Workout'
         this.desc = params.desc ?? ''
         this.lastChild = params.lastChild ?? undefined
-        this.warmupExerciseGroups = params.warmupExerciseGroups ?? []
-        this.cooldownExerciseGroups = params.cooldownExerciseGroups ?? []
-        this.standardExerciseGroups = params.standardExerciseGroups ?? []
+        this.warmupGroups = params.warmupGroups ?? []
+        this.cooldownGroups = params.cooldownGroups ?? []
+        this.exerciseGroups = params.exerciseGroups ?? []
         this.nextWorkoutIds = params.nextWorkoutIds ?? []
     }
 }

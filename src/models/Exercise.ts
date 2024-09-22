@@ -1,5 +1,16 @@
 import { TableEnum, TagEnum } from '@/shared/enums'
-import type { IdType, TagType, TextAreaType, TextLineType, TimestampType } from '@/shared/types'
+import type {
+    ExerciseInputType,
+    ExerciseResultType,
+    IdType,
+    InitialSetCountType,
+    RestTimerType,
+    TabataTimerType,
+    TagType,
+    TextAreaType,
+    TextLineType,
+    TimestampType,
+} from '@/shared/types'
 import { createId } from '@/shared/utils'
 
 interface ExerciseParams {
@@ -8,11 +19,11 @@ interface ExerciseParams {
     tags?: TagType[]
     name?: TextLineType
     desc?: TextAreaType
-    lastChild?: any // TODO: ExerciseResultType
-    initialSetCount?: any // TODO: InitialSetCountType
-    inputs: any // TODO: ExerciseInputType // Required
-    restTimer?: any // TODO: RestTimerType
-    tabataTimer?: any // TODO: TabataTimerType
+    lastChild?: ExerciseResultType
+    inputs: ExerciseInputType // Required
+    initialSetCount?: InitialSetCountType
+    restTimer?: RestTimerType
+    tabataTimer?: TabataTimerType
 }
 
 /**
@@ -26,11 +37,11 @@ export default class Exercise {
     tags: TagType[]
     name: TextLineType
     desc: TextAreaType
-    lastChild?: any // TODO: ExerciseResultType
-    initialSetCount?: any // TODO: InitialSetCountType
-    inputs: any // TODO: ExerciseInputType
-    restTimer?: any // TODO: RestTimerType
-    tabataTimer?: any // TODO: TabataTimerType
+    lastChild?: ExerciseResultType
+    inputs: ExerciseInputType
+    initialSetCount: InitialSetCountType
+    restTimer?: RestTimerType
+    tabataTimer?: TabataTimerType
 
     constructor(params: ExerciseParams) {
         this.id = params.id ?? createId(TableEnum.EXERCISES)
@@ -39,8 +50,8 @@ export default class Exercise {
         this.name = params.name ?? 'My Exercise'
         this.desc = params.desc ?? ''
         this.lastChild = params.lastChild ?? undefined
-        this.initialSetCount = params.initialSetCount ?? undefined
         this.inputs = params.inputs // Required, not defaulted
+        this.initialSetCount = params.initialSetCount ?? 1
         this.restTimer = params.restTimer ?? undefined
         this.tabataTimer = params.tabataTimer ?? undefined
     }

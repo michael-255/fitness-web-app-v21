@@ -1,5 +1,6 @@
 import { TableEnum } from '@/shared/enums'
 import type {
+    ExerciseResultGroupType,
     IdType,
     OptionalTimestampType,
     TagType,
@@ -15,9 +16,9 @@ interface WorkoutResultParams {
     workoutId: IdType // Parent reference required, never defaulted
     note?: TextAreaType
     finishedAt?: OptionalTimestampType
-    warmupResultGroups?: any[] // TODO: ExerciseResultGroup[]
-    exerciseResultGroups?: any[] // TODO: ExerciseResultGroup[]
-    cooldownResultGroups?: any[] // TODO: ExerciseResultGroup[]
+    warmupResultGroups?: ExerciseResultGroupType[]
+    cooldownResultGroups?: ExerciseResultGroupType[]
+    exerciseResultGroups?: ExerciseResultGroupType[]
 }
 
 /**
@@ -32,9 +33,9 @@ export default class WorkoutResult {
     workoutId: IdType
     note: TextAreaType
     finishedAt?: OptionalTimestampType
-    warmupResultGroups: any[] // TODO: ExerciseResultGroup[]
-    exerciseResultGroups: any[] // TODO: ExerciseResultGroup[]
-    cooldownResultGroups: any[] // TODO: ExerciseResultGroup[]
+    warmupResultGroups: ExerciseResultGroupType[]
+    cooldownResultGroups: ExerciseResultGroupType[]
+    exerciseResultGroups: ExerciseResultGroupType[]
 
     constructor(params: WorkoutResultParams) {
         this.id = params.id ?? createId(TableEnum.WORKOUT_RESULTS)
@@ -44,7 +45,7 @@ export default class WorkoutResult {
         this.note = params.note ?? ''
         this.finishedAt = params.finishedAt ?? undefined
         this.warmupResultGroups = params.warmupResultGroups ?? []
-        this.exerciseResultGroups = params.exerciseResultGroups ?? []
         this.cooldownResultGroups = params.cooldownResultGroups ?? []
+        this.exerciseResultGroups = params.exerciseResultGroups ?? []
     }
 }

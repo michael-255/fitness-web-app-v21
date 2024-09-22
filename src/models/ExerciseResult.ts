@@ -1,5 +1,15 @@
 import { TableEnum } from '@/shared/enums'
-import type { IdType, TagType, TextAreaType, TimestampType } from '@/shared/types'
+import type {
+    CardioSetType,
+    ChecklistSetType,
+    ClimbingSetType,
+    IdType,
+    SidedWeightSetType,
+    TagType,
+    TextAreaType,
+    TimestampType,
+    WeightSetType,
+} from '@/shared/types'
 import { createId } from '@/shared/utils'
 
 interface ExerciseResultParams {
@@ -8,11 +18,11 @@ interface ExerciseResultParams {
     tags?: TagType[]
     exerciseId: IdType // Parent reference required, never defaulted
     note?: TextAreaType
-    checklistSets?: any[] // TODO: ChecklistSet[]
-    cardioSets?: any[] // TODO: CardioSet[]
-    weightSets?: any[] // TODO: WeightSet[]
-    sidedWeightSets?: any[] // TODO: SidedWeightSet[]
-    climbingSession?: any[] // TODO: ClimbingSession[]
+    checklistSets?: ChecklistSetType[]
+    cardioSets?: CardioSetType[]
+    weightSets?: WeightSetType[]
+    sidedWeightSets?: SidedWeightSetType[]
+    climbingSets?: ClimbingSetType[]
 }
 
 /**
@@ -26,11 +36,11 @@ export default class ExerciseResult {
     tags: TagType[]
     exerciseId: IdType
     note: TextAreaType
-    checklistSets?: any[] // TODO: ChecklistSet[]
-    cardioSets?: any[] // TODO: CardioSet[]
-    weightSets?: any[] // TODO: WeightSet[]
-    sidedWeightSets?: any[] // TODO: SidedWeightSet[]
-    climbingSession?: any[] // TODO: ClimbingSession[]
+    checklistSets?: ChecklistSetType[]
+    cardioSets?: CardioSetType[]
+    weightSets?: WeightSetType[]
+    sidedWeightSets?: SidedWeightSetType[]
+    climbingSets?: ClimbingSetType[]
 
     constructor(params: ExerciseResultParams) {
         this.id = params.id ?? createId(TableEnum.EXERCISE_RESULTS)
@@ -42,6 +52,6 @@ export default class ExerciseResult {
         this.cardioSets = params.cardioSets ?? undefined
         this.weightSets = params.weightSets ?? undefined
         this.sidedWeightSets = params.sidedWeightSets ?? undefined
-        this.climbingSession = params.climbingSession ?? undefined
+        this.climbingSets = params.climbingSets ?? undefined
     }
 }
