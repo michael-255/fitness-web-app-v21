@@ -9,7 +9,7 @@ import {
     saveIcon,
     scheduleTimeIcon,
 } from '@/shared/icons'
-import { nameSchema, textAreaSchema } from '@/shared/schemas'
+import { textAreaSchema, textLineSchema } from '@/shared/schemas'
 import { computedTagToggle } from '@/shared/utils'
 import useSelectedStore from '@/stores/selected'
 import { date, useQuasar } from 'quasar'
@@ -112,10 +112,10 @@ watch(dateTimePicker, () => {
                     @blur="selectedStore.example.name = selectedStore.example.name?.trim()"
                     :rules="[
                         (val: string) =>
-                            nameSchema.safeParse(val).success ||
-                            `Name must be between ${LimitEnum.MIN_NAME} and ${LimitEnum.MAX_NAME} characters`,
+                            textLineSchema.safeParse(val).success ||
+                            `Name must be between ${LimitEnum.MIN_TEXT_LINE} and ${LimitEnum.MAX_TEXT_LINE} characters`,
                     ]"
-                    :maxlength="LimitEnum.MAX_NAME"
+                    :maxlength="LimitEnum.MAX_TEXT_LINE"
                     :disable="isDisabled"
                     type="text"
                     lazy-rules
