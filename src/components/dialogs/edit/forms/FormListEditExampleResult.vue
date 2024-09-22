@@ -12,7 +12,6 @@ import {
     scheduleTimeIcon,
 } from '@/shared/icons'
 import { idSchema, mockDataSchema, textAreaSchema } from '@/shared/schemas'
-import { computedTagToggle } from '@/shared/utils'
 import useSelectedStore from '@/stores/selected'
 import { date, useQuasar } from 'quasar'
 import { computed, onMounted, ref, watch, type Ref } from 'vue'
@@ -25,7 +24,6 @@ const examplesService = ExamplesService()
 const isDisabled = computed(
     () => $q.loading.isActive || selectedStore.exampleResult.tags.includes(TagEnum.LOCKED),
 )
-const skipped = computedTagToggle(selectedStore.exampleResult.tags, TagEnum.SKIPPED)
 
 const displayDate = computed(
     () => date.formatDate(selectedStore.exampleResult.createdAt, displayDateFormat) ?? '-',
@@ -197,28 +195,6 @@ watch(dateTimePicker, () => {
                     outlined
                     color="primary"
                 />
-            </q-item-label>
-        </BaseFormItem>
-
-        <BaseFormItem
-            label="Tags"
-            description="Options that determine how the app treats this record in certain circumstances."
-        >
-            <q-item-label>
-                <q-list padding>
-                    <q-item :disable="isDisabled" tag="label">
-                        <q-item-section top>
-                            <q-item-label>Skipped</q-item-label>
-                            <q-item-label caption>
-                                Record was skipped and is incomplete.
-                            </q-item-label>
-                        </q-item-section>
-
-                        <q-item-section side>
-                            <q-toggle :disable="isDisabled" v-model="skipped" size="lg" />
-                        </q-item-section>
-                    </q-item>
-                </q-list>
             </q-item-label>
         </BaseFormItem>
 

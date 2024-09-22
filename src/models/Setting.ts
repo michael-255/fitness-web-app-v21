@@ -1,5 +1,10 @@
 import type { SettingKeyType, SettingValueType } from '@/shared/types'
 
+interface SettingParams {
+    key: SettingKeyType
+    value: SettingValueType
+}
+
 /**
  * Application `Setting` model.
  *
@@ -10,8 +15,8 @@ export default class Setting {
     key: SettingKeyType
     value: SettingValueType
 
-    constructor({ key, value }: { key: SettingKeyType; value: SettingValueType }) {
-        this.key = key
-        this.value = value
+    constructor(params: SettingParams) {
+        this.key = params.key
+        this.value = params.value
     }
 }

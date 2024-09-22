@@ -1,6 +1,19 @@
 import { TableEnum, TagEnum } from '@/shared/enums'
-import type { IdType, NameType, TagType, TextAreaType, TimestampType } from '@/shared/types'
+import type { IdType, TagType, TextAreaType, TextLineType, TimestampType } from '@/shared/types'
 import { createId } from '@/shared/utils'
+
+interface WorkoutParams {
+    id?: IdType
+    createdAt?: TimestampType
+    tags?: TagType[]
+    name?: TextLineType
+    desc?: TextAreaType
+    lastChild?: any // TODO: WorkoutResultType
+    warmupExerciseGroups?: any[] // TODO: ExerciseGroupType[]
+    cooldownExerciseGroups?: any[] // TODO: ExerciseGroupType[]
+    standardExerciseGroups?: any[] // TODO: ExerciseGroupType[]
+    nextWorkoutIds?: IdType[]
+}
 
 /**
  * `Workout` parent model.
@@ -11,7 +24,7 @@ export default class Workout {
     id: IdType
     createdAt: TimestampType
     tags: TagType[]
-    name: NameType
+    name: TextLineType
     desc: TextAreaType
     lastChild?: any // TODO: WorkoutResultType
     warmupExerciseGroups: any[] // TODO: ExerciseGroupType[]
@@ -19,38 +32,16 @@ export default class Workout {
     standardExerciseGroups: any[] // TODO: ExerciseGroupType[]
     nextWorkoutIds: IdType[]
 
-    constructor({
-        id,
-        createdAt,
-        tags,
-        name,
-        desc,
-        lastChild,
-        warmupExerciseGroups,
-        cooldownExerciseGroups,
-        standardExerciseGroups,
-        nextWorkoutIds,
-    }: {
-        id?: IdType
-        createdAt?: TimestampType
-        tags?: TagType[]
-        name?: NameType
-        desc?: TextAreaType
-        lastChild?: any // TODO: WorkoutResultType
-        warmupExerciseGroups?: any[] // TODO: ExerciseGroupType[]
-        cooldownExerciseGroups?: any[] // TODO: ExerciseGroupType[]
-        standardExerciseGroups?: any[] // TODO: ExerciseGroupType[]
-        nextWorkoutIds?: IdType[]
-    }) {
-        this.id = id ?? createId(TableEnum.WORKOUTS)
-        this.createdAt = createdAt ?? Date.now()
-        this.tags = tags ?? [TagEnum.ENABLED]
-        this.name = name ?? 'My Workout'
-        this.desc = desc ?? ''
-        this.lastChild = lastChild ?? undefined
-        this.warmupExerciseGroups = warmupExerciseGroups ?? []
-        this.cooldownExerciseGroups = cooldownExerciseGroups ?? []
-        this.standardExerciseGroups = standardExerciseGroups ?? []
-        this.nextWorkoutIds = nextWorkoutIds ?? []
+    constructor(params: WorkoutParams) {
+        this.id = params.id ?? createId(TableEnum.WORKOUTS)
+        this.createdAt = params.createdAt ?? Date.now()
+        this.tags = params.tags ?? [TagEnum.ENABLED]
+        this.name = params.name ?? 'My Workout'
+        this.desc = params.desc ?? ''
+        this.lastChild = params.lastChild ?? undefined
+        this.warmupExerciseGroups = params.warmupExerciseGroups ?? []
+        this.cooldownExerciseGroups = params.cooldownExerciseGroups ?? []
+        this.standardExerciseGroups = params.standardExerciseGroups ?? []
+        this.nextWorkoutIds = params.nextWorkoutIds ?? []
     }
 }

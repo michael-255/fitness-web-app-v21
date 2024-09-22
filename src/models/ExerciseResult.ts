@@ -2,6 +2,19 @@ import { TableEnum } from '@/shared/enums'
 import type { IdType, TagType, TextAreaType, TimestampType } from '@/shared/types'
 import { createId } from '@/shared/utils'
 
+interface ExerciseResultParams {
+    id?: IdType
+    createdAt?: TimestampType
+    tags?: TagType[]
+    exerciseId: IdType // Parent reference required, never defaulted
+    note?: TextAreaType
+    checklistSets?: any[] // TODO: ChecklistSet[]
+    cardioSets?: any[] // TODO: CardioSet[]
+    weightSets?: any[] // TODO: WeightSet[]
+    sidedWeightSets?: any[] // TODO: SidedWeightSet[]
+    climbingSession?: any[] // TODO: ClimbingSession[]
+}
+
 /**
  * `ExerciseResult` child model.
  *
@@ -19,38 +32,16 @@ export default class ExerciseResult {
     sidedWeightSets?: any[] // TODO: SidedWeightSet[]
     climbingSession?: any[] // TODO: ClimbingSession[]
 
-    constructor({
-        id,
-        createdAt,
-        tags,
-        exerciseId,
-        note,
-        checklistSets,
-        cardioSets,
-        weightSets,
-        sidedWeightSets,
-        climbingSession,
-    }: {
-        id?: IdType
-        createdAt?: TimestampType
-        tags?: TagType[]
-        exerciseId: IdType // Required
-        note?: TextAreaType
-        checklistSets?: any[] // TODO: ChecklistSet[]
-        cardioSets?: any[] // TODO: CardioSet[]
-        weightSets?: any[] // TODO: WeightSet[]
-        sidedWeightSets?: any[] // TODO: SidedWeightSet[]
-        climbingSession?: any[] // TODO: ClimbingSession[]
-    }) {
-        this.id = id ?? createId(TableEnum.EXERCISE_RESULTS)
-        this.createdAt = createdAt ?? Date.now()
-        this.tags = tags ?? []
-        this.exerciseId = exerciseId
-        this.note = note ?? ''
-        this.checklistSets = checklistSets ?? undefined
-        this.cardioSets = cardioSets ?? undefined
-        this.weightSets = weightSets ?? undefined
-        this.sidedWeightSets = sidedWeightSets ?? undefined
-        this.climbingSession = climbingSession ?? undefined
+    constructor(params: ExerciseResultParams) {
+        this.id = params.id ?? createId(TableEnum.EXERCISE_RESULTS)
+        this.createdAt = params.createdAt ?? Date.now()
+        this.tags = params.tags ?? []
+        this.exerciseId = params.exerciseId // Parent reference required, never defaulted
+        this.note = params.note ?? ''
+        this.checklistSets = params.checklistSets ?? undefined
+        this.cardioSets = params.cardioSets ?? undefined
+        this.weightSets = params.weightSets ?? undefined
+        this.sidedWeightSets = params.sidedWeightSets ?? undefined
+        this.climbingSession = params.climbingSession ?? undefined
     }
 }

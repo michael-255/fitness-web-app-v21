@@ -10,12 +10,12 @@ import {
     inspectIcon,
     verticalDotMenuIcon,
 } from '@/shared/icons'
-import type { NameType, TextAreaType, TimestampType } from '@/shared/types'
+import type { TextAreaType, TextLineType, TimestampType } from '@/shared/types'
 import { compactDateFromMs, timeAgo } from '@/shared/utils'
 import useSettingsStore from '@/stores/settings'
 
 defineProps<{
-    recordName: NameType
+    recordName: TextLineType
     recordDesc: TextAreaType
     recordLastChildCreatedAt?: TimestampType
     recordLastChildNote?: TextAreaType

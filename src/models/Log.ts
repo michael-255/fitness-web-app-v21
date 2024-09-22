@@ -6,10 +6,16 @@ import {
     type TimestampType,
 } from '@/shared/types'
 
+interface LogParams {
+    logLevel: LogLevelType
+    label: LogLabelType
+    details: LogDetailsType | Error
+}
+
 /**
  * Application `Log` model.
  *
- * This model is used for all internal app logging. Logs can also be reviewed in app.
+ * This model is used for all internal logging. Logs can also be reviewed in app.
  */
 export default class Log {
     autoId: LogAutoIdType // Handled by Dexie
@@ -18,27 +24,19 @@ export default class Log {
     label: LogLabelType
     details: LogDetailsType
 
-    constructor({
-        logLevel,
-        label,
-        details,
-    }: {
-        logLevel: LogLevelType
-        label: LogLabelType
-        details: LogDetailsType
-    }) {
+    constructor(params: LogParams) {
         this.createdAt = Date.now()
-        this.logLevel = logLevel
-        this.label = label
+        this.logLevel = params.logLevel
+        this.label = params.label
 
-        if (details instanceof Error) {
+        if (params.details instanceof Error) {
             this.details = {
-                name: details.name,
-                message: details.message,
-                stack: details.stack,
+                name: params.details.name,
+                message: params.details.message,
+                stack: params.details.stack,
             }
         } else {
-            this.details = details
+            this.details = params.details
         }
     }
 }

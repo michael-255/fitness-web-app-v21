@@ -2,9 +2,9 @@ import { TableEnum, TagEnum } from '@/shared/enums'
 import type {
     ExampleResultType,
     IdType,
-    NameType,
     TagType,
     TextAreaType,
+    TextLineType,
     TimestampType,
 } from '@/shared/types'
 import { createId } from '@/shared/utils'
@@ -17,7 +17,7 @@ export default class Example {
     id: IdType
     createdAt: TimestampType
     tags: TagType[]
-    name: NameType
+    name: TextLineType
     desc: TextAreaType
     lastChild?: ExampleResultType
 
@@ -32,7 +32,7 @@ export default class Example {
         id?: IdType
         createdAt?: TimestampType
         tags?: TagType[]
-        name?: NameType
+        name?: TextLineType
         desc?: TextAreaType
         lastChild?: ExampleResult
     }) {

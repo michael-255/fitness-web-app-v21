@@ -197,7 +197,7 @@ it('durationFromMs', () => {
 })
 
 it('computedTagToggle', () => {
-    const selectedTags: TagType[] = [TagEnum.ENABLED, TagEnum.SKIPPED]
+    const selectedTags: TagType[] = [TagEnum.ENABLED, TagEnum.FAVORITED]
     let computedValue = computedTagToggle(selectedTags, TagEnum.ENABLED)
     expect(computedValue.value).toBe(true)
 

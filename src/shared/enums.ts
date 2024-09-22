@@ -63,15 +63,14 @@ export enum TagEnum {
     LOCKED = 'Locked', // Shared
     ENABLED = 'Enabled', // Parent
     FAVORITED = 'Favorited', // Parent
-    SKIPPED = 'Skipped', // Child
 }
 
 export enum LimitEnum {
     MAX_ID = 30,
     MAX_FILE_SIZE = 1_000_000,
     MAX_TEXT_AREA = 250,
-    MAX_NAME = 50,
-    MIN_NAME = 1,
+    MIN_TEXT_LINE = 1,
+    MAX_TEXT_LINE = 50,
 }
 
 export enum DurationEnum {
