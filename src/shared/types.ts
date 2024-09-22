@@ -2,6 +2,7 @@ import type {
     exampleResultSchema,
     exampleSchema,
     idSchema,
+    idsSchema,
     logAutoIdSchema,
     logDetailsSchema,
     logLabelSchema,
@@ -54,16 +55,18 @@ export type LogDetailsType = z.infer<typeof logDetailsSchema>
 //
 // Models
 //
-export type ExampleType = z.infer<typeof exampleSchema>
+export type ExampleType = z.infer<typeof exampleSchema> // TODO: Remove
 
-export type ExampleResultType = z.infer<typeof exampleResultSchema>
+export type ExampleResultType = z.infer<typeof exampleResultSchema> // TODO: Remove
 
-export type MockDataType = z.infer<typeof mockDataSchema>
+export type MockDataType = z.infer<typeof mockDataSchema> // TODO: Remove
 
 //
 // Shared
 //
 export type IdType = z.infer<typeof idSchema>
+
+export type IdsType = z.infer<typeof idsSchema>
 
 export type TimestampType = z.infer<typeof timestampSchema>
 
@@ -84,8 +87,8 @@ export type BackupType = {
     createdAt: number
     settings: SettingType[]
     logs: LogType[]
-    examples: ExampleType[]
-    exampleResults: ExampleResultType[]
+    examples: ExampleType[] // TODO: Remove
+    exampleResults: ExampleResultType[] // TODO: Remove
 }
 
 //

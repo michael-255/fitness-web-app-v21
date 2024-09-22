@@ -6,7 +6,7 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   WIP
+-   Get the DB services for `Workouts`, `Exercises`, and `Measurements` working
 
 ## Post Cloning Steps
 

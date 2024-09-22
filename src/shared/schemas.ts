@@ -120,6 +120,7 @@ export const logSchema = z.object({
     details: logDetailsSchema,
 })
 
+// TODO: Remove
 export const exampleResultSchema = z.object({
     id: idSchema,
     createdAt: timestampSchema,
@@ -129,6 +130,7 @@ export const exampleResultSchema = z.object({
     mockData: mockDataSchema, // For testing charts on Examples
 })
 
+// TODO: Remove
 export const exampleSchema = z.object({
     id: idSchema,
     createdAt: timestampSchema,

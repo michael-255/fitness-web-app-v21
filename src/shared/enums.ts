@@ -8,8 +8,8 @@ export enum RouteNameEnum {
     MEASUREMENTS_DASHBOARD = 'MeasurementsDashboard',
     SETTINGS_TABLE = 'SettingsTable',
     LOGS_TABLE = 'LogsTable',
-    EXAMPLES_TABLE = 'ExamplesTable',
-    EXAMPLE_RESULTS_TABLE = 'ExampleResultsTable',
+    EXAMPLES_TABLE = 'ExamplesTable', // TODO: Remove
+    EXAMPLE_RESULTS_TABLE = 'ExampleResultsTable', // TODO: Remove
     WORKOUTS_TABLE = 'WorkoutsTable',
     WORKOUT_RESULTS_TABLE = 'WorkoutResultsTable',
     EXERCISES_TABLE = 'ExercisesTable',
@@ -28,13 +28,13 @@ export enum RouteNameEnum {
 export enum TableEnum {
     SETTINGS = 'settings', // Standalone
     LOGS = 'logs', // Standalone
-    EXAMPLES = 'exp', // Parent
-    EXAMPLE_RESULTS = 'exr', // Child
+    MEASUREMENTS = 'mea', // Standalone
+    EXAMPLES = 'exp', // TODO: Remove
+    EXAMPLE_RESULTS = 'exr', // TODO: Remove
     WORKOUTS = 'wop', // Parent
     WORKOUT_RESULTS = 'wor', // Child
     EXERCISES = 'exp', // Parent
     EXERCISE_RESULTS = 'exr', // Child
-    MEASUREMENTS = 'mea', // Standalone
 }
 
 /**
