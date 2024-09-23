@@ -1,7 +1,13 @@
 import { z } from 'zod'
 import { ExerciseInputEnum, LimitEnum } from '../enums'
 import { exerciseResultSchema } from './exercise-result'
-import { flagListSchema, idSchema, textAreaSchema, textLineSchema, timestampSchema } from './shared'
+import {
+    idSchema,
+    statusListSchema,
+    textAreaSchema,
+    textLineSchema,
+    timestampSchema,
+} from './shared'
 
 //
 // Fields
@@ -34,7 +40,7 @@ export const tabataTimerSchema = z.object({
 export const exerciseSchema = z.object({
     id: idSchema,
     createdAt: timestampSchema,
-    flags: flagListSchema,
+    status: statusListSchema,
     name: textLineSchema,
     desc: textAreaSchema,
     lastChild: exerciseResultSchema.optional(),

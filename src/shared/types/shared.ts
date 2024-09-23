@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import type {
-    flagSchema,
     idSchema,
     routeNameSchema,
+    statusSchema,
     tableSchema,
     textAreaSchema,
     textLineSchema,
@@ -34,7 +34,7 @@ export type TextLineType = z.infer<typeof textLineSchema>
 
 export type TextAreaType = z.infer<typeof textAreaSchema>
 
-export type FlagType = z.infer<typeof flagSchema>
+export type StatusType = z.infer<typeof statusSchema>
 
 //
 // Database

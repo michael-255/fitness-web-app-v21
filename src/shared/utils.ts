@@ -2,7 +2,7 @@ import { DurationMSEnum, TableEnum } from '@/shared/enums'
 import { date, uid, type QTableColumn } from 'quasar'
 import { computed } from 'vue'
 import { tableSchema } from './schemas/shared'
-import type { FlagType, IdType } from './types/shared'
+import type { IdType, StatusType } from './types/shared'
 
 /**
  * Creates an Id with the table encoded in the prefix. Encoding this extra information helps with
@@ -185,24 +185,24 @@ export function durationFromMs(milliseconds: number | null | undefined): string 
 }
 
 /**
- * Function that returns a Vue computed boolean for managing flag toggle switches. Determines if a
- * target flag is in selected flags array, and will remove or add it based on the computed value.
- * @param selectedFlag From `selectedStore.{record}.flags`
- * @param targetFlag Flag your looking for in the `selectedFlags`
+ * Function that returns a Vue computed boolean for managing status toggle switches. Determines if a
+ * target status is in selected status array, and will remove or add it based on the computed value.
+ * @param selectedStatus From `selectedStore.{record}.status`
+ * @param targetStatus Status your looking for in the `selectedStatus`
  * @returns Vue computed boolean
  */
-export function computedFlagToggle(selectedFlags: FlagType[], targetFlag: FlagType) {
+export function computedStatusToggle(selectedStatus: StatusType[], targetStatus: StatusType) {
     return computed({
-        get: () => selectedFlags?.includes(targetFlag),
+        get: () => selectedStatus?.includes(targetStatus),
         set: (value) => {
-            if (!selectedFlags) {
-                selectedFlags = []
+            if (!selectedStatus) {
+                selectedStatus = []
             }
-            const index = selectedFlags.indexOf(targetFlag)
+            const index = selectedStatus.indexOf(targetStatus)
             if (value && index === -1) {
-                selectedFlags.push(targetFlag)
+                selectedStatus.push(targetStatus)
             } else if (!value && index !== -1) {
-                selectedFlags.splice(index, 1)
+                selectedStatus.splice(index, 1)
             }
         },
     })

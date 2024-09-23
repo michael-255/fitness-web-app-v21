@@ -1,5 +1,11 @@
 import { z } from 'zod'
-import { flagListSchema, idSchema, textAreaSchema, textLineSchema, timestampSchema } from './shared'
+import {
+    idSchema,
+    statusListSchema,
+    textAreaSchema,
+    textLineSchema,
+    timestampSchema,
+} from './shared'
 import { workoutResultSchema } from './workout-result'
 
 //
@@ -15,7 +21,7 @@ export const exerciseGroupSchema = z.object({
 export const workoutSchema = z.object({
     id: idSchema,
     createdAt: timestampSchema,
-    flags: flagListSchema,
+    status: statusListSchema,
     name: textLineSchema,
     desc: textAreaSchema,
     lastChild: workoutResultSchema.optional(),

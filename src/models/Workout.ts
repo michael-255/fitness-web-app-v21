@@ -1,7 +1,7 @@
-import { FlagEnum, TableEnum } from '@/shared/enums'
+import { StatusEnum, TableEnum } from '@/shared/enums'
 import type {
-    FlagType,
     IdType,
+    StatusType,
     TextAreaType,
     TextLineType,
     TimestampType,
@@ -13,7 +13,7 @@ import { createId } from '@/shared/utils'
 interface WorkoutParams {
     id?: IdType
     createdAt?: TimestampType
-    flags?: FlagType[]
+    status?: StatusType[]
     name?: TextLineType
     desc?: TextAreaType
     lastChild?: WorkoutResultType
@@ -31,7 +31,7 @@ interface WorkoutParams {
 export default class Workout {
     id: IdType
     createdAt: TimestampType
-    flags: FlagType[]
+    status: StatusType[]
     name: TextLineType
     desc: TextAreaType
     lastChild?: WorkoutResultType
@@ -43,7 +43,7 @@ export default class Workout {
     constructor(params: WorkoutParams) {
         this.id = params.id ?? createId(TableEnum.WORKOUTS)
         this.createdAt = params.createdAt ?? Date.now()
-        this.flags = params.flags ?? [FlagEnum.ENABLED]
+        this.status = params.status ?? [StatusEnum.ENABLED]
         this.name = params.name ?? 'My Workout'
         this.desc = params.desc ?? ''
         this.lastChild = params.lastChild ?? undefined

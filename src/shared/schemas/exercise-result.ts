@@ -1,6 +1,12 @@
 import { z } from 'zod'
 import { LimitEnum } from '../enums'
-import { flagListSchema, idSchema, textAreaSchema, textLineSchema, timestampSchema } from './shared'
+import {
+    idSchema,
+    statusListSchema,
+    textAreaSchema,
+    textLineSchema,
+    timestampSchema,
+} from './shared'
 
 //
 // Fields
@@ -55,7 +61,7 @@ export const climbingSetSchema = z.object({
 export const exerciseResultSchema = z.object({
     id: idSchema,
     createdAt: timestampSchema,
-    flags: flagListSchema,
+    status: statusListSchema,
     exerciseId: idSchema,
     note: textAreaSchema,
     checklistSets: z.array(checklistSetSchema).optional(),

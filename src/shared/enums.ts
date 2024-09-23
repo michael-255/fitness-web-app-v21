@@ -52,9 +52,9 @@ export enum LogLevelEnum {
 }
 
 /**
- * Flags used as proxies for booleans to alter the application in various ways.
+ * Status indicators used to modify how the app treats a record with it.
  */
-export enum FlagEnum {
+export enum StatusEnum {
     LOCKED = 'Locked', // Shared
     ENABLED = 'Enabled', // Parent
     FAVORITED = 'Favorited', // Parent

@@ -1,4 +1,4 @@
-import { FlagEnum, LimitEnum, RouteNameEnum, TableEnum } from '@/shared/enums'
+import { LimitEnum, RouteNameEnum, StatusEnum, TableEnum } from '@/shared/enums'
 import { z } from 'zod'
 
 //
@@ -8,7 +8,7 @@ export const tableSchema = z.nativeEnum(TableEnum)
 
 export const routeNameSchema = z.nativeEnum(RouteNameEnum)
 
-export const flagSchema = z.nativeEnum(FlagEnum)
+export const statusSchema = z.nativeEnum(StatusEnum)
 
 //
 // Shared
@@ -42,16 +42,16 @@ export const textLineSchema = z
 
 export const textAreaSchema = z.string().max(LimitEnum.MAX_TEXT_AREA).trim() // For desc, notes, etc.
 
-export const flagListSchema = z
-    .nativeEnum(FlagEnum)
+export const statusListSchema = z
+    .nativeEnum(StatusEnum)
     .array()
     .refine(
-        (flags) => {
+        (status) => {
             // Check for duplicates
-            // Flag not used by a record type will be ignored
-            return new Set(flags).size === flags.length
+            // Status not used by a record type will be ignored
+            return new Set(status).size === status.length
         },
         {
-            message: 'Cannot have duplicate flags',
+            message: 'Cannot have duplicate status',
         },
     )

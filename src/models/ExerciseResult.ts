@@ -6,13 +6,13 @@ import type {
     SidedWeightSetType,
     WeightSetType,
 } from '@/shared/types/exercise-result'
-import type { FlagType, IdType, TextAreaType, TimestampType } from '@/shared/types/shared'
+import type { IdType, StatusType, TextAreaType, TimestampType } from '@/shared/types/shared'
 import { createId } from '@/shared/utils'
 
 interface ExerciseResultParams {
     id?: IdType
     createdAt?: TimestampType
-    flags?: FlagType[]
+    status?: StatusType[]
     exerciseId: IdType // Parent reference required, never defaulted
     note?: TextAreaType
     checklistSets?: ChecklistSetType[]
@@ -30,7 +30,7 @@ interface ExerciseResultParams {
 export default class ExerciseResult {
     id: IdType
     createdAt: TimestampType
-    flags: FlagType[]
+    status: StatusType[]
     exerciseId: IdType
     note: TextAreaType
     checklistSets?: ChecklistSetType[]
@@ -42,7 +42,7 @@ export default class ExerciseResult {
     constructor(params: ExerciseResultParams) {
         this.id = params.id ?? createId(TableEnum.EXERCISE_RESULTS)
         this.createdAt = params.createdAt ?? Date.now()
-        this.flags = params.flags ?? []
+        this.status = params.status ?? []
         this.exerciseId = params.exerciseId // Parent reference required, never defaulted
         this.note = params.note ?? ''
         this.checklistSets = params.checklistSets ?? undefined

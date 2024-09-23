@@ -21,8 +21,8 @@ defineProps<{
     recordLastChildNote?: TextAreaType
     isLoading: boolean
     hasLastChild: boolean
-    hasLockedFlag: boolean
-    hasFavoriteFlag: boolean
+    hasLockedStatus: boolean
+    hasFavoriteStatus: boolean
     supportsCharts: boolean
     supportsInspect: boolean
     supportsEdit: boolean
@@ -74,8 +74,8 @@ const settingsStore = useSettingsStore()
                         flat
                         dense
                         round
-                        :color="hasFavoriteFlag ? 'amber' : 'grey'"
-                        :icon="hasFavoriteFlag ? favoriteOnIcon : favoriteOffIcon"
+                        :color="hasFavoriteStatus ? 'amber' : 'grey'"
+                        :icon="hasFavoriteStatus ? favoriteOnIcon : favoriteOffIcon"
                         @click="emit('onFavorite')"
                     />
                     <q-btn
@@ -119,7 +119,7 @@ const settingsStore = useSettingsStore()
 
                                 <q-item
                                     v-if="supportsEdit"
-                                    :disable="hasLockedFlag || isLoading"
+                                    :disable="hasLockedStatus || isLoading"
                                     clickable
                                     @click="emit('onEdit')"
                                 >
@@ -131,7 +131,7 @@ const settingsStore = useSettingsStore()
 
                                 <q-item
                                     v-if="supportsDelete"
-                                    :disable="hasLockedFlag || isLoading"
+                                    :disable="hasLockedStatus || isLoading"
                                     clickable
                                     @click="emit('onDelete')"
                                 >
@@ -166,7 +166,7 @@ const settingsStore = useSettingsStore()
 
         <q-card-actions>
             <q-btn
-                :disable="hasLockedFlag || isLoading"
+                :disable="hasLockedStatus || isLoading"
                 color="primary"
                 label="Add Entry"
                 class="full-width"
