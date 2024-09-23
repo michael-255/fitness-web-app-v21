@@ -35,8 +35,8 @@ export class Database extends Dexie {
             [TableEnum.SETTINGS]: '&key',
             [TableEnum.LOGS]: '++autoId, createdAt',
             [TableEnum.MEASUREMENTS]: '&id, field, createdAt',
-            [TableEnum.WORKOUTS]: '&id, name, *tags',
-            [TableEnum.EXERCISES]: '&id, name, *tags',
+            [TableEnum.WORKOUTS]: '&id, name, *flags',
+            [TableEnum.EXERCISES]: '&id, name, *flags',
             [TableEnum.WORKOUT_RESULTS]: '&id, exerciseId, createdAt',
             [TableEnum.EXERCISE_RESULTS]: '&id, workoutId, createdAt',
         })

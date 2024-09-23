@@ -3,19 +3,16 @@ import type {
     CardioSetType,
     ChecklistSetType,
     ClimbingSetType,
-    IdType,
     SidedWeightSetType,
-    TagType,
-    TextAreaType,
-    TimestampType,
     WeightSetType,
-} from '@/shared/types'
+} from '@/shared/types/exercise-result'
+import type { FlagType, IdType, TextAreaType, TimestampType } from '@/shared/types/shared'
 import { createId } from '@/shared/utils'
 
 interface ExerciseResultParams {
     id?: IdType
     createdAt?: TimestampType
-    tags?: TagType[]
+    flags?: FlagType[]
     exerciseId: IdType // Parent reference required, never defaulted
     note?: TextAreaType
     checklistSets?: ChecklistSetType[]
@@ -33,7 +30,7 @@ interface ExerciseResultParams {
 export default class ExerciseResult {
     id: IdType
     createdAt: TimestampType
-    tags: TagType[]
+    flags: FlagType[]
     exerciseId: IdType
     note: TextAreaType
     checklistSets?: ChecklistSetType[]
@@ -45,7 +42,7 @@ export default class ExerciseResult {
     constructor(params: ExerciseResultParams) {
         this.id = params.id ?? createId(TableEnum.EXERCISE_RESULTS)
         this.createdAt = params.createdAt ?? Date.now()
-        this.tags = params.tags ?? []
+        this.flags = params.flags ?? []
         this.exerciseId = params.exerciseId // Parent reference required, never defaulted
         this.note = params.note ?? ''
         this.checklistSets = params.checklistSets ?? undefined

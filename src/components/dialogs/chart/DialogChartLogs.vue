@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import useLogger from '@/composables/useLogger'
-import LogsService from '@/services/LogsService'
+import LogService from '@/services/LogService'
 import { LogLevelEnum } from '@/shared/enums'
 import { closeIcon, createIcon } from '@/shared/icons'
-import type { LogType } from '@/shared/types'
+import type { LogType } from '@/shared/types/log'
 import { compactDateFromMs } from '@/shared/utils'
 import {
     Chart as ChartJS,
@@ -29,13 +29,13 @@ defineEmits([...useDialogPluginComponent.emits])
 const { dialogRef, onDialogHide, onDialogCancel } = useDialogPluginComponent()
 
 const { log } = useLogger()
-const logsService = LogsService()
+const logService = LogService()
 
 const subscriptionFinished = ref(false)
 const liveLogs: Ref<LogType[]> = ref([])
 const hasRecords = ref(false)
 
-const subscription = logsService.liveObservable().subscribe({
+const subscription = logService.liveObservable().subscribe({
     next: (logs) => {
         liveLogs.value = logs
         subscriptionFinished.value = true

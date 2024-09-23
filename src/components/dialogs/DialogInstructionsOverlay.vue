@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import Setting from '@/models/Setting'
-import DB from '@/services/db'
-import SettingsService from '@/services/SettingsService'
+import SettingService from '@/services/SettingService'
 import { appDescription, appName } from '@/shared/constants'
 import { SettingKeyEnum } from '@/shared/enums'
 import {
@@ -17,13 +16,13 @@ import { ref, type Ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const settingsService = SettingsService(DB)
+const settingService = SettingService()
 const settingsStore = useSettingsStore()
 
 const showWelcome: Ref<any> = ref(false)
 
 async function onCloseWelcomeOverlay() {
-    await settingsService.put(
+    await settingService.put(
         new Setting({
             key: SettingKeyEnum.INSTRUCTIONS_OVERLAY,
             value: false,
@@ -42,7 +41,7 @@ async function goToDonate() {
     <q-dialog
         :model-value="Boolean(settingsStore.getKeyValue(SettingKeyEnum.INSTRUCTIONS_OVERLAY))"
         @update:model-value="
-            settingsService.put({
+            settingService.put({
                 key: SettingKeyEnum.INSTRUCTIONS_OVERLAY,
                 value: $event,
             })

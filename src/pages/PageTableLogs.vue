@@ -4,7 +4,7 @@ import DialogInspectLog from '@/components/dialogs/inspect/DialogInspectLog.vue'
 import PageTable from '@/components/tables/PageTable.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
-import LogsService from '@/services/LogsService'
+import LogService from '@/services/LogService'
 import { appName } from '@/shared/constants'
 import { logsTableIcon } from '@/shared/icons'
 import { hiddenTableColumn, tableColumn } from '@/shared/utils'
@@ -15,7 +15,7 @@ useMeta({ title: `${appName} - Logs Data Table` })
 
 const { log } = useLogger()
 const { showDialog } = useDialogs()
-const logsService = LogsService()
+const logService = LogService()
 const selectedStore = useSelectedStore()
 
 const tableColumns = [
@@ -38,7 +38,7 @@ async function chartLogsDialog() {
  * Opens inspect dialog for Logs. This is defined here since it is the only place it is used.
  */
 async function inspectLogDialog(id: string) {
-    const record = await logsService.get(Number(id)) // Log Auto IDs are numbers
+    const record = await logService.get(Number(id)) // Log Auto IDs are numbers
     if (!record) {
         log.error('Log not found')
     }
@@ -57,7 +57,7 @@ async function inspectLogDialog(id: string) {
         :supportsColumnFilters="true"
         :supportsTableCharts="true"
         :supportsInspect="true"
-        :dataObservable="logsService.liveObservable()"
+        :dataObservable="logService.liveObservable()"
         @onTableCharts="chartLogsDialog"
         @onInspect="inspectLogDialog"
     />

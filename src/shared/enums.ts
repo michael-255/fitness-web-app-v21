@@ -8,8 +8,6 @@ export enum RouteNameEnum {
     MEASUREMENTS_DASHBOARD = 'MeasurementsDashboard',
     SETTINGS_TABLE = 'SettingsTable',
     LOGS_TABLE = 'LogsTable',
-    EXAMPLES_TABLE = 'ExamplesTable', // TODO: Remove
-    EXAMPLE_RESULTS_TABLE = 'ExampleResultsTable', // TODO: Remove
     WORKOUTS_TABLE = 'WorkoutsTable',
     WORKOUT_RESULTS_TABLE = 'WorkoutResultsTable',
     EXERCISES_TABLE = 'ExercisesTable',
@@ -29,8 +27,6 @@ export enum TableEnum {
     SETTINGS = 'settings', // Standalone
     LOGS = 'logs', // Standalone
     MEASUREMENTS = 'mea', // Standalone
-    EXAMPLES = 'exp', // TODO: Remove
-    EXAMPLE_RESULTS = 'exr', // TODO: Remove
     WORKOUTS = 'wop', // Parent
     WORKOUT_RESULTS = 'wor', // Child
     EXERCISES = 'exp', // Parent
@@ -56,14 +52,12 @@ export enum LogLevelEnum {
 }
 
 /**
- * Tags used for flaging certain records for the application to change their behavior.
- * Dexie index on these tags for quick access.
+ * Flags used as proxies for booleans to alter the application in various ways.
  */
-export enum TagEnum {
+export enum FlagEnum {
     LOCKED = 'Locked', // Shared
     ENABLED = 'Enabled', // Parent
     FAVORITED = 'Favorited', // Parent
-    MULTI_SET = 'Multi-Set', // Exercise
 }
 
 /**
@@ -117,9 +111,9 @@ export enum LimitEnum {
     MIN_SETS = 1,
     MAX_SETS = 30,
     MIN_SET_WEIGHT = 0,
-    MAX_SET_WEIGHT = 9_000,
+    MAX_SET_WEIGHT = 9_999,
     MIN_SET_REPS = 0,
-    MAX_SET_REPS = 9_000,
+    MAX_SET_REPS = 9_999,
     MIN_SET_RPE = 0,
     MAX_SET_RPE = 10,
 }

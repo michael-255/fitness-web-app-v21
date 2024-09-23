@@ -5,14 +5,12 @@ import type {
     BodyMeasurementType,
     BodyWeightType,
     CaloriesType,
-    IdType,
     MeasurementFieldType,
     NutritionType,
     PercentType,
     TemperatureType,
-    TextAreaType,
-    TimestampType,
-} from '@/shared/types'
+} from '@/shared/types/measurement'
+import type { IdType, TextAreaType, TimestampType } from '@/shared/types/shared'
 import { createId } from '@/shared/utils'
 
 interface MeasurementParams {

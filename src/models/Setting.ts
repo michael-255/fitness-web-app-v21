@@ -1,4 +1,4 @@
-import type { SettingKeyType, SettingValueType } from '@/shared/types'
+import type { SettingKeyType, SettingValueType } from '@/shared/types/setting'
 
 interface SettingParams {
     key: SettingKeyType

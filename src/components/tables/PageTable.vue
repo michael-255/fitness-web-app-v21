@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import useLogger from '@/composables/useLogger'
 import useRouting from '@/composables/useRouting'
-import DB from '@/services/db'
 import {
     addIcon,
     chartsIcon,
@@ -45,8 +44,8 @@ const emit = defineEmits<{
     (event: 'onDelete', id: string): void
 }>()
 
-const { log } = useLogger(DB)
-const { goBack } = useRouting(DB)
+const { log } = useLogger()
+const { goBack } = useRouting()
 
 const searchFilter: Ref<string> = ref('')
 const columnOptions: Ref<QTableColumn[]> = ref(columnOptionsFromTableColumns(props.tableColumns))

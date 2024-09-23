@@ -10,7 +10,7 @@ import {
     inspectIcon,
     verticalDotMenuIcon,
 } from '@/shared/icons'
-import type { TextAreaType, TextLineType, TimestampType } from '@/shared/types'
+import type { TextAreaType, TextLineType, TimestampType } from '@/shared/types/shared'
 import { compactDateFromMs, timeAgo } from '@/shared/utils'
 import useSettingsStore from '@/stores/settings'
 
@@ -21,8 +21,8 @@ defineProps<{
     recordLastChildNote?: TextAreaType
     isLoading: boolean
     hasLastChild: boolean
-    hasLockedTag: boolean
-    hasFavoriteTag: boolean
+    hasLockedFlag: boolean
+    hasFavoriteFlag: boolean
     supportsCharts: boolean
     supportsInspect: boolean
     supportsEdit: boolean
@@ -74,8 +74,8 @@ const settingsStore = useSettingsStore()
                         flat
                         dense
                         round
-                        :color="hasFavoriteTag ? 'amber' : 'grey'"
-                        :icon="hasFavoriteTag ? favoriteOnIcon : favoriteOffIcon"
+                        :color="hasFavoriteFlag ? 'amber' : 'grey'"
+                        :icon="hasFavoriteFlag ? favoriteOnIcon : favoriteOffIcon"
                         @click="emit('onFavorite')"
                     />
                     <q-btn
@@ -119,7 +119,7 @@ const settingsStore = useSettingsStore()
 
                                 <q-item
                                     v-if="supportsEdit"
-                                    :disable="hasLockedTag || isLoading"
+                                    :disable="hasLockedFlag || isLoading"
                                     clickable
                                     @click="emit('onEdit')"
                                 >
@@ -131,7 +131,7 @@ const settingsStore = useSettingsStore()
 
                                 <q-item
                                     v-if="supportsDelete"
-                                    :disable="hasLockedTag || isLoading"
+                                    :disable="hasLockedFlag || isLoading"
                                     clickable
                                     @click="emit('onDelete')"
                                 >
@@ -166,7 +166,7 @@ const settingsStore = useSettingsStore()
 
         <q-card-actions>
             <q-btn
-                :disable="hasLockedTag || isLoading"
+                :disable="hasLockedFlag || isLoading"
                 color="primary"
                 label="Add Entry"
                 class="full-width"

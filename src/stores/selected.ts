@@ -1,4 +1,9 @@
-import type { ExampleResultType, ExampleType, LogType } from '@/shared/types'
+import type { ExerciseType } from '@/shared/types/exercise'
+import type { ExerciseResultType } from '@/shared/types/exercise-result'
+import type { LogType } from '@/shared/types/log'
+import type { MeasurementType } from '@/shared/types/measurement'
+import type { WorkoutType } from '@/shared/types/workout'
+import type { WorkoutResultType } from '@/shared/types/workout-result'
 import { defineStore } from 'pinia'
 
 /**
@@ -9,11 +14,18 @@ const useSelectedStore = defineStore({
 
     state: () => ({
         isLogValid: true,
-        isExampleValid: true,
-        isExampleResultValid: true,
-        log: {} as LogType,
-        example: {} as ExampleType,
-        exampleResult: {} as ExampleResultType,
+        isMeasurementValid: true,
+        isMeasurementResultValid: true,
+        isWorkoutValid: true,
+        isWorkoutResultValid: true,
+        isExerciseValid: true,
+        isExerciseResultValid: true,
+        log: {} as LogType, // Only needs this for inspection
+        measurement: {} as MeasurementType,
+        workout: {} as WorkoutType,
+        workoutResult: {} as WorkoutResultType,
+        exercise: {} as ExerciseType,
+        exerciseResult: {} as ExerciseResultType,
     }),
 })
 

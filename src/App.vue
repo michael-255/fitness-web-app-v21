@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import DialogInstructionsOverlay from '@/components/dialogs/DialogInstructionsOverlay.vue'
 import useLogger from '@/composables/useLogger'
-import LogsService from '@/services/LogsService'
-import SettingsService from '@/services/SettingsService'
+import LogService from '@/services/LogService'
+import SettingService from '@/services/SettingService'
 import { appDescription } from '@/shared/constants'
 import { errorIcon } from '@/shared/icons'
 import useSettingsStore from '@/stores/settings'
@@ -63,19 +63,19 @@ useMeta({
 
 const notify = useQuasar().notify
 const { log } = useLogger()
-const settingsService = SettingsService()
-const logsService = LogsService()
+const settingService = SettingService()
+const logService = LogService()
 const settingsStore = useSettingsStore()
 
 // Loading live Settings into the store on startup for use throughout the app.
-const subscription = settingsService.liveObservable().subscribe({
+const subscription = settingService.liveObservable().subscribe({
     next: (records) => (settingsStore.settings = records),
     error: (error) => log.error(`Error loading live Settings`, error as Error),
 })
 
 onMounted(async () => {
     try {
-        const settings = await settingsService.initialize()
+        const settings = await settingService.initialize()
         log.silentDebug('Settings initialized', settings)
     } catch (error) {
         // Output the error and notify user since it could be a database or logger failure
@@ -84,7 +84,7 @@ onMounted(async () => {
     }
 
     try {
-        const logsPurged = await logsService.purge()
+        const logsPurged = await logService.purge()
         log.silentDebug('Expired logs purged', { logsPurged })
     } catch (error) {
         log.error('Error purging expired logs', error as Error)

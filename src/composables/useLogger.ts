@@ -1,16 +1,15 @@
 import Log from '@/models/Log'
-import DB, { Database } from '@/services/db'
-import LogsService from '@/services/LogsService'
-import SettingsService from '@/services/SettingsService'
+import LogService from '@/services/LogService'
+import SettingService from '@/services/SettingService'
 import { appName } from '@/shared/constants'
 import { LogLevelEnum, SettingKeyEnum } from '@/shared/enums'
 import { debugIcon, errorIcon, infoIcon, warnIcon } from '@/shared/icons'
-import type { LogDetailsType } from '@/shared/types'
+import type { LogDetailsType } from '@/shared/types/log'
 import { colors, useQuasar } from 'quasar'
 
-export default function useLogger(db: Database = DB) {
-    const settingsService = SettingsService(db)
-    const logsService = LogsService(db)
+export default function useLogger() {
+    const settingService = SettingService()
+    const logService = LogService()
     const notify = useQuasar().notify
     const loggerName = `%c${appName}`
     const baseStyle = 'border-radius: 3px; padding: 2px 4px; color: white; background-color:'
@@ -47,7 +46,7 @@ export default function useLogger(db: Database = DB) {
         },
 
         info: async (name: string, details?: LogDetailsType) => {
-            if ((await settingsService.get(SettingKeyEnum.CONSOLE_LOGS))?.value) {
+            if ((await settingService.get(SettingKeyEnum.CONSOLE_LOGS))?.value) {
                 console.log(loggerName, style.info, `[${LogLevelEnum.INFO}]`, name, details)
             }
             const log = new Log({
@@ -55,14 +54,14 @@ export default function useLogger(db: Database = DB) {
                 label: name,
                 details,
             })
-            await logsService.add(log)
-            if ((await settingsService.get(SettingKeyEnum.INFO_MESSAGES))?.value) {
+            await logService.add(log)
+            if ((await settingService.get(SettingKeyEnum.INFO_MESSAGES))?.value) {
                 notify({ message: name, icon: infoIcon, color: 'info' })
             }
         },
 
         warn: async (name: string, details?: LogDetailsType) => {
-            if ((await settingsService.get(SettingKeyEnum.CONSOLE_LOGS))?.value) {
+            if ((await settingService.get(SettingKeyEnum.CONSOLE_LOGS))?.value) {
                 console.warn(loggerName, style.warn, `[${LogLevelEnum.WARN}]`, name, details)
             }
             const log = new Log({
@@ -70,12 +69,12 @@ export default function useLogger(db: Database = DB) {
                 label: name,
                 details,
             })
-            await logsService.add(log)
+            await logService.add(log)
             notify({ message: name, icon: warnIcon, color: 'warning' })
         },
 
         error: async (name: string, details?: LogDetailsType) => {
-            if ((await settingsService.get(SettingKeyEnum.CONSOLE_LOGS))?.value) {
+            if ((await settingService.get(SettingKeyEnum.CONSOLE_LOGS))?.value) {
                 console.error(loggerName, style.error, `[${LogLevelEnum.ERROR}]`, name, details)
             }
             const log = new Log({
@@ -83,7 +82,7 @@ export default function useLogger(db: Database = DB) {
                 label: name,
                 details,
             })
-            await logsService.add(log)
+            await logService.add(log)
             notify({ message: name, icon: errorIcon, color: 'negative' })
         },
     }

@@ -1,10 +1,5 @@
-import {
-    type LogAutoIdType,
-    type LogDetailsType,
-    type LogLabelType,
-    type LogLevelType,
-    type TimestampType,
-} from '@/shared/types'
+import type { LogAutoIdType, LogDetailsType, LogLabelType, LogLevelType } from '@/shared/types/log'
+import type { TimestampType } from '@/shared/types/shared'
 
 interface LogParams {
     logLevel: LogLevelType

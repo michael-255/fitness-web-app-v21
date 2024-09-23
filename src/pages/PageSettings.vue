@@ -4,21 +4,10 @@ import PageHeading from '@/components/shared/PageHeading.vue'
 import ResponsivePage from '@/components/shared/ResponsivePage.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
-import Example from '@/models/Example'
-import ExampleResult from '@/models/ExampleResult'
 import DB from '@/services/db'
-import ExampleResultsService from '@/services/ExampleResultsService'
-import ExamplesService from '@/services/ExamplesService'
-import SettingsService from '@/services/SettingsService'
+import SettingService from '@/services/SettingService'
 import { appDatabaseVersion, appName } from '@/shared/constants'
-import {
-    DurationEnum,
-    DurationMSEnum,
-    LimitEnum,
-    RouteNameEnum,
-    SettingKeyEnum,
-    TableEnum,
-} from '@/shared/enums'
+import { DurationEnum, LimitEnum, RouteNameEnum, SettingKeyEnum, TableEnum } from '@/shared/enums'
 import {
     createIcon,
     databaseIcon,
@@ -35,8 +24,7 @@ import {
     settingsTableIcon,
     warnIcon,
 } from '@/shared/icons'
-import type { BackupType } from '@/shared/types'
-import { compactDateFromMs } from '@/shared/utils'
+import type { BackupType } from '@/shared/types/shared'
 import useSettingsStore from '@/stores/settings'
 import { exportFile, useMeta, useQuasar } from 'quasar'
 import { ref, type Ref } from 'vue'
@@ -49,9 +37,7 @@ const router = useRouter()
 const { log } = useLogger()
 const { onConfirmDialog, onStrictConfirmDialog } = useDialogs()
 const settingsStore = useSettingsStore()
-const settingsService = SettingsService()
-const examplesService = ExamplesService()
-const exampleResultsService = ExampleResultsService()
+const settingService = SettingService()
 
 const isDevMode = import.meta.env.DEV
 
@@ -94,37 +80,30 @@ function onImportBackup() {
                 log.silentDebug('backup:', backup)
 
                 // NOTE: Logs are ignored during import
-                const settingsImport = await settingsService.importData(backup?.settings ?? [])
-                const examplesImport = await examplesService.importData(backup?.examples ?? [])
-                const exampleResultsImport = await exampleResultsService.importData(
-                    backup?.exampleResults ?? [],
-                )
+                const settingsImport = await settingService.importData(backup?.settings ?? [])
+                // TODO: Other table imports here...
 
                 // Check for invalid records
                 const hasInvalidRecords = [
                     settingsImport.invalidRecords,
-                    examplesImport.invalidRecords,
-                    exampleResultsImport.invalidRecords,
+                    // other tables here...
                 ].some((record) => Array.isArray(record) && record.length > 0)
 
                 if (hasInvalidRecords) {
                     log.warn('Import skipping invalid records', {
                         invalidSettings: settingsImport.invalidRecords,
-                        invalidExamples: examplesImport.invalidRecords,
-                        invalidExampleResults: exampleResultsImport.invalidRecords,
+                        // other tables here...
                     })
                 }
 
                 // Check for bulk import errors
                 const hasBulkErrors = [
-                    examplesImport.bulkError,
-                    exampleResultsImport.bulkError,
+                    // other tables here...
                 ].some((error) => error)
 
                 if (hasBulkErrors) {
                     log.warn('Import skipping existing records', {
-                        bulkErrorExamples: examplesImport.bulkError,
-                        bulkErrorExampleResults: exampleResultsImport.bulkError,
+                        // other tables here...
                     })
                 }
 
@@ -134,8 +113,7 @@ function onImportBackup() {
                     databaseVersion: backup.databaseVersion,
                     logsDiscarded: backup?.logs?.length ?? 0, // Logs are ignored during import
                     settingsImported: settingsImport.importedCount,
-                    examplesImported: examplesImport.importedCount,
-                    exampleResultsImported: exampleResultsImport.importedCount,
+                    // other tables here...
                 })
 
                 importFile.value = null // Clear input
@@ -171,8 +149,7 @@ function onExportBackup() {
                     createdAt: Date.now(),
                     settings: await DB.table(TableEnum.SETTINGS).toArray(),
                     logs: await DB.table(TableEnum.LOGS).toArray(),
-                    examples: await examplesService.exportData(),
-                    exampleResults: await DB.table(TableEnum.EXAMPLE_RESULTS).toArray(),
+                    // TODO: other tables here...
                 } as BackupType
 
                 log.silentDebug('backup:', backup)
@@ -231,10 +208,9 @@ function onDeleteAppData() {
         onOk: async () => {
             try {
                 $q.loading.show()
-                await settingsService.clear()
+                await settingService.clear()
                 await DB.table(TableEnum.LOGS).clear()
-                await DB.table(TableEnum.EXAMPLES).clear()
-                await DB.table(TableEnum.EXAMPLE_RESULTS).clear()
+                // other tables here...
                 log.info('Successfully deleted app data')
             } catch (error) {
                 log.error(`Error deleting app data`, error as Error)
@@ -277,44 +253,41 @@ function onDeleteDatabase() {
  * Allows for the creation of test data when the app is in local DEV mode.
  */
 async function createTestData() {
-    // Example
-    const example = new Example({
-        name: `Generated: ${compactDateFromMs(Date.now())}`,
-        desc: 'This is an Example description. These descriptions can be quite long and detailed at 250 characters. Here is my attempt fill this space with text that makes sense. I want to see what this looks like when you are at the limit. This is enough.',
-    })
-
-    // Example Results
-    const exampleResults = []
-    const numberOfDays = 600
-    const currentDate = Date.now()
-
-    // First record
-    const recentExampleResult = new ExampleResult({
-        parentId: example.id,
-        createdAt: currentDate,
-        note: 'This is the Example Result note. MOST RECENT!',
-        mockData: 0,
-    })
-    example.lastChild = recentExampleResult
-    exampleResults.push(recentExampleResult)
-
-    for (let i = 1; i < numberOfDays; i++) {
-        exampleResults.push(
-            new ExampleResult({
-                parentId: example.id,
-                createdAt: currentDate - i * DurationMSEnum['One Day'],
-                note: `This is the Example Result note: Index ${i}`,
-                mockData: Math.floor(Math.random() * (i / 2)) + i / 2,
-            }),
-        )
-    }
-
-    await examplesService.add(example)
-    await exampleResultsService.importData(exampleResults)
-    log.debug('Test Example added with debug', example)
-    log.warn('Test Example added with warn', example)
-    log.info('Test Example added with info', example)
-    log.error('Test Example added with error', example)
+    // TODO
+    // // Example
+    // const example = new Example({
+    //     name: `Generated: ${compactDateFromMs(Date.now())}`,
+    //     desc: 'This is an Example description. These descriptions can be quite long and detailed at 250 characters. Here is my attempt fill this space with text that makes sense. I want to see what this looks like when you are at the limit. This is enough.',
+    // })
+    // // Example Results
+    // const exampleResults = []
+    // const numberOfDays = 600
+    // const currentDate = Date.now()
+    // // First record
+    // const recentExampleResult = new ExampleResult({
+    //     parentId: example.id,
+    //     createdAt: currentDate,
+    //     note: 'This is the Example Result note. MOST RECENT!',
+    //     mockData: 0,
+    // })
+    // example.lastChild = recentExampleResult
+    // exampleResults.push(recentExampleResult)
+    // for (let i = 1; i < numberOfDays; i++) {
+    //     exampleResults.push(
+    //         new ExampleResult({
+    //             parentId: example.id,
+    //             createdAt: currentDate - i * DurationMSEnum['One Day'],
+    //             note: `This is the Example Result note: Index ${i}`,
+    //             mockData: Math.floor(Math.random() * (i / 2)) + i / 2,
+    //         }),
+    //     )
+    // }
+    // await exampleService.add(example)
+    // await exampleResultService.importData(exampleResults)
+    // log.debug('Test Example added with debug', example)
+    // log.warn('Test Example added with warn', example)
+    // log.info('Test Example added with info', example)
+    // log.error('Test Example added with error', example)
 }
 </script>
 
@@ -370,7 +343,7 @@ async function createTestData() {
                     <q-toggle
                         :model-value="settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)"
                         @update:model-value="
-                            settingsService.put({
+                            settingService.put({
                                 key: SettingKeyEnum.ADVANCED_MODE,
                                 value: $event,
                             })
@@ -395,7 +368,7 @@ async function createTestData() {
                             settingsStore.getKeyValue(SettingKeyEnum.INSTRUCTIONS_OVERLAY)
                         "
                         @update:model-value="
-                            settingsService.put({
+                            settingService.put({
                                 key: SettingKeyEnum.INSTRUCTIONS_OVERLAY,
                                 value: $event,
                             })
@@ -418,7 +391,7 @@ async function createTestData() {
                     <q-toggle
                         :model-value="settingsStore.getKeyValue(SettingKeyEnum.INFO_MESSAGES)"
                         @update:model-value="
-                            settingsService.put({
+                            settingService.put({
                                 key: SettingKeyEnum.INFO_MESSAGES,
                                 value: $event,
                             })
@@ -441,7 +414,7 @@ async function createTestData() {
                     <q-toggle
                         :model-value="settingsStore.getKeyValue(SettingKeyEnum.CONSOLE_LOGS)"
                         @update:model-value="
-                            settingsService.put({
+                            settingService.put({
                                 key: SettingKeyEnum.CONSOLE_LOGS,
                                 value: $event,
                             })
@@ -466,7 +439,7 @@ async function createTestData() {
                             settingsStore.getKeyValue(SettingKeyEnum.LOG_RETENTION_DURATION)
                         "
                         @update:model-value="
-                            settingsService.put({
+                            settingService.put({
                                 key: SettingKeyEnum.LOG_RETENTION_DURATION,
                                 value: $event,
                             })

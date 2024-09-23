@@ -1,22 +1,24 @@
-import { TableEnum, TagEnum } from '@/shared/enums'
+import { FlagEnum, TableEnum } from '@/shared/enums'
 import type {
     ExerciseInputType,
-    ExerciseResultType,
-    IdType,
     InitialSetCountType,
     RestTimerType,
     TabataTimerType,
-    TagType,
+} from '@/shared/types/exercise'
+import type { ExerciseResultType } from '@/shared/types/exercise-result'
+import type {
+    FlagType,
+    IdType,
     TextAreaType,
     TextLineType,
     TimestampType,
-} from '@/shared/types'
+} from '@/shared/types/shared'
 import { createId } from '@/shared/utils'
 
 interface ExerciseParams {
     id?: IdType
     createdAt?: TimestampType
-    tags?: TagType[]
+    flags?: FlagType[]
     name?: TextLineType
     desc?: TextAreaType
     lastChild?: ExerciseResultType
@@ -34,7 +36,7 @@ interface ExerciseParams {
 export default class Exercise {
     id: IdType
     createdAt: TimestampType
-    tags: TagType[]
+    flags: FlagType[]
     name: TextLineType
     desc: TextAreaType
     lastChild?: ExerciseResultType
@@ -46,7 +48,7 @@ export default class Exercise {
     constructor(params: ExerciseParams) {
         this.id = params.id ?? createId(TableEnum.EXERCISES)
         this.createdAt = params.createdAt ?? Date.now()
-        this.tags = params.tags ?? [TagEnum.ENABLED]
+        this.flags = params.flags ?? [FlagEnum.ENABLED]
         this.name = params.name ?? 'My Exercise'
         this.desc = params.desc ?? ''
         this.lastChild = params.lastChild ?? undefined

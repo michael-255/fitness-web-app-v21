@@ -1,8 +1,8 @@
 import { DurationMSEnum, TableEnum } from '@/shared/enums'
-import { tableSchema } from '@/shared/schemas'
-import type { IdType, TagType } from '@/shared/types'
 import { date, uid, type QTableColumn } from 'quasar'
 import { computed } from 'vue'
+import { tableSchema } from './schemas/shared'
+import type { FlagType, IdType } from './types/shared'
 
 /**
  * Creates an Id with the table encoded in the prefix. Encoding this extra information helps with
@@ -185,24 +185,24 @@ export function durationFromMs(milliseconds: number | null | undefined): string 
 }
 
 /**
- * Function that returns a Vue computed boolean for managing tag toggle switches. Determines if a
- * target tag is in the selected tags array, and will remove or add it based on the computed value.
- * @param selectedTags From `selectedStore.{record}.tags`
- * @param targetTag Tag your looking for in the `selectedTags`
+ * Function that returns a Vue computed boolean for managing flag toggle switches. Determines if a
+ * target flag is in selected flags array, and will remove or add it based on the computed value.
+ * @param selectedFlag From `selectedStore.{record}.flags`
+ * @param targetFlag Flag your looking for in the `selectedFlags`
  * @returns Vue computed boolean
  */
-export function computedTagToggle(selectedTags: TagType[], targetTag: TagType) {
+export function computedFlagToggle(selectedFlags: FlagType[], targetFlag: FlagType) {
     return computed({
-        get: () => selectedTags?.includes(targetTag),
+        get: () => selectedFlags?.includes(targetFlag),
         set: (value) => {
-            if (!selectedTags) {
-                selectedTags = []
+            if (!selectedFlags) {
+                selectedFlags = []
             }
-            const index = selectedTags.indexOf(targetTag)
+            const index = selectedFlags.indexOf(targetFlag)
             if (value && index === -1) {
-                selectedTags.push(targetTag)
+                selectedFlags.push(targetFlag)
             } else if (!value && index !== -1) {
-                selectedTags.splice(index, 1)
+                selectedFlags.splice(index, 1)
             }
         },
     })

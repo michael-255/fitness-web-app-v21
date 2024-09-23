@@ -1,10 +1,10 @@
 import DB, { Database } from '@/services/db'
 import { DurationEnum, DurationMSEnum, SettingKeyEnum, TableEnum } from '@/shared/enums'
-import { logSchema } from '@/shared/schemas'
-import type { LogAutoIdType, LogType } from '@/shared/types'
+import { logSchema } from '@/shared/schemas/log'
+import type { LogAutoIdType, LogType } from '@/shared/types/log'
 import { liveQuery, type Observable } from 'dexie'
 
-export default function LogsService(db: Database = DB) {
+export default function LogService(db: Database = DB) {
     /**
      * Purges logs based on the log retention duration setting. Returns the number of logs purged.
      */

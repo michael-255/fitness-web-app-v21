@@ -1,11 +1,10 @@
 import useLogger from '@/composables/useLogger'
-import DB, { Database } from '@/services/db'
 import { useRouter } from 'vue-router'
 
-export default function useRouting(db: Database = DB) {
+export default function useRouting() {
     // Do NOT return route or router from any composable due to performance issues
     const router = useRouter()
-    const { log } = useLogger(db)
+    const { log } = useLogger()
 
     /**
      * Go back if previous route state is part of the app history, otherwise go to root path.
