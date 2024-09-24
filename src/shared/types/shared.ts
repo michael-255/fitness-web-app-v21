@@ -24,7 +24,7 @@ export type TableType = z.infer<typeof tableSchema>
 export type RouteNameType = z.infer<typeof routeNameSchema>
 
 //
-// Shared
+// Common
 //
 export type IdType = z.infer<typeof idSchema>
 

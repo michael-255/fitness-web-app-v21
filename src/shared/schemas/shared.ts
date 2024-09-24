@@ -11,7 +11,7 @@ export const routeNameSchema = z.nativeEnum(RouteNameEnum)
 export const statusSchema = z.nativeEnum(StatusEnum)
 
 //
-// Shared
+// Common
 //
 export const idSchema = z.string().refine(
     (id) => {
