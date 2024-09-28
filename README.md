@@ -6,8 +6,14 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   Flesh out `Schemas`
--   Get the DB services for `Workouts`, `Exercises`, and `Measurements` working
+-   Work on Database `Services` for `Workouts`, `Exercises`, and `Measurements`
+    -   `Workouts` (Start here!)
+        -   CRUD operations
+    -   `Workout Results`
+        -   CRUD operations
+    -   `Exercises`
+    -   `Exercise Results`
+    -   `Measurements`
 
 ## Post Cloning Steps
 

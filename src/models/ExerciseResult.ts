@@ -38,6 +38,7 @@ export const sidedWeightSetSchema = z.object({
     right: weightSetSchema,
 })
 
+// TODO: Still need to think about the design of this
 export const climbingSetSchema = z.object({
     listedGrade: z.any(), // TODO
     myGrade: z.any(), // TODO
@@ -63,6 +64,8 @@ export const exerciseResultSchema = z.object({
 //
 // Types
 //
+
+export type SetRpeType = z.infer<typeof setRpeSchema>
 
 export type ChecklistSetType = z.infer<typeof checklistSetSchema>
 

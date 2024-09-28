@@ -39,8 +39,8 @@ export const initialSetCountSchema = z
     .max(LimitEnum.MAX_SETS)
 
 /**
- * Rest timer minimum is 15 seconds and maximum is 15 minutes.
- * Timer should be incremented by 15 seconds.
+ * Rest timer minimum is 30 seconds and maximum is 15 minutes.
+ * Timer should be incremented by 30 seconds.
  */
 export const restTimerSchema = z.object({
     defaultDurationSeconds: z
@@ -50,6 +50,7 @@ export const restTimerSchema = z.object({
         .max(LimitEnum.MAX_REST_TIMER),
 })
 
+// TODO: Still need to think about the design of this
 export const tabataTimerSchema = z.object({
     prepare: z.number().int(), // TODO
     work: z.number().int(), // TODO
@@ -94,7 +95,7 @@ interface ExerciseParams {
     name?: TextLineType
     desc?: TextAreaType
     lastChild?: ExerciseResultType
-    inputs: ExerciseInputType // Required
+    inputs: ExerciseInputType // Required, not defaulted
     initialSetCount?: InitialSetCountType
     restTimer?: RestTimerType
     tabataTimer?: TabataTimerType
@@ -112,7 +113,7 @@ export default class Exercise {
     name: TextLineType
     desc: TextAreaType
     lastChild?: ExerciseResultType
-    inputs: ExerciseInputType
+    inputs: ExerciseInputType // Required, not defaulted
     initialSetCount: InitialSetCountType
     restTimer?: RestTimerType
     tabataTimer?: TabataTimerType

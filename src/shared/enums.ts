@@ -53,7 +53,7 @@ export enum LimitEnum {
     MAX_WEIGHT = 9_999,
     MAX_REPS = 9_999,
     MAX_RPE = 10,
-    MIN_REST_TIMER = 15, // 15 seconds
+    MIN_REST_TIMER = 30, // 30 seconds
     MAX_REST_TIMER = 900, // 15 minutes
     MAX_DURATION_SEC = 359_999, // 99 hours 59 minutes 59 seconds
     MAX_CALORIES_BURNED = 9_999,
@@ -63,6 +63,8 @@ export enum LimitEnum {
     MIN_TEMPERATURE = 60,
     MAX_TEMPERATURE = 115,
     MAX_BODY_MEASUREMENT = 999,
+    MIN_BLOOD_PRESSURE = 30,
+    MAX_BLOOD_PRESSURE = 300,
 }
 
 export enum DurationEnum {

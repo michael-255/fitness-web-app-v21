@@ -36,7 +36,7 @@ export enum MeasurementFieldEnum {
     LEFT_CALF = 'Left Calf',
     RIGHT_CALF = 'Right Calf',
     // Lab Work
-    // ...
+    // TODO
 }
 
 //
@@ -53,16 +53,20 @@ export const bodyWeightSchema = z.number().positive().max(LimitEnum.MAX_BODY_WEI
 
 export const percentSchema = z.number().min(0).max(100)
 
-export const bodyMassIndexSchema = z.number().positive()
-
 export const temperatureSchema = z
     .number()
     .min(LimitEnum.MIN_TEMPERATURE)
     .max(LimitEnum.MAX_TEMPERATURE)
 
+export const bloodPressureReadingSchema = z
+    .number()
+    .int()
+    .min(LimitEnum.MIN_BLOOD_PRESSURE)
+    .max(LimitEnum.MAX_BLOOD_PRESSURE)
+
 export const bloodPressureSchema = z.object({
-    systolic: z.number().int().min(0), // TODO
-    diastolic: z.number().int().min(0), // TODO
+    systolic: bloodPressureReadingSchema,
+    diastolic: bloodPressureReadingSchema,
 })
 
 export const bodyMeasurementSchema = z.number().min(0).max(LimitEnum.MAX_BODY_MEASUREMENT)
@@ -84,7 +88,6 @@ export const measurementSchema = z.object({
     protein: nutritionSchema.optional(),
     weight: bodyWeightSchema.optional(),
     bodyFat: percentSchema.optional(),
-    bodyMassIndex: bodyMassIndexSchema.optional(), // TODO: Should this value just be computed?
     // Health
     temperature: temperatureSchema.optional(),
     bloodPressure: bloodPressureSchema.optional(),
@@ -115,13 +118,15 @@ export type BodyWeightType = z.infer<typeof bodyWeightSchema>
 
 export type PercentType = z.infer<typeof percentSchema>
 
-export type BodyMassIndexType = z.infer<typeof bodyMassIndexSchema>
-
 export type TemperatureType = z.infer<typeof temperatureSchema>
+
+export type BloodPressureReadingType = z.infer<typeof bloodPressureReadingSchema>
 
 export type BloodPressureType = z.infer<typeof bloodPressureSchema>
 
 export type BodyMeasurementType = z.infer<typeof bodyMeasurementSchema>
+
+export type SidedBodyMeasurementType = z.infer<typeof sidedBodyMeasurementSchema>
 
 export type MeasurementType = z.infer<typeof measurementSchema>
 
@@ -137,7 +142,6 @@ interface MeasurementParams {
     protein?: NutritionType
     weight?: BodyWeightType
     bodyFat?: PercentType
-    bodyMassIndex?: BodyMassIndexType // Would this be calculated as needed?
     // Health
     temperature?: TemperatureType
     bloodPressure?: BloodPressureType
@@ -148,16 +152,12 @@ interface MeasurementParams {
     shoulders?: BodyMeasurementType
     chest?: BodyMeasurementType
     waist?: BodyMeasurementType
-    leftBicep?: BodyMeasurementType
-    rightBicep?: BodyMeasurementType
-    leftForearm?: BodyMeasurementType
-    rightForearm?: BodyMeasurementType
-    leftThigh?: BodyMeasurementType
-    rightThigh?: BodyMeasurementType
-    leftCalf?: BodyMeasurementType
-    rightCalf?: BodyMeasurementType
-    // TODO: Lab Work
-    // ...
+    biceps?: SidedBodyMeasurementType
+    forearms?: SidedBodyMeasurementType
+    thighs?: SidedBodyMeasurementType
+    calfs?: SidedBodyMeasurementType
+    // Lab Work
+    // TODO
 }
 
 /**
@@ -178,7 +178,6 @@ export default class Measurement {
     protein?: NutritionType
     weight?: BodyWeightType
     bodyFat?: PercentType
-    bodyMassIndex?: BodyMassIndexType // Would this be calculated as needed?
     // Health
     temperature?: TemperatureType
     bloodPressure?: BloodPressureType
@@ -189,42 +188,40 @@ export default class Measurement {
     shoulders?: BodyMeasurementType
     chest?: BodyMeasurementType
     waist?: BodyMeasurementType
-    leftBicep?: BodyMeasurementType
-    rightBicep?: BodyMeasurementType
-    leftForearm?: BodyMeasurementType
-    rightForearm?: BodyMeasurementType
-    leftThigh?: BodyMeasurementType
-    rightThigh?: BodyMeasurementType
-    leftCalf?: BodyMeasurementType
-    rightCalf?: BodyMeasurementType
+    biceps?: SidedBodyMeasurementType
+    forearms?: SidedBodyMeasurementType
+    thighs?: SidedBodyMeasurementType
+    calfs?: SidedBodyMeasurementType
+    // Lab Work
+    // TODO
 
     constructor(params: MeasurementParams) {
         this.id = params.id ?? createId(TableEnum.MEASUREMENTS)
         this.createdAt = params.createdAt ?? Date.now()
         this.note = params.note ?? ''
         this.field = params.field // Required, not defaulted
+        // Diet & Weight
         this.calories = params.calories ?? undefined
         this.carbs = params.carbs ?? undefined
         this.fat = params.fat ?? undefined
         this.protein = params.protein ?? undefined
         this.weight = params.weight ?? undefined
         this.bodyFat = params.bodyFat ?? undefined
-        this.bodyMassIndex = params.bodyMassIndex ?? undefined
+        // Health
         this.temperature = params.temperature ?? undefined
         this.bloodPressure = params.bloodPressure ?? undefined
         this.bloodOxygen = params.bloodOxygen ?? undefined
+        // Body
         this.height = params.height ?? undefined
         this.neck = params.neck ?? undefined
         this.shoulders = params.shoulders ?? undefined
         this.chest = params.chest ?? undefined
         this.waist = params.waist ?? undefined
-        this.leftBicep = params.leftBicep ?? undefined
-        this.rightBicep = params.rightBicep ?? undefined
-        this.leftForearm = params.leftForearm ?? undefined
-        this.rightForearm = params.rightForearm ?? undefined
-        this.leftThigh = params.leftThigh ?? undefined
-        this.rightThigh = params.rightThigh ?? undefined
-        this.leftCalf = params.leftCalf ?? undefined
-        this.rightCalf = params.rightCalf ?? undefined
+        this.biceps = params.biceps ?? undefined
+        this.forearms = params.forearms ?? undefined
+        this.thighs = params.thighs ?? undefined
+        this.calfs = params.calfs ?? undefined
+        // Lab Work
+        // TODO
     }
 }
