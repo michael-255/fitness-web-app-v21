@@ -1,4 +1,4 @@
-import type { SettingKeyType, SettingType } from '@/shared/types/setting'
+import type { SettingKeyType, SettingType } from '@/models/Setting'
 import { defineStore } from 'pinia'
 
 /**

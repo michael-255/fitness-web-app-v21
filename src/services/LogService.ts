@@ -1,7 +1,7 @@
+import { logSchema, type LogAutoIdType, type LogType } from '@/models/Log'
+import { SettingKeyEnum } from '@/models/Setting'
 import DB, { Database } from '@/services/db'
-import { DurationEnum, DurationMSEnum, SettingKeyEnum, TableEnum } from '@/shared/enums'
-import { logSchema } from '@/shared/schemas/log'
-import type { LogAutoIdType, LogType } from '@/shared/types/log'
+import { DurationEnum, DurationMSEnum, TableEnum } from '@/shared/enums'
 import { liveQuery, type Observable } from 'dexie'
 
 export default function LogService(db: Database = DB) {

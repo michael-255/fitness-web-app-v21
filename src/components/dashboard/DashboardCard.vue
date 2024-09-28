@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SettingKeyEnum } from '@/shared/enums'
+import { SettingKeyEnum } from '@/models/Setting'
 import {
     addEntryIcon,
     chartsIcon,
@@ -10,7 +10,7 @@ import {
     inspectIcon,
     verticalDotMenuIcon,
 } from '@/shared/icons'
-import type { TextAreaType, TextLineType, TimestampType } from '@/shared/types/shared'
+import type { TextAreaType, TextLineType, TimestampType } from '@/shared/types'
 import { compactDateFromMs, timeAgo } from '@/shared/utils'
 import useSettingsStore from '@/stores/settings'
 

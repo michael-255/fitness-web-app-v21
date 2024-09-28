@@ -1,14 +1,44 @@
 import { StatusEnum, TableEnum } from '@/shared/enums'
-import type {
-    IdType,
-    StatusType,
-    TextAreaType,
-    TextLineType,
-    TimestampType,
-} from '@/shared/types/shared'
-import type { ExerciseGroupType } from '@/shared/types/workout'
-import type { WorkoutResultType } from '@/shared/types/workout-result'
+import {
+    idSchema,
+    statusListSchema,
+    textAreaSchema,
+    textLineSchema,
+    timestampSchema,
+} from '@/shared/schemas'
+import type { IdType, StatusType, TextAreaType, TextLineType, TimestampType } from '@/shared/types'
 import { createId } from '@/shared/utils'
+import { z } from 'zod'
+import { workoutResultSchema, type WorkoutResultType } from './WorkoutResult'
+
+//
+// Schemas
+//
+
+export const exerciseGroupSchema = z.object({
+    exerciseIds: z.array(idSchema), // 2+ means it's a superset
+})
+
+export const workoutSchema = z.object({
+    id: idSchema,
+    createdAt: timestampSchema,
+    status: statusListSchema,
+    name: textLineSchema,
+    desc: textAreaSchema,
+    lastChild: workoutResultSchema.optional(),
+    warmupGroups: z.array(exerciseGroupSchema),
+    cooldownGroups: z.array(exerciseGroupSchema),
+    exerciseGroups: z.array(exerciseGroupSchema),
+    nextWorkoutIds: z.array(idSchema),
+})
+
+//
+// Types
+//
+
+export type ExerciseGroupType = z.infer<typeof exerciseGroupSchema>
+
+export type WorkoutType = z.infer<typeof workoutSchema>
 
 interface WorkoutParams {
     id?: IdType

@@ -14,7 +14,7 @@ import {
 import type { QTableColumn } from 'quasar'
 import { expect, it, vi } from 'vitest'
 import { DurationMSEnum, StatusEnum, TableEnum } from '../enums'
-import type { StatusType } from '../types/shared'
+import type { StatusType } from '../types'
 
 it('createId', () => {
     expect(() => createId('BAD' as TableEnum)).toThrow('Invalid Table: BAD')

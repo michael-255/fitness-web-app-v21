@@ -1,10 +1,9 @@
-import Log from '@/models/Log'
+import Log, { LogLevelEnum, type LogDetailsType } from '@/models/Log'
+import { SettingKeyEnum } from '@/models/Setting'
 import LogService from '@/services/LogService'
 import SettingService from '@/services/SettingService'
 import { appName } from '@/shared/constants'
-import { LogLevelEnum, SettingKeyEnum } from '@/shared/enums'
 import { debugIcon, errorIcon, infoIcon, warnIcon } from '@/shared/icons'
-import type { LogDetailsType } from '@/shared/types/log'
 import { colors, useQuasar } from 'quasar'
 
 export default function useLogger() {

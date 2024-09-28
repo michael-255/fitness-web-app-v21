@@ -1,8 +1,8 @@
 import { DurationMSEnum, TableEnum } from '@/shared/enums'
 import { date, uid, type QTableColumn } from 'quasar'
 import { computed } from 'vue'
-import { tableSchema } from './schemas/shared'
-import type { IdType, StatusType } from './types/shared'
+import { tableSchema } from './schemas'
+import type { IdType, StatusType } from './types'
 
 /**
  * Creates an Id with the table encoded in the prefix. Encoding this extra information helps with

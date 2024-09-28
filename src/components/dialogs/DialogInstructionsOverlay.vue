@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import Setting from '@/models/Setting'
+import Setting, { SettingKeyEnum } from '@/models/Setting'
 import SettingService from '@/services/SettingService'
 import { appDescription, appName } from '@/shared/constants'
-import { SettingKeyEnum } from '@/shared/enums'
 import {
     databaseIcon,
     donatePageIcon,

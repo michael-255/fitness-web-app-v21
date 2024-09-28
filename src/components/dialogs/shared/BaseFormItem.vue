@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { SettingKeyEnum } from '@/shared/enums'
+import { SettingKeyEnum } from '@/models/Setting'
 import useSettingsStore from '@/stores/settings'
 
 defineProps<{

@@ -34,72 +34,12 @@ export enum TableEnum {
 }
 
 /**
- * Valid keys for settings in the application.
- */
-export enum SettingKeyEnum {
-    ADVANCED_MODE = 'advanced-mode',
-    INSTRUCTIONS_OVERLAY = 'instructions-overlay',
-    CONSOLE_LOGS = 'console-logs',
-    INFO_MESSAGES = 'info-messages',
-    LOG_RETENTION_DURATION = 'log-retention-duration',
-}
-
-export enum LogLevelEnum {
-    DEBUG = 'DEBUG',
-    INFO = 'INFO',
-    WARN = 'WARN',
-    ERROR = 'ERROR',
-}
-
-/**
  * Status indicators used to modify how the app treats a record with it.
  */
 export enum StatusEnum {
     LOCKED = 'Locked', // Shared
     ENABLED = 'Enabled', // Parent
     FAVORITED = 'Favorited', // Parent
-}
-
-/**
- * Used to determine the type of inputs available for an exercise.
- */
-export enum ExerciseInputEnum {
-    CHECKLIST = 'Checklist', // Check boxes, all optional
-    CARDIO = 'Cardio Exercise', // Duration, Calories, RPE
-    WEIGHT = 'Weight Exercise', // Reps, Weight, RPE
-    SIDED_WEIGHT = 'Sided Weight Exercise', // Reps (R/L), Weight (R/L), RPE (R/L)
-    CLIMBING_SESSION = 'Climbing Session',
-}
-
-export enum MeasurementFieldEnum {
-    // Diet & Weight
-    CALORIES = 'Calories',
-    CARBOHYDRATES = 'Carbohydrates',
-    FAT = 'Fat',
-    PROTEIN = 'Protein',
-    WEIGHT = 'Weight',
-    BODY_FAT = 'Body Fat',
-    BODY_MASS_INDEX = 'Body Mass Index', // Based on if you have a Height measurement
-    // Health
-    TEMPERATURE = 'Temperature',
-    BLOOD_PRESSURE = 'Blood Pressure', // Systolic/Diastolic
-    BLOOD_OXYGEN = 'Blood Oxygen',
-    // Body
-    HEIGHT = 'Height', // Needed for BMI
-    NECK = 'Neck',
-    SHOULDERS = 'Shoulders',
-    CHEST = 'Chest',
-    WAIST = 'Waist',
-    LEFT_BICEP = 'Left Bicep',
-    RIGHT_BICEP = 'Right Bicep',
-    LEFT_FOREARM = 'Left Forearm',
-    RIGHT_FOREARM = 'Right Forearm',
-    LEFT_THIGH = 'Left Thigh',
-    RIGHT_THIGH = 'Right Thigh',
-    LEFT_CALF = 'Left Calf',
-    RIGHT_CALF = 'Right Calf',
-    // Lab Work
-    // ...
 }
 
 export enum LimitEnum {

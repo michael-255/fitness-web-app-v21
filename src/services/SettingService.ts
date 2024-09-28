@@ -1,8 +1,13 @@
-import Setting from '@/models/Setting'
+import Setting, {
+    SettingKeyEnum,
+    settingSchema,
+    type SettingKeyType,
+    type SettingType,
+    type SettingValueType,
+} from '@/models/Setting'
 import DB, { Database } from '@/services/db'
-import { DurationEnum, SettingKeyEnum, TableEnum } from '@/shared/enums'
-import { settingSchema } from '@/shared/schemas/setting'
-import type { SettingKeyType, SettingType, SettingValueType } from '@/shared/types/setting'
+import { DurationEnum, TableEnum } from '@/shared/enums'
+
 import { liveQuery, type Observable } from 'dexie'
 
 export default function SettingService(db: Database = DB) {

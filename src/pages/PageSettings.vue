@@ -4,10 +4,11 @@ import PageHeading from '@/components/shared/PageHeading.vue'
 import ResponsivePage from '@/components/shared/ResponsivePage.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
+import { SettingKeyEnum } from '@/models/Setting'
 import DB from '@/services/db'
 import SettingService from '@/services/SettingService'
 import { appDatabaseVersion, appName } from '@/shared/constants'
-import { DurationEnum, LimitEnum, RouteNameEnum, SettingKeyEnum, TableEnum } from '@/shared/enums'
+import { DurationEnum, LimitEnum, RouteNameEnum, TableEnum } from '@/shared/enums'
 import {
     createIcon,
     databaseIcon,
@@ -24,7 +25,7 @@ import {
     settingsTableIcon,
     warnIcon,
 } from '@/shared/icons'
-import type { BackupType } from '@/shared/types/shared'
+import type { BackupType } from '@/shared/types'
 import useSettingsStore from '@/stores/settings'
 import { exportFile, useMeta, useQuasar } from 'quasar'
 import { ref, type Ref } from 'vue'

@@ -8,8 +8,6 @@ your workouts, exercises, and overall fitness journey.
 
 -   Get the DB services for `Workouts`, `Exercises`, and `Measurements` working
 -   Flesh out `Schemas`
-    -   Move `Schemas` and `Types` for models to the model files?
-    -   TS `namespace`?
 
 ## Post Cloning Steps
 

@@ -1,9 +1,9 @@
-import type { ExerciseType } from '@/shared/types/exercise'
-import type { ExerciseResultType } from '@/shared/types/exercise-result'
-import type { LogType } from '@/shared/types/log'
-import type { MeasurementType } from '@/shared/types/measurement'
-import type { WorkoutType } from '@/shared/types/workout'
-import type { WorkoutResultType } from '@/shared/types/workout-result'
+import type { ExerciseType } from '@/models/Exercise'
+import type { ExerciseResultType } from '@/models/ExerciseResult'
+import type { LogType } from '@/models/Log'
+import type { MeasurementType } from '@/models/Measurements'
+import type { WorkoutType } from '@/models/Workout'
+import type { WorkoutResultType } from '@/models/WorkoutResult'
 import { defineStore } from 'pinia'
 
 /**

@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import useLogger from '@/composables/useLogger'
+import { LogLevelEnum, type LogType } from '@/models/Log'
 import LogService from '@/services/LogService'
-import { LogLevelEnum } from '@/shared/enums'
 import { closeIcon, createIcon } from '@/shared/icons'
-import type { LogType } from '@/shared/types/log'
 import { compactDateFromMs } from '@/shared/utils'
 import {
     Chart as ChartJS,
