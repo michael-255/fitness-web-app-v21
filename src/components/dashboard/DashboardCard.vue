@@ -69,7 +69,7 @@ const settingsStore = useSettingsStore()
             <q-item-section top side>
                 <div class="row">
                     <q-btn
-                        :disable="isLoading"
+                        :disable="isLoading || hasLockedStatus"
                         class="favorite-btn-translation"
                         flat
                         dense
