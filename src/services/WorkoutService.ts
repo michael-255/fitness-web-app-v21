@@ -7,18 +7,29 @@ import { liveQuery, type Observable } from 'dexie'
 
 export default function WorkoutService(db: Database = DB) {
     /**
-     * Returns Workouts live query with records that are not enabled filtered out and the remaining
-     * sorted alphabetically by name with favorited records given priority.
+     * Returns Workouts live query with records that are not deactivated with the remaining sorted
+     * with locked records first, then favorited records, then alphabetically by name, and finally
+     * by createdAt reversed.
      */
     function liveDashboardObservable(): Observable<WorkoutType[]> {
         return liveQuery(() =>
             db
                 .table(TableEnum.WORKOUTS)
                 .orderBy('name')
-                .filter((record) => record.status.includes(StatusEnum.ENABLED))
+                .filter((record) => !record.status.includes(StatusEnum.DEACTIVATED))
                 .toArray()
                 .then((records) =>
                     records.sort((a, b) => {
+                        const aIsLocked = a.status.includes(StatusEnum.LOCKED)
+                        const bIsLocked = b.status.includes(StatusEnum.LOCKED)
+
+                        if (aIsLocked && !bIsLocked) {
+                            return -1 // a comes first
+                        }
+                        if (!aIsLocked && bIsLocked) {
+                            return 1 // b comes first
+                        }
+
                         const aIsFavorited = a.status.includes(StatusEnum.FAVORITED)
                         const bIsFavorited = b.status.includes(StatusEnum.FAVORITED)
 
@@ -188,7 +199,7 @@ export default function WorkoutService(db: Database = DB) {
             .table(TableEnum.WORKOUTS)
             .orderBy('name')
             .filter((record) => !record.status.includes(StatusEnum.LOCKED))
-            .filter((record) => record.status.includes(StatusEnum.ENABLED))
+            .filter((record) => !record.status.includes(StatusEnum.DEACTIVATED))
             .toArray()
 
         return records.map((record) => ({

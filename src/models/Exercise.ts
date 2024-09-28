@@ -1,4 +1,4 @@
-import { LimitEnum, StatusEnum, TableEnum } from '@/shared/enums'
+import { LimitEnum, TableEnum } from '@/shared/enums'
 import {
     idSchema,
     statusListSchema,
@@ -121,7 +121,7 @@ export default class Exercise {
     constructor(params: ExerciseParams) {
         this.id = params.id ?? createId(TableEnum.EXERCISES)
         this.createdAt = params.createdAt ?? Date.now()
-        this.status = params.status ?? [StatusEnum.ENABLED]
+        this.status = params.status ?? []
         this.name = params.name ?? 'My Exercise'
         this.desc = params.desc ?? ''
         this.lastChild = params.lastChild ?? undefined
