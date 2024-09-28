@@ -50,12 +50,19 @@ export enum LimitEnum {
     MAX_TEXT_LINE = 50,
     MIN_SETS = 1,
     MAX_SETS = 30,
-    MIN_SET_WEIGHT = 0,
-    MAX_SET_WEIGHT = 9_999,
-    MIN_SET_REPS = 0,
-    MAX_SET_REPS = 9_999,
-    MIN_SET_RPE = 0,
-    MAX_SET_RPE = 10,
+    MAX_WEIGHT = 9_999,
+    MAX_REPS = 9_999,
+    MAX_RPE = 10,
+    MIN_REST_TIMER = 15, // 15 seconds
+    MAX_REST_TIMER = 900, // 15 minutes
+    MAX_DURATION_SEC = 359_999, // 99 hours 59 minutes 59 seconds
+    MAX_CALORIES_BURNED = 9_999,
+    MAX_CALORIES = 99_999,
+    MAX_NUTRITION = 9_999,
+    MAX_BODY_WEIGHT = 9_999,
+    MIN_TEMPERATURE = 60,
+    MAX_TEMPERATURE = 115,
+    MAX_BODY_MEASUREMENT = 999,
 }
 
 export enum DurationEnum {

@@ -14,18 +14,7 @@ import { z } from 'zod'
 // Schemas
 //
 
-export const setWeightSchema = z
-    .number()
-    .min(LimitEnum.MIN_SET_WEIGHT)
-    .max(LimitEnum.MAX_SET_WEIGHT)
-
-export const setRepsSchema = z
-    .number()
-    .int()
-    .min(LimitEnum.MIN_SET_REPS)
-    .max(LimitEnum.MAX_SET_REPS)
-
-export const setRpeSchema = z.number().int().min(LimitEnum.MIN_SET_RPE).max(LimitEnum.MAX_SET_RPE)
+export const setRpeSchema = z.number().int().min(0).max(LimitEnum.MAX_RPE)
 
 export const checklistSetSchema = z.object({
     label: textLineSchema,
@@ -33,14 +22,14 @@ export const checklistSetSchema = z.object({
 })
 
 export const cardioSetSchema = z.object({
-    duration: z.number().int(), // TODO
-    calories: z.number().int(), // TODO
+    durationSeconds: z.number().int().min(0).max(LimitEnum.MAX_DURATION_SEC),
+    caloriesBurned: z.number().int().min(0).max(LimitEnum.MAX_CALORIES_BURNED),
     rpe: setRpeSchema,
 })
 
 export const weightSetSchema = z.object({
-    weight: setWeightSchema,
-    reps: setRepsSchema,
+    weight: z.number().min(0).max(LimitEnum.MAX_WEIGHT), // Can be decimal
+    reps: z.number().int().min(0).max(LimitEnum.MAX_REPS),
     rpe: setRpeSchema,
 })
 
@@ -74,10 +63,6 @@ export const exerciseResultSchema = z.object({
 //
 // Types
 //
-
-export type SetWeightType = z.infer<typeof setWeightSchema>
-
-export type SetRepsType = z.infer<typeof setRepsSchema>
 
 export type ChecklistSetType = z.infer<typeof checklistSetSchema>
 

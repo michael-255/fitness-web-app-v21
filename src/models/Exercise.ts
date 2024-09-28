@@ -38,8 +38,16 @@ export const initialSetCountSchema = z
     .min(LimitEnum.MIN_SETS)
     .max(LimitEnum.MAX_SETS)
 
+/**
+ * Rest timer minimum is 15 seconds and maximum is 15 minutes.
+ * Timer should be incremented by 15 seconds.
+ */
 export const restTimerSchema = z.object({
-    defaultDuration: z.number().int(), // TODO
+    defaultDurationSeconds: z
+        .number()
+        .int()
+        .min(LimitEnum.MIN_REST_TIMER)
+        .max(LimitEnum.MAX_REST_TIMER),
 })
 
 export const tabataTimerSchema = z.object({

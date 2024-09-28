@@ -1,4 +1,4 @@
-import { TableEnum } from '@/shared/enums'
+import { LimitEnum, TableEnum } from '@/shared/enums'
 import { idSchema, textAreaSchema, timestampSchema } from '@/shared/schemas'
 import type { IdType, TextAreaType, TimestampType } from '@/shared/types'
 import { createId } from '@/shared/utils'
@@ -45,21 +45,32 @@ export enum MeasurementFieldEnum {
 
 export const measurementFieldSchema = z.nativeEnum(MeasurementFieldEnum)
 
-export const caloriesSchema = z.any() // TODO
+export const caloriesSchema = z.number().int().min(0).max(LimitEnum.MAX_CALORIES)
 
-export const nutritionSchema = z.any() // TODO
+export const nutritionSchema = z.number().int().min(0).max(LimitEnum.MAX_NUTRITION)
 
-export const bodyWeightSchema = z.any() // TODO
+export const bodyWeightSchema = z.number().positive().max(LimitEnum.MAX_BODY_WEIGHT)
 
-export const percentSchema = z.any() // TODO
+export const percentSchema = z.number().min(0).max(100)
 
-export const bodyMassIndexSchema = z.any() // TODO
+export const bodyMassIndexSchema = z.number().positive()
 
-export const temperatureSchema = z.any() // TODO
+export const temperatureSchema = z
+    .number()
+    .min(LimitEnum.MIN_TEMPERATURE)
+    .max(LimitEnum.MAX_TEMPERATURE)
 
-export const bloodPressureSchema = z.any() // TODO
+export const bloodPressureSchema = z.object({
+    systolic: z.number().int().min(0), // TODO
+    diastolic: z.number().int().min(0), // TODO
+})
 
-export const bodyMeasurementSchema = z.any() // TODO
+export const bodyMeasurementSchema = z.number().min(0).max(LimitEnum.MAX_BODY_MEASUREMENT)
+
+export const sidedBodyMeasurementSchema = z.object({
+    left: bodyMeasurementSchema,
+    right: bodyMeasurementSchema,
+})
 
 export const measurementSchema = z.object({
     id: idSchema,
@@ -84,14 +95,10 @@ export const measurementSchema = z.object({
     shoulders: bodyMeasurementSchema.optional(),
     chest: bodyMeasurementSchema.optional(),
     waist: bodyMeasurementSchema.optional(),
-    leftBicep: bodyMeasurementSchema.optional(), // TODO: Combine to { left, right }?
-    rightBicep: bodyMeasurementSchema.optional(),
-    leftForearm: bodyMeasurementSchema.optional(),
-    rightForearm: bodyMeasurementSchema.optional(),
-    leftThigh: bodyMeasurementSchema.optional(),
-    rightThigh: bodyMeasurementSchema.optional(),
-    leftCalf: bodyMeasurementSchema.optional(),
-    rightCalf: bodyMeasurementSchema.optional(),
+    biceps: sidedBodyMeasurementSchema.optional(),
+    forearms: sidedBodyMeasurementSchema.optional(),
+    thighs: sidedBodyMeasurementSchema.optional(),
+    calfs: sidedBodyMeasurementSchema.optional(),
 })
 
 //
