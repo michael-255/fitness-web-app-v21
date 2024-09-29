@@ -6,7 +6,9 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   `WIP` Determine next steps...
+-   Workouts Dashboard
+-   Exercises Dashboard
+-   Settings page test function to create mock records for you
 
 ## Post Cloning Steps
 

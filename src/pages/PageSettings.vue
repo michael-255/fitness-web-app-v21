@@ -6,7 +6,12 @@ import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import { SettingKeyEnum } from '@/models/Setting'
 import DB from '@/services/db'
+import ExerciseResultService from '@/services/ExerciseResultService'
+import ExerciseService from '@/services/ExerciseService'
+import MeasurementService from '@/services/MeasurementService'
 import SettingService from '@/services/SettingService'
+import WorkoutResultService from '@/services/WorkoutResultService'
+import WorkoutService from '@/services/WorkoutService'
 import { appDatabaseVersion, appName } from '@/shared/constants'
 import { DurationEnum, LimitEnum, RouteNameEnum, TableEnum } from '@/shared/enums'
 import {
@@ -39,6 +44,11 @@ const { log } = useLogger()
 const { onConfirmDialog, onStrictConfirmDialog } = useDialogs()
 const settingsStore = useSettingsStore()
 const settingService = SettingService()
+const workoutService = WorkoutService()
+const exerciseService = ExerciseService()
+const workoutResultService = WorkoutResultService()
+const exerciseResultService = ExerciseResultService()
+const measurementService = MeasurementService()
 
 const isDevMode = import.meta.env.DEV
 
@@ -82,29 +92,56 @@ function onImportBackup() {
 
                 // NOTE: Logs are ignored during import
                 const settingsImport = await settingService.importData(backup?.settings ?? [])
-                // TODO: Other table imports here...
+                const measurementsImport = await measurementService.importData(
+                    backup?.measurements ?? [],
+                )
+                const workoutsImport = await workoutService.importData(backup?.workouts ?? [])
+                const exercisesImport = await exerciseService.importData(backup?.exercises ?? [])
+                const workoutResultsImport = await workoutResultService.importData(
+                    backup?.workoutResults ?? [],
+                )
+                const exerciseResultsImport = await exerciseResultService.importData(
+                    backup?.exerciseResults ?? [],
+                )
 
                 // Check for invalid records
                 const hasInvalidRecords = [
                     settingsImport.invalidRecords,
-                    // other tables here...
+                    measurementsImport.invalidRecords,
+                    workoutsImport.invalidRecords,
+                    exercisesImport.invalidRecords,
+                    workoutResultsImport.invalidRecords,
+                    exerciseResultsImport.invalidRecords,
                 ].some((record) => Array.isArray(record) && record.length > 0)
 
                 if (hasInvalidRecords) {
                     log.warn('Import skipping invalid records', {
                         invalidSettings: settingsImport.invalidRecords,
-                        // other tables here...
+                        invalidMeasurements: measurementsImport.invalidRecords,
+                        invalidWorkouts: workoutsImport.invalidRecords,
+                        invalidExercises: exercisesImport.invalidRecords,
+                        invalidWorkoutResults: workoutResultsImport.invalidRecords,
+                        invalidExerciseResults: exerciseResultsImport.invalidRecords,
                     })
                 }
 
                 // Check for bulk import errors
+                // NOTE: Settings don't have bulk error
                 const hasBulkErrors = [
-                    // other tables here...
+                    measurementsImport.bulkError,
+                    workoutsImport.bulkError,
+                    exercisesImport.bulkError,
+                    workoutResultsImport.bulkError,
+                    exerciseResultsImport.bulkError,
                 ].some((error) => error)
 
                 if (hasBulkErrors) {
                     log.warn('Import skipping existing records', {
-                        // other tables here...
+                        blukErrorMeasurements: measurementsImport.bulkError,
+                        bulkErrorWorkouts: workoutsImport.bulkError,
+                        bulkErrorExercises: exercisesImport.bulkError,
+                        bulkErrorWorkoutResults: workoutResultsImport.bulkError,
+                        bulkErrorExerciseResults: exerciseResultsImport.bulkError,
                     })
                 }
 
@@ -114,7 +151,11 @@ function onImportBackup() {
                     databaseVersion: backup.databaseVersion,
                     logsDiscarded: backup?.logs?.length ?? 0, // Logs are ignored during import
                     settingsImported: settingsImport.importedCount,
-                    // other tables here...
+                    measurementsImported: measurementsImport.importedCount,
+                    workoutsImported: workoutsImport.importedCount,
+                    exercisesImported: exercisesImport.importedCount,
+                    workoutResultsImported: workoutResultsImport.importedCount,
+                    exerciseResultsImported: exerciseResultsImport.importedCount,
                 })
 
                 importFile.value = null // Clear input
@@ -144,13 +185,18 @@ function onExportBackup() {
             try {
                 $q.loading.show()
 
+                // NOTE: Some tables have a custom export method
                 const backup: BackupType = {
                     appName: appName,
                     databaseVersion: appDatabaseVersion,
                     createdAt: Date.now(),
                     settings: await DB.table(TableEnum.SETTINGS).toArray(),
                     logs: await DB.table(TableEnum.LOGS).toArray(),
-                    // TODO: other tables here...
+                    measurements: await DB.table(TableEnum.MEASUREMENTS).toArray(),
+                    workouts: await workoutService.exportData(),
+                    exercises: await exerciseService.exportData(),
+                    workoutResults: await DB.table(TableEnum.WORKOUT_RESULTS).toArray(),
+                    exerciseResults: await DB.table(TableEnum.EXERCISE_RESULTS).toArray(),
                 } as BackupType
 
                 log.silentDebug('backup:', backup)
