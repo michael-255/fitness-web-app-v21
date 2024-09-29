@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import useLogger from '@/composables/useLogger'
 import useRouting from '@/composables/useRouting'
+import { StatusEnum } from '@/shared/enums'
 import {
     addIcon,
     chartsIcon,
@@ -11,6 +12,7 @@ import {
     inspectIcon,
     searchIcon,
 } from '@/shared/icons'
+import type { StatusType } from '@/shared/types'
 import {
     columnOptionsFromTableColumns,
     recordsCount,
@@ -66,6 +68,10 @@ const supportsActions = computed(() => {
         props.supportsCharts || props.supportsInspect || props.supportsEdit || props.supportsDelete
     )
 })
+
+function isRowLocked(row: { status?: StatusType[] }) {
+    return row?.status?.includes(StatusEnum.LOCKED) || false
+}
 </script>
 
 <template>
@@ -121,21 +127,23 @@ const supportsActions = computed(() => {
                     />
                     <q-btn
                         v-if="supportsEdit"
+                        :disable="isRowLocked(props.row)"
                         flat
                         round
                         dense
                         class="q-ml-xs"
-                        color="amber"
+                        :color="isRowLocked(props.row) ? 'grey' : 'amber'"
                         :icon="editIcon"
                         @click="emit('onEdit', props.cols[0].value)"
                     />
                     <q-btn
                         v-if="supportsDelete"
+                        :disable="isRowLocked(props.row)"
                         flat
                         round
                         dense
                         class="q-ml-xs"
-                        color="negative"
+                        :color="isRowLocked(props.row) ? 'grey' : 'negative'"
                         :icon="deleteIcon"
                         @click="emit('onDelete', props.cols[0].value)"
                     />

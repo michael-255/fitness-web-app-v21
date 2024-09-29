@@ -56,16 +56,10 @@ export default function WorkoutService(db: Database = DB) {
     }
 
     /**
-     * Returns Workouts live query ordered by name with locked records filtered out.
+     * Returns Workouts live query ordered by name.
      */
     function liveObservable(): Observable<WorkoutType[]> {
-        return liveQuery(() =>
-            db
-                .table(TableEnum.WORKOUTS)
-                .orderBy('name')
-                .filter((record) => !record.status.includes(StatusEnum.LOCKED))
-                .toArray(),
-        )
+        return liveQuery(() => db.table(TableEnum.WORKOUTS).orderBy('name').toArray())
     }
 
     /**
@@ -168,7 +162,7 @@ export default function WorkoutService(db: Database = DB) {
      * From Parent:
      *
      * Updates the `lastChild` property of the Workout associated with the `workoutId` with the
-     * most recently created child record.
+     * most recently created child record. Locked records are not updated.
      */
     async function updateLastChild(workoutId: IdType) {
         const lastChild = (
