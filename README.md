@@ -7,7 +7,6 @@ your workouts, exercises, and overall fitness journey.
 ## TODO
 
 -   Work on Database `Services` for `Workouts`, `Exercises`, and `Measurements`
-    -   `Workout Results`
     -   `Exercises`
     -   `Exercise Results`
     -   `Measurements`

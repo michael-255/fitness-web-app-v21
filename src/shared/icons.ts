@@ -1,4 +1,4 @@
-import { matFilterAlt, matStar, matStarBorder } from '@quasar/extras/material-icons'
+import { matFilterAlt, matLock, matStar, matStarBorder } from '@quasar/extras/material-icons'
 import {
     symRoundedAdd,
     symRoundedAddCircle,
@@ -108,3 +108,4 @@ export const scheduleTimeIcon = symRoundedSchedule
 export const recommendIcon = symRoundedRecommend
 export const notSupported = symRoundedProblem
 export const hourGlassIcon = symRoundedHourglass
+export const lockIcon = matLock
