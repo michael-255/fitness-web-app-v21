@@ -192,26 +192,25 @@ export default function WorkoutService(db: Database = DB) {
     }
 
     /**
-     * Generates an options list of Workouts for select box components on the FE. Filters out
-     * locked and deactivated records and truncates the ID to save space.
+     * Generates an options list of Workouts for select box components on the FE.
      */
     async function getSelectOptions(): Promise<SelectOption[]> {
-        const records = await db
-            .table(TableEnum.WORKOUTS)
-            .orderBy('name')
-            .filter((record) => !record.status.includes(StatusEnum.LOCKED))
-            .filter((record) => !record.status.includes(StatusEnum.DEACTIVATED))
-            .toArray()
+        const records = await db.table(TableEnum.WORKOUTS).orderBy('name').toArray()
 
         return records.map((record) => {
-            const recordName = record.name
-            const recordId = truncateText(record.id, 8, '*')
-            const recordFavorite = record.status.includes(StatusEnum.FAVORITED) ? '⭐' : ''
+            const name = record.name
+            const id = truncateText(record.id, 8, '*')
+            const favorite = record.status.includes(StatusEnum.FAVORITED) ? '⭐' : ''
+            const locked = record.status.includes(StatusEnum.LOCKED) ? '🔒' : ''
+            const deactiviated = record.status.includes(StatusEnum.DEACTIVATED) ? '🚫' : ''
+            const disable =
+                record.status.includes(StatusEnum.LOCKED) ||
+                record.status.includes(StatusEnum.DEACTIVATED)
 
             return {
                 value: record.id as IdType,
-                label: `${recordName} (${recordId}) ${recordFavorite}`,
-                disable: false, // Already filtered out disabled records
+                label: `${name} (${id}) ${locked}${deactiviated}${favorite}`,
+                disable,
             }
         })
     }

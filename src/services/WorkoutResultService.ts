@@ -149,25 +149,25 @@ export default function WorkoutResultService(db: Database = DB) {
     }
 
     /**
-     * Generates an options list of Workout Results for select box components on the FE. Filters out
-     * locked records and truncates the ID to save space.
+     * Generates an options list of Workout Results for select box components on the FE.
      */
     async function getSelectOptions(): Promise<SelectOption[]> {
         const records = await db
             .table(TableEnum.WORKOUT_RESULTS)
             .orderBy('createdAt')
-            .filter((record) => !record.status.includes(StatusEnum.LOCKED))
             .reverse()
             .toArray()
 
         return records.map((record) => {
-            const recordId = truncateText(record.id, 8, '*')
-            const recordWorkoutId = truncateText(record.workoutId, 8, '*')
+            const id = truncateText(record.id, 8, '*')
+            const workoutId = truncateText(record.workoutId, 8, '*')
+            const locked = record.status.includes(StatusEnum.LOCKED) ? '🔒' : ''
+            const disable = record.status.includes(StatusEnum.LOCKED)
 
             return {
                 value: record.id as IdType,
-                label: `${recordId} (${recordWorkoutId})`,
-                disable: false, // Already filtered out disabled records
+                label: `${id} (${workoutId}) ${locked}`,
+                disable,
             }
         })
     }
