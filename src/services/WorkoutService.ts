@@ -198,7 +198,7 @@ export default function WorkoutService(db: Database = DB) {
     }
 
     /**
-     * Generates an options list of Examples for select box components on the FE. Filters out
+     * Generates an options list of Workouts for select box components on the FE. Filters out
      * locked and deactivated records and truncates the ID to save space.
      */
     async function getSelectOptions(): Promise<SelectOption[]> {
