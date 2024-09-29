@@ -17,6 +17,7 @@ export default function WorkoutResultService(db: Database = DB) {
 
     /**
      * Returns chart datasets for the Workout Results associated with a parent Workout.
+     * TODO: Implement for charts.
      */
     async function getChartDatasets(workoutId: IdType) {
         console.log('getChartDatasets', workoutId)

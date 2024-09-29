@@ -6,10 +6,7 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   Work on Database `Services` for `Workouts`, `Exercises`, and `Measurements`
-    -   `Exercises`
-    -   `Exercise Results`
-    -   `Measurements`
+-   `WIP` Determine next steps...
 
 ## Post Cloning Steps
 
