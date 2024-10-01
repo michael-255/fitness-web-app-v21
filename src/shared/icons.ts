@@ -61,7 +61,7 @@ export const errorIcon = symRoundedError
 // Pages (Views)
 export const donatePageIcon = symRoundedRedeem
 export const settingsPageIcon = symRoundedSettings
-export const examplesPageIcon = symRoundedSmartToy
+export const examplesPageIcon = symRoundedSmartToy // TODO: remove
 export const workoutsPageIcon = symRoundedAssignment
 export const exercisesPageIcon = symRoundedFitnessCenter
 export const measurementsPageIcon = symRoundedStraighten
