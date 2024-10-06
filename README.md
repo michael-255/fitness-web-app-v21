@@ -6,9 +6,7 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   Settings page `test` function to create mock records for you
 -   Workouts Dashboard
-    -   Think about the components needed for the workouts dashboard
     -   Work on CRUD dialogs?
         -   `Inspect` first
 -   Exercises Dashboard

@@ -4,7 +4,9 @@ import PageHeading from '@/components/shared/PageHeading.vue'
 import ResponsivePage from '@/components/shared/ResponsivePage.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
+import Exercise, { ExerciseInputEnum } from '@/models/Exercise'
 import { SettingKeyEnum } from '@/models/Setting'
+import Workout from '@/models/Workout'
 import DB from '@/services/db'
 import ExerciseResultService from '@/services/ExerciseResultService'
 import ExerciseService from '@/services/ExerciseService'
@@ -300,41 +302,22 @@ function onDeleteDatabase() {
  * Allows for the creation of test data when the app is in local DEV mode.
  */
 async function createTestData() {
-    // TODO
-    // // Example
-    // const example = new Example({
-    //     name: `Generated: ${compactDateFromMs(Date.now())}`,
-    //     desc: 'This is an Example description. These descriptions can be quite long and detailed at 250 characters. Here is my attempt fill this space with text that makes sense. I want to see what this looks like when you are at the limit. This is enough.',
-    // })
-    // // Example Results
-    // const exampleResults = []
-    // const numberOfDays = 600
-    // const currentDate = Date.now()
-    // // First record
-    // const recentExampleResult = new ExampleResult({
-    //     parentId: example.id,
-    //     createdAt: currentDate,
-    //     note: 'This is the Example Result note. MOST RECENT!',
-    //     mockData: 0,
-    // })
-    // example.lastChild = recentExampleResult
-    // exampleResults.push(recentExampleResult)
-    // for (let i = 1; i < numberOfDays; i++) {
-    //     exampleResults.push(
-    //         new ExampleResult({
-    //             parentId: example.id,
-    //             createdAt: currentDate - i * DurationMSEnum['One Day'],
-    //             note: `This is the Example Result note: Index ${i}`,
-    //             mockData: Math.floor(Math.random() * (i / 2)) + i / 2,
-    //         }),
-    //     )
-    // }
-    // await exampleService.add(example)
-    // await exampleResultService.importData(exampleResults)
-    // log.debug('Test Example added with debug', example)
-    // log.warn('Test Example added with warn', example)
-    // log.info('Test Example added with info', example)
-    // log.error('Test Example added with error', example)
+    // This will need to be expanded later for more complex test data
+    const exercise = new Exercise({
+        name: 'Exercise: ' + new Date().toISOString(),
+        desc: 'This is just a test exercise.',
+        inputs: ExerciseInputEnum.CHECKLIST,
+    })
+    const workout = new Workout({
+        name: 'Workout: ' + new Date().toISOString(),
+        desc: 'This is just a test workout.',
+        exerciseGroups: [{ exerciseIds: [exercise.id] }],
+    })
+
+    await exerciseService.add(exercise)
+    await workoutService.add(workout)
+
+    log.info('Test data added', { exercise, workout })
 }
 </script>
 
