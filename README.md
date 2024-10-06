@@ -12,6 +12,7 @@ your workouts, exercises, and overall fitness journey.
     -   Work on CRUD dialogs?
         -   `Inspect` first
 -   Exercises Dashboard
+-   See how to get `newlines` to work in notes and descriptions
 
 ## Post Cloning Steps
 
