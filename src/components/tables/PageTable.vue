@@ -72,6 +72,10 @@ const supportsActions = computed(() => {
 function isRowLocked(row: { status?: StatusType[] }) {
     return row?.status?.includes(StatusEnum.LOCKED) || false
 }
+
+function hasNoChildData(row: { lastChild?: any }) {
+    return !row?.lastChild
+}
 </script>
 
 <template>
@@ -107,11 +111,12 @@ function isRowLocked(row: { status?: StatusType[] }) {
                 <q-td v-if="supportsActions" auto-width>
                     <q-btn
                         v-if="supportsCharts"
+                        :disable="hasNoChildData(props.row)"
                         flat
                         round
                         dense
                         class="q-ml-xs"
-                        color="cyan"
+                        :color="hasNoChildData(props.row) ? 'grey' : 'cyan'"
                         :icon="chartsIcon"
                         @click="emit('onCharts', props.cols[0].value)"
                     />

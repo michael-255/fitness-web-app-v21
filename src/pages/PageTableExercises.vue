@@ -1,18 +1,55 @@
 <script setup lang="ts">
-import PageFabMenu from '@/components/shared/PageFabMenu.vue'
-import PageHeading from '@/components/shared/PageHeading.vue'
-import ResponsivePage from '@/components/shared/ResponsivePage.vue'
+import PageTable from '@/components/tables/PageTable.vue'
+import useExerciseDialogs from '@/composables/useExerciseDialogs'
+import ExerciseService from '@/services/ExerciseService'
 import { appName } from '@/shared/constants'
-import { warnIcon } from '@/shared/icons'
+import { databaseIcon } from '@/shared/icons'
+import { hiddenTableColumn, tableColumn } from '@/shared/utils'
 import { useMeta } from 'quasar'
 
-useMeta({ title: `${appName} - INDEV` })
+useMeta({ title: `${appName} - Exercises Data Table` })
+
+const {
+    chartExerciseDialog,
+    inspectExerciseDialog,
+    createExerciseDialog,
+    editExerciseDialog,
+    deleteExerciseDialog,
+} = useExerciseDialogs()
+const exerciseService = ExerciseService()
+
+const tableColumns = [
+    hiddenTableColumn('id'),
+    tableColumn('id', 'Id', 'UUID'),
+    tableColumn('createdAt', 'Created Date', 'DATE'),
+    tableColumn('name', 'Name', 'TEXT'),
+    tableColumn('desc', 'Description', 'TEXT'),
+    tableColumn('status', 'Status', 'LIST-PRINT'),
+    tableColumn('lastChild', 'Last Exercise Result', 'JSON'),
+    tableColumn('inputs', 'Exercise Inputs'),
+    tableColumn('initialSetCount', 'Initial Set Count'),
+    tableColumn('restTimer', 'Rest Timer Settings', 'JSON'),
+    tableColumn('tabataTimer', 'Tabata Timer Settings', 'JSON'),
+]
 </script>
 
 <template>
-    <ResponsivePage>
-        <PageFabMenu />
-        <PageHeading :headingIcon="warnIcon" headingTitle="INDEV" />
-        <div class="q-mt-md q-ml-md text-h5">In Development</div>
-    </ResponsivePage>
+    <PageTable
+        labelSingular="Exercise"
+        labelPlural="Exercises"
+        :icon="databaseIcon"
+        :tableColumns="tableColumns"
+        :supportsColumnFilters="true"
+        :supportsCharts="true"
+        :supportsInspect="true"
+        :supportsCreate="true"
+        :supportsEdit="true"
+        :supportsDelete="true"
+        :dataObservable="exerciseService.liveObservable()"
+        @onCharts="chartExerciseDialog"
+        @onInspect="inspectExerciseDialog"
+        @onCreate="createExerciseDialog"
+        @onEdit="editExerciseDialog"
+        @onDelete="deleteExerciseDialog"
+    />
 </template>

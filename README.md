@@ -6,9 +6,6 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   `Table Pages`
-    -   `Workouts`
-    -   `Exercises`
 -   `Workouts`
     -   `Create`
     -   `Edit`
