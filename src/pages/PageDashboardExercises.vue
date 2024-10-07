@@ -4,6 +4,8 @@ import DashboardEmptyMessage from '@/components/dashboard/DashboardEmptyMessage.
 import PageFabMenu from '@/components/shared/PageFabMenu.vue'
 import PageHeading from '@/components/shared/PageHeading.vue'
 import ResponsivePage from '@/components/shared/ResponsivePage.vue'
+import useExerciseDialogs from '@/composables/useExerciseDialogs'
+import useExerciseResultDialogs from '@/composables/useExerciseResultDialogs'
 import useLogger from '@/composables/useLogger'
 import type { ExerciseType } from '@/models/Exercise'
 import ExerciseService from '@/services/ExerciseService'
@@ -19,6 +21,15 @@ useMeta({ title: `${appName} - Exercises Dashboard` })
 const $q = useQuasar()
 const router = useRouter()
 const { log } = useLogger()
+const {
+    toggleFavoriteExerciseDialog,
+    chartExerciseDialog,
+    inspectExerciseDialog,
+    createExerciseDialog,
+    editExerciseDialog,
+    deleteExerciseDialog,
+} = useExerciseDialogs()
+const { createExerciseResultDialog } = useExerciseResultDialogs()
 const exerciseService = ExerciseService()
 
 const subscriptionFinished = ref(false)
@@ -60,7 +71,7 @@ onUnmounted(() => {
                     label: 'Create Exercise',
                     color: 'positive',
                     icon: addIcon,
-                    handleClick: () => log.debug(`handleClick: createWorkoutDialog`),
+                    handleClick: createExerciseDialog,
                 },
             ]"
         />
@@ -77,7 +88,7 @@ onUnmounted(() => {
                 ]"
                 buttonLabel="Create Exercise"
                 buttonColor="positive"
-                @onEmptyAction="log.debug(`onEmptyAction='createWorkoutDialog'`)"
+                @onEmptyAction="createExerciseDialog"
             />
 
             <q-item v-for="exercise in liveExercises" :key="exercise.id">
@@ -95,16 +106,12 @@ onUnmounted(() => {
                         :supportsInspect="true"
                         :supportsEdit="true"
                         :supportsDelete="true"
-                        @onCharts="log.debug(`onCharts='chartWorkoutDialog(exercise.id)'`)"
-                        @onInspect="log.debug(`onInspect='inspectWorkoutDialog(exercise.id)'`)"
-                        @onEdit="log.debug(`onEdit='editWorkoutDialog(exercise.id)'`)"
-                        @onDelete="log.debug(`onDelete='deleteWorkoutDialog(exercise.id)'`)"
-                        @onFavorite="
-                            log.debug(`onFavorite='toggleFavoriteWorkoutDialog(exercise.id)'`)
-                        "
-                        @onAddEntry="
-                            log.debug(`onAddEntry='createWorkoutResultDialog(exercise.id)'`)
-                        "
+                        @onCharts="chartExerciseDialog(exercise.id)"
+                        @onInspect="inspectExerciseDialog(exercise.id)"
+                        @onEdit="editExerciseDialog(exercise.id)"
+                        @onDelete="deleteExerciseDialog(exercise.id)"
+                        @onFavorite="toggleFavoriteExerciseDialog(exercise)"
+                        @onAddEntry="createExerciseResultDialog(exercise.id)"
                     />
                 </q-item-section>
             </q-item>

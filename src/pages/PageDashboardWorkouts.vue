@@ -5,6 +5,8 @@ import PageFabMenu from '@/components/shared/PageFabMenu.vue'
 import PageHeading from '@/components/shared/PageHeading.vue'
 import ResponsivePage from '@/components/shared/ResponsivePage.vue'
 import useLogger from '@/composables/useLogger'
+import useWorkoutDialogs from '@/composables/useWorkoutDialogs'
+import useWorkoutResultDialogs from '@/composables/useWorkoutResultDialogs'
 import type { WorkoutType } from '@/models/Workout'
 import WorkoutService from '@/services/WorkoutService'
 import { appName } from '@/shared/constants'
@@ -19,6 +21,15 @@ useMeta({ title: `${appName} - Workouts Dashboard` })
 const $q = useQuasar()
 const router = useRouter()
 const { log } = useLogger()
+const {
+    toggleFavoriteWorkoutDialog,
+    chartWorkoutDialog,
+    inspectWorkoutDialog,
+    createWorkoutDialog,
+    editWorkoutDialog,
+    deleteWorkoutDialog,
+} = useWorkoutDialogs()
+const { createWorkoutResultDialog } = useWorkoutResultDialogs()
 const workoutService = WorkoutService()
 
 const subscriptionFinished = ref(false)
@@ -60,7 +71,7 @@ onUnmounted(() => {
                     label: 'Create Workout',
                     color: 'positive',
                     icon: addIcon,
-                    handleClick: () => log.debug(`handleClick: createWorkoutDialog`),
+                    handleClick: createWorkoutDialog,
                 },
             ]"
         />
@@ -77,7 +88,7 @@ onUnmounted(() => {
                 ]"
                 buttonLabel="Create Workout"
                 buttonColor="positive"
-                @onEmptyAction="log.debug(`onEmptyAction='createWorkoutDialog'`)"
+                @onEmptyAction="createWorkoutDialog"
             />
 
             <q-item v-for="workout in liveWorkouts" :key="workout.id">
@@ -95,16 +106,12 @@ onUnmounted(() => {
                         :supportsInspect="true"
                         :supportsEdit="true"
                         :supportsDelete="true"
-                        @onCharts="log.debug(`onCharts='chartWorkoutDialog(workout.id)'`)"
-                        @onInspect="log.debug(`onInspect='inspectWorkoutDialog(workout.id)'`)"
-                        @onEdit="log.debug(`onEdit='editWorkoutDialog(workout.id)'`)"
-                        @onDelete="log.debug(`onDelete='deleteWorkoutDialog(workout.id)'`)"
-                        @onFavorite="
-                            log.debug(`onFavorite='toggleFavoriteWorkoutDialog(workout.id)'`)
-                        "
-                        @onAddEntry="
-                            log.debug(`onAddEntry='createWorkoutResultDialog(workout.id)'`)
-                        "
+                        @onCharts="chartWorkoutDialog(workout.id)"
+                        @onInspect="inspectWorkoutDialog(workout.id)"
+                        @onEdit="editWorkoutDialog(workout.id)"
+                        @onDelete="deleteWorkoutDialog(workout.id)"
+                        @onFavorite="toggleFavoriteWorkoutDialog(workout)"
+                        @onAddEntry="createWorkoutResultDialog(workout.id)"
                     />
                 </q-item-section>
             </q-item>

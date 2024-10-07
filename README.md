@@ -6,10 +6,15 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   Workouts Dashboard
-    -   Work on CRUD dialogs?
-        -   `Inspect` first
--   Exercises Dashboard
+-   `Table Pages`
+    -   `Workouts`
+    -   `Exercises`
+-   `Workouts`
+    -   `Create`
+    -   `Edit`
+-   `Exercises`
+    -   `Create`
+    -   `Edit`
 -   See how to get `newlines` to work in notes and descriptions
 
 ## Post Cloning Steps
