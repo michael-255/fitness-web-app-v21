@@ -1,3 +1,5 @@
+import DialogCreateWorkout from '@/components/dialogs/create/DialogCreateWorkout.vue'
+import DialogEditWorkout from '@/components/dialogs/edit/DialogEditWorkout.vue'
 import DialogInspectWorkout from '@/components/dialogs/inspect/DialogInspectWorkout.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
@@ -69,8 +71,7 @@ export default function useWorkoutDialogs() {
 
     async function createWorkoutDialog() {
         selectedStore.workout = new Workout({})
-        // TODO
-        // showDialog({ component: DialogCreateWorkout })
+        showDialog({ component: DialogCreateWorkout })
     }
 
     async function editWorkoutDialog(id: string) {
@@ -80,8 +81,7 @@ export default function useWorkoutDialogs() {
             return
         }
         selectedStore.workout = record
-        // TODO
-        // showDialog({ component: DialogEditWorkout })
+        showDialog({ component: DialogEditWorkout })
     }
 
     async function deleteWorkoutDialog(id: IdType) {
