@@ -6,16 +6,12 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   `Workouts`
-    -   `Create`
-    -   `Edit`
 -   `Exercises`
     -   `Create`
     -   `Edit`
 -   `Measurements`
     -   `Dashboard Modules`
     -   `WIP`
--   See how to get `newlines` to work in notes and descriptions
 
 ## Post Cloning Steps
 
