@@ -1,3 +1,5 @@
+import DialogCreateExercise from '@/components/dialogs/create/DialogCreateExercise.vue'
+import DialogEditExercise from '@/components/dialogs/edit/DialogEditExercise.vue'
 import DialogInspectExercise from '@/components/dialogs/inspect/DialogInspectExercise.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
@@ -69,8 +71,7 @@ export default function useExerciseDialogs() {
 
     async function createExerciseDialog() {
         selectedStore.exercise = new Exercise({ inputs: ExerciseInputEnum.CHECKLIST })
-        // TODO
-        // showDialog({ component: DialogCreateExercise })
+        showDialog({ component: DialogCreateExercise })
     }
 
     async function editExerciseDialog(id: string) {
@@ -80,8 +81,7 @@ export default function useExerciseDialogs() {
             return
         }
         selectedStore.exercise = record
-        // TODO
-        // showDialog({ component: DialogEditExercise })
+        showDialog({ component: DialogEditExercise })
     }
 
     async function deleteExerciseDialog(id: IdType) {

@@ -6,9 +6,6 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   `Exercises`
-    -   `Create`
-    -   `Edit`
 -   `Measurements`
     -   `Dashboard Modules`
     -   `WIP`
