@@ -1,3 +1,5 @@
+import DialogCreateExerciseResult from '@/components/dialogs/create/DialogCreateExerciseResult.vue'
+import DialogEditExerciseResult from '@/components/dialogs/edit/DialogEditExerciseResult.vue'
 import DialogInspectExerciseResult from '@/components/dialogs/inspect/DialogInspectExerciseResult.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
@@ -34,8 +36,7 @@ export default function useExerciseResultDialogs() {
         } else {
             selectedStore.exerciseResult = new ExerciseResult({ exerciseId: undefined! })
         }
-        // TODO
-        // showDialog({ component: DialogCreateExerciseResult })
+        showDialog({ component: DialogCreateExerciseResult })
     }
 
     async function editExerciseResultDialog(id: string) {
@@ -45,8 +46,7 @@ export default function useExerciseResultDialogs() {
             return
         }
         selectedStore.exerciseResult = record
-        // TODO
-        // showDialog({ component: DialogEditExerciseResult })
+        showDialog({ component: DialogEditExerciseResult })
     }
 
     async function deleteExerciseResultDialog(id: IdType) {

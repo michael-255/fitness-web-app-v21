@@ -37,8 +37,8 @@ export class Database extends Dexie {
             [TableEnum.MEASUREMENTS]: '&id, field, createdAt',
             [TableEnum.WORKOUTS]: '&id, name, *status',
             [TableEnum.EXERCISES]: '&id, name, *status',
-            [TableEnum.WORKOUT_RESULTS]: '&id, exerciseId, createdAt',
-            [TableEnum.EXERCISE_RESULTS]: '&id, workoutId, createdAt',
+            [TableEnum.WORKOUT_RESULTS]: '&id, workoutId, createdAt',
+            [TableEnum.EXERCISE_RESULTS]: '&id, exerciseId, createdAt',
         })
 
         // Required for converting objects to classes
