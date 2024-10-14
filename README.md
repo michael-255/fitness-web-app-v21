@@ -6,6 +6,33 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
+-   `Workouts`
+    -   Install Vue Draggable Next `npm i -S vuedraggable@next`
+    -   `TEST` Vue Draggable Next on a page
+    -   Exercise groups will likely need to be updated to support this library
+
+```ts
+// But I don't want to save this data cause these labels could be changed
+const exerciseSelections = [
+    {
+        id: 'test-123',
+        label: 'Squat (test-123)',
+        disable: false,
+    },
+    {
+        id: 'test-456',
+        label: 'Bench Press (test-456)',
+        disable: false,
+    },
+]
+
+const data: ExerciseGroups = [
+    ['test-123', 'test-456'], // A superset: Squat and Bench Press
+    ['test-789', 'test-101'], // B superset: Deadlift and Overhead Press
+    ['test-111', 'test-222'], // C superset: Pull-up and Dips
+]
+```
+
 -   `Measurements`
     -   `Dashboard Modules`
     -   `WIP`
