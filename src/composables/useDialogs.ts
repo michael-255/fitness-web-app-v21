@@ -1,5 +1,4 @@
 import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
-import DialogConfirmStrict from '@/components/dialogs/DialogConfirmStrict.vue'
 import DialogDismiss from '@/components/dialogs/DialogDismiss.vue'
 import { useQuasar } from 'quasar'
 import type { Component } from 'vue'
@@ -65,12 +64,16 @@ export default function useDialogs() {
         message,
         icon,
         color,
+        requiresConfirmation,
+        confirmationText,
         onOk,
     }: {
         title: string
         message: string
         icon: string
         color: string
+        requiresConfirmation?: boolean
+        confirmationText?: string
         onOk: () => Promise<void>
     }) {
         showDialog({
@@ -79,34 +82,7 @@ export default function useDialogs() {
             message,
             icon,
             color,
-            onOk,
-        })
-    }
-
-    /**
-     * Displays a strict confirmation dialog that requires a specific confirmation code to close.
-     */
-    function onStrictConfirmDialog({
-        title,
-        message,
-        icon,
-        color,
-        confirmationText = 'YES',
-        onOk,
-    }: {
-        title: string
-        message: string
-        icon: string
-        color: string
-        confirmationText?: string
-        onOk: () => Promise<void>
-    }) {
-        showDialog({
-            component: DialogConfirmStrict,
-            title,
-            message,
-            icon,
-            color,
+            requiresConfirmation,
             confirmationText,
             onOk,
         })
@@ -116,6 +92,5 @@ export default function useDialogs() {
         showDialog,
         onDismissDialog,
         onConfirmDialog,
-        onStrictConfirmDialog,
     }
 }

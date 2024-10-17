@@ -15,7 +15,7 @@ import { useQuasar } from 'quasar'
 export default function useExerciseResultDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
-    const { showDialog, onConfirmDialog, onStrictConfirmDialog } = useDialogs()
+    const { showDialog, onConfirmDialog } = useDialogs()
     const exerciseResultService = ExerciseResultService()
     const selectedStore = useSelectedStore()
     const settingsStore = useSettingsStore()
@@ -66,11 +66,12 @@ export default function useExerciseResultDialogs() {
                 },
             })
         } else {
-            onStrictConfirmDialog({
+            onConfirmDialog({
                 title,
                 message,
                 color,
                 icon,
+                requiresConfirmation: true,
                 onOk: async () => {
                     return await confirmDeleteDialog(id)
                 },

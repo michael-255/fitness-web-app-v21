@@ -43,7 +43,7 @@ useMeta({ title: `${appName} - Settings` })
 const $q = useQuasar()
 const router = useRouter()
 const { log } = useLogger()
-const { onConfirmDialog, onStrictConfirmDialog } = useDialogs()
+const { onConfirmDialog } = useDialogs()
 const settingsStore = useSettingsStore()
 const settingService = SettingService()
 const workoutService = WorkoutService()
@@ -226,11 +226,12 @@ function onExportBackup() {
  * Deletes all app logs from the database.
  */
 function onDeleteLogs() {
-    onStrictConfirmDialog({
+    onConfirmDialog({
         title: 'Delete Logs',
         message: 'Are you sure you want to delete all app logs from the database?',
         color: 'negative',
         icon: deleteIcon,
+        requiresConfirmation: true,
         onOk: async () => {
             try {
                 $q.loading.show()
@@ -249,11 +250,12 @@ function onDeleteLogs() {
  * Deletes all app data including configuration and user data from the database.
  */
 function onDeleteAppData() {
-    onStrictConfirmDialog({
+    onConfirmDialog({
         title: 'Delete App Data',
         message: 'Are you sure you want to delete all app data?',
         color: 'negative',
         icon: deleteXIcon,
+        requiresConfirmation: true,
         onOk: async () => {
             try {
                 $q.loading.show()
@@ -274,12 +276,13 @@ function onDeleteAppData() {
  * Deletes the underlining database and all of its data.
  */
 function onDeleteDatabase() {
-    onStrictConfirmDialog({
+    onConfirmDialog({
         title: 'Delete Database',
         message:
             'Delete the underlining database? All data will be lost. You must reload the website after this action to reinitialize the database.',
         color: 'negative',
         icon: deleteSweepIcon,
+        requiresConfirmation: true,
         onOk: async () => {
             try {
                 $q.loading.show()
