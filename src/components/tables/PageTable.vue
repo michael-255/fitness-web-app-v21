@@ -52,10 +52,10 @@ const { goBack } = useRouting()
 const searchFilter: Ref<string> = ref('')
 const columnOptions: Ref<QTableColumn[]> = ref(columnOptionsFromTableColumns(props.tableColumns))
 const visibleColumns: Ref<string[]> = ref(visibleColumnsFromTableColumns(props.tableColumns))
-const liveRows: Ref<any[]> = ref([])
+const liveRows: Ref<Record<string, any>[]> = ref([])
 
 const subscription = props.dataObservable.subscribe({
-    next: (records: any) => (liveRows.value = records),
+    next: (records: Record<string, any>[]) => (liveRows.value = records),
     error: (error: Error) => log.error('Error loading live data', error),
 })
 
