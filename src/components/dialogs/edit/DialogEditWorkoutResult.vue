@@ -17,7 +17,6 @@ const { dialogRef, onDialogHide, onDialogCancel, onDialogOK } = useDialogPluginC
 const $q = useQuasar()
 const { log } = useLogger()
 const { onConfirmDialog } = useDialogs()
-const workoutResultService = WorkoutResultService()
 const selectedStore = useSelectedStore()
 const settingsStore = useSettingsStore()
 
@@ -45,7 +44,7 @@ async function updateWorkoutResultSubmit() {
 async function updateSubmit(record: WorkoutResultType) {
     try {
         $q.loading.show()
-        await workoutResultService.put(record)
+        await WorkoutResultService.put(record)
         log.info('Workout updated', record)
     } catch (error) {
         log.error(`Error updating Workout Result`, error as Error)

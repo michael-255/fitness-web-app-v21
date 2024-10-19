@@ -1,19 +1,69 @@
 import { workoutSchema, type WorkoutType } from '@/models/Workout'
 import DB, { Database } from '@/services/db'
 import { StatusEnum, TableEnum } from '@/shared/enums'
+import { databaseIcon, workoutsPageIcon } from '@/shared/icons'
 import type { IdType, SelectOption } from '@/shared/types'
-import { truncateText } from '@/shared/utils'
+import { hiddenTableColumn, tableColumn, truncateText } from '@/shared/utils'
 import { liveQuery, type Observable } from 'dexie'
+import BaseService from './BaseService'
 
-export default function WorkoutService(db: Database = DB) {
+/**
+ * Singleton class for managing most aspects of the Workout model.
+ */
+export class WorkoutService extends BaseService {
+    private static _instance: WorkoutService | null = null
+
+    private constructor(public db: Database) {
+        super()
+    }
+
+    static getSingleton(db: Database = DB): WorkoutService {
+        if (!WorkoutService._instance) {
+            WorkoutService._instance = new WorkoutService(db)
+        }
+        return WorkoutService._instance
+    }
+
+    labelSingular = 'Workout'
+    labelPlural = 'Workouts'
+    modelSchema = workoutSchema
+    table = TableEnum.WORKOUTS
+    tableColumns = [
+        hiddenTableColumn('id'),
+        tableColumn('id', 'Id', 'UUID'),
+        tableColumn('createdAt', 'Created Date', 'DATE'),
+        tableColumn('name', 'Name', 'TEXT'),
+        tableColumn('desc', 'Description', 'TEXT'),
+        tableColumn('status', 'Status', 'LIST-PRINT'),
+        tableColumn('lastChild', 'Last Workout Result', 'JSON'),
+        tableColumn('warmupGroups', 'Warmup Exercises', 'JSON'),
+        tableColumn('exerciseGroups', 'Main Exercises', 'JSON'),
+        tableColumn('cooldownGroups', 'Cooldown Exercises', 'JSON'),
+        tableColumn('nextWorkoutIds', 'Next records', 'LIST-PRINT'),
+    ]
+    displayIcon = workoutsPageIcon
+    tableIcon = databaseIcon
+    supportsTableColumnFilters = true
+    supportsTableCharts = false
+    supportsCharts = true
+    supportsInspect = true
+    supportsCreate = true
+    supportsEdit = true
+    supportsDelete = true
+    chartsDialogProps = null! // TODO
+    inspectDialogProps = null! // TODO
+    createDialogProps = null! // TODO
+    editDialogProps = null! // TODO
+    deleteDialogProps = null! // TODO
+
     /**
-     * Returns Workouts live query with records that are not deactivated with the remaining sorted
+     * Returns records live query with records that are not deactivated with the remaining sorted
      * with locked records first, then favorited records, then alphabetically by name, and finally
      * by createdAt reversed.
      */
-    function liveDashboardObservable(): Observable<WorkoutType[]> {
+    liveDashboardObservable(): Observable<WorkoutType[]> {
         return liveQuery(() =>
-            db
+            this.db
                 .table(TableEnum.WORKOUTS)
                 .orderBy('name')
                 .filter((record) => !record.status.includes(StatusEnum.DEACTIVATED))
@@ -56,17 +106,17 @@ export default function WorkoutService(db: Database = DB) {
     }
 
     /**
-     * Returns Workouts live query ordered by name.
+     * Returns records live query ordered by name.
      */
-    function liveObservable(): Observable<WorkoutType[]> {
-        return liveQuery(() => db.table(TableEnum.WORKOUTS).orderBy('name').toArray())
+    liveObservable(): Observable<WorkoutType[]> {
+        return liveQuery(() => this.db.table(TableEnum.WORKOUTS).orderBy('name').toArray())
     }
 
     /**
-     * Returns Workout by ID.
+     * Returns record by ID.
      */
-    async function get(id: IdType): Promise<WorkoutType> {
-        const recordToGet = await db.table(TableEnum.WORKOUTS).get(id)
+    async get(id: IdType): Promise<WorkoutType> {
+        const recordToGet = await this.db.table(TableEnum.WORKOUTS).get(id)
         if (!recordToGet) {
             throw new Error(`Workout ID not found: ${id}`)
         }
@@ -74,49 +124,53 @@ export default function WorkoutService(db: Database = DB) {
     }
 
     /**
-     * Creates a new Workout in the database.
+     * Creates a new record in the database.
      */
-    async function add(workout: WorkoutType): Promise<WorkoutType> {
-        const validatedRecord = workoutSchema.parse(workout)
-        await db.table(TableEnum.WORKOUTS).add(validatedRecord)
+    async add(record: WorkoutType): Promise<WorkoutType> {
+        const validatedRecord = workoutSchema.parse(record)
+        await this.db.table(TableEnum.WORKOUTS).add(validatedRecord)
         return validatedRecord
     }
 
     /**
-     * Creates or overwrites a Workout in the database.
+     * Creates or overwrites a record in the database.
      */
-    async function put(workout: WorkoutType): Promise<WorkoutType> {
-        const validatedRecord = workoutSchema.parse(workout)
-        await db.table(TableEnum.WORKOUTS).put(validatedRecord)
+    async put(record: WorkoutType): Promise<WorkoutType> {
+        const validatedRecord = workoutSchema.parse(record)
+        await this.db.table(TableEnum.WORKOUTS).put(validatedRecord)
         return validatedRecord
     }
 
     /**
-     * Removes the Workout by id and all associated child records from the database.
+     * Removes the record by id and all associated child records from the database.
      */
-    async function remove(id: IdType): Promise<WorkoutType> {
-        const recordToDelete = await db.table(TableEnum.WORKOUTS).get(id)
-        await db.transaction(
+    async remove(id: IdType): Promise<WorkoutType> {
+        const recordToDelete = await this.db.table(TableEnum.WORKOUTS).get(id)
+        await this.db.transaction(
             'rw',
-            db.table(TableEnum.WORKOUTS),
-            db.table(TableEnum.WORKOUT_RESULTS),
+            this.db.table(TableEnum.WORKOUTS),
+            this.db.table(TableEnum.WORKOUT_RESULTS),
             async () => {
-                await db.table(TableEnum.WORKOUTS).delete(id)
-                await db.table(TableEnum.WORKOUT_RESULTS).where('workoutId').equals(id).delete()
+                await this.db.table(TableEnum.WORKOUTS).delete(id)
+                await this.db
+                    .table(TableEnum.WORKOUT_RESULTS)
+                    .where('workoutId')
+                    .equals(id)
+                    .delete()
             },
         )
         return recordToDelete
     }
 
     /**
-     * Imports Workouts into the database using put and returns a results object.
+     * Imports records into the database using put and returns a results object.
      */
-    async function importData(workouts: WorkoutType[]) {
+    async importData(records: WorkoutType[]) {
         const validRecords: WorkoutType[] = []
         const invalidRecords: Partial<WorkoutType>[] = []
 
         // Validate each record
-        workouts.forEach((workout) => {
+        records.forEach((workout) => {
             if (workoutSchema.safeParse(workout).success) {
                 validRecords.push(workoutSchema.parse(workout)) // Clean record with parse
             } else {
@@ -127,7 +181,7 @@ export default function WorkoutService(db: Database = DB) {
         // Put validated records into the database. Catch any bulk errors.
         let bulkError: Record<string, string> = null!
         try {
-            await db.table(TableEnum.WORKOUTS).bulkAdd(validRecords)
+            await this.db.table(TableEnum.WORKOUTS).bulkAdd(validRecords)
         } catch (error) {
             bulkError = {
                 name: (error as Error)?.name,
@@ -145,11 +199,11 @@ export default function WorkoutService(db: Database = DB) {
     }
 
     /**
-     * Custom export operation for fetching all Workouts from the database with unneeded fields
+     * Custom export operation for fetching all records from the database with unneeded fields
      * removed.
      */
-    async function exportData() {
-        const records = await db.table(TableEnum.WORKOUTS).toArray()
+    async exportData() {
+        const records = await this.db.table(TableEnum.WORKOUTS).toArray()
         return records.map((record) => {
             if ('lastChild' in record) {
                 delete record.lastChild
@@ -161,12 +215,12 @@ export default function WorkoutService(db: Database = DB) {
     /**
      * From Parent:
      *
-     * Updates the `lastChild` property of the Workout associated with the `workoutId` with the
+     * Updates the `lastChild` property of the record associated with the `workoutId` with the
      * most recently created child record. Locked records are not updated.
      */
-    async function updateLastChild(workoutId: IdType) {
+    async updateLastChild(workoutId: IdType) {
         const lastChild = (
-            await db
+            await this.db
                 .table(TableEnum.WORKOUT_RESULTS)
                 .where('workoutId')
                 .equals(workoutId)
@@ -175,27 +229,27 @@ export default function WorkoutService(db: Database = DB) {
             .filter((record) => !record.status.includes(StatusEnum.LOCKED))
             .reverse()[0]
 
-        await db.table(TableEnum.WORKOUTS).update(workoutId, { lastChild })
+        await this.db.table(TableEnum.WORKOUTS).update(workoutId, { lastChild })
     }
 
     /**
-     * Toggles the favorited status on the Workout's status property.
+     * Toggles the favorited status on the record's status property.
      */
-    async function toggleFavorite(workout: WorkoutType) {
-        const index = workout.status.indexOf(StatusEnum.FAVORITED)
+    async toggleFavorite(record: WorkoutType) {
+        const index = record.status.indexOf(StatusEnum.FAVORITED)
         if (index === -1) {
-            workout.status.push(StatusEnum.FAVORITED)
+            record.status.push(StatusEnum.FAVORITED)
         } else {
-            workout.status.splice(index, 1)
+            record.status.splice(index, 1)
         }
-        await db.table(TableEnum.WORKOUTS).update(workout.id, { status: workout.status })
+        await this.db.table(TableEnum.WORKOUTS).update(record.id, { status: record.status })
     }
 
     /**
-     * Generates an options list of Workouts for select box components on the FE.
+     * Generates an options list of records for select box components on the FE.
      */
-    async function getSelectOptions(): Promise<SelectOption[]> {
-        const records = await db.table(TableEnum.WORKOUTS).orderBy('name').toArray()
+    async getSelectOptions(): Promise<SelectOption[]> {
+        const records = await this.db.table(TableEnum.WORKOUTS).orderBy('name').toArray()
 
         return records.map((record) => {
             const name = record.name
@@ -214,18 +268,9 @@ export default function WorkoutService(db: Database = DB) {
             }
         })
     }
-
-    return {
-        liveDashboardObservable,
-        liveObservable,
-        get,
-        add,
-        put,
-        remove,
-        importData,
-        exportData,
-        updateLastChild,
-        toggleFavorite,
-        getSelectOptions,
-    }
 }
+
+/**
+ * Singleton instance exported as default for convenience.
+ */
+export default WorkoutService.getSingleton()

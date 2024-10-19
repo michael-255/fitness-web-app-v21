@@ -16,12 +16,11 @@ export default function useWorkoutResultDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
     const { showDialog, onConfirmDialog } = useDialogs()
-    const workoutResultService = WorkoutResultService()
     const selectedStore = useSelectedStore()
     const settingsStore = useSettingsStore()
 
     async function inspectWorkoutResultDialog(id: string) {
-        const record = await workoutResultService.get(id)
+        const record = await WorkoutResultService.get(id)
         if (!record) {
             log.error('Workout Result not found')
             return
@@ -40,7 +39,7 @@ export default function useWorkoutResultDialogs() {
     }
 
     async function editWorkoutResultDialog(id: string) {
-        const record = await workoutResultService.get(id)
+        const record = await WorkoutResultService.get(id)
         if (!record) {
             log.error('Workout Result not found')
             return
@@ -82,7 +81,7 @@ export default function useWorkoutResultDialogs() {
     async function confirmDeleteDialog(id: IdType) {
         try {
             $q.loading.show()
-            const deletedRecord = await workoutResultService.remove(id)
+            const deletedRecord = await WorkoutResultService.remove(id)
             log.info(`Deleted Workout Result`, deletedRecord)
         } catch (error) {
             log.error(`Error deleting Workout Result`, error as Error)

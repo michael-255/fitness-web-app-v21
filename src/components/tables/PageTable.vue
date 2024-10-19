@@ -27,7 +27,7 @@ const props = defineProps<{
     labelPlural: string
     icon: string
     tableColumns: QTableColumn[]
-    supportsColumnFilters?: boolean
+    supportsTableColumnFilters?: boolean
     supportsTableCharts?: boolean
     supportsCharts?: boolean
     supportsInspect?: boolean
@@ -185,7 +185,7 @@ function hasNoChildData(row: { lastChild?: any }) {
                 >
                     <template v-slot:after>
                         <q-select
-                            v-if="supportsColumnFilters"
+                            v-if="supportsTableColumnFilters"
                             v-model="visibleColumns"
                             :options="columnOptions"
                             :disable="!liveRows.length"

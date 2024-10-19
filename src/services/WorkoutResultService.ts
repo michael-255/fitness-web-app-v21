@@ -1,25 +1,70 @@
 import { workoutResultSchema, type WorkoutResultType } from '@/models/WorkoutResult'
 import DB, { Database } from '@/services/db'
 import { StatusEnum, TableEnum } from '@/shared/enums'
+import { databaseIcon } from '@/shared/icons'
 import type { IdType, SelectOption } from '@/shared/types'
-import { truncateText } from '@/shared/utils'
+import { hiddenTableColumn, tableColumn, truncateText } from '@/shared/utils'
 import { liveQuery, type Observable } from 'dexie'
+import BaseService from './BaseService'
 
-export default function WorkoutResultService(db: Database = DB) {
+/**
+ * Singleton class for managing most aspects of the Workout Result model.
+ */
+export class WorkoutResultService extends BaseService {
+    private static _instance: WorkoutResultService | null = null
+
+    private constructor(public db: Database) {
+        super()
+    }
+
+    static getSingleton(db: Database = DB): WorkoutResultService {
+        if (!WorkoutResultService._instance) {
+            WorkoutResultService._instance = new WorkoutResultService(db)
+        }
+        return WorkoutResultService._instance
+    }
+
+    labelSingular = 'Workout Result'
+    labelPlural = 'Workout Results'
+    modelSchema = workoutResultSchema
+    table = TableEnum.WORKOUT_RESULTS
+    tableColumns = [
+        hiddenTableColumn('id'),
+        tableColumn('id', 'Id', 'UUID'),
+        tableColumn('createdAt', 'Created Date', 'DATE'),
+        tableColumn('workoutId', 'Parent Workout Id', 'UUID'),
+        tableColumn('note', 'Note', 'TEXT'),
+        tableColumn('status', 'Status', 'LIST-PRINT'),
+    ]
+    displayIcon = databaseIcon
+    tableIcon = databaseIcon
+    supportsTableColumnFilters = true
+    supportsTableCharts = false
+    supportsCharts = false
+    supportsInspect = true
+    supportsCreate = true
+    supportsEdit = true
+    supportsDelete = true
+    chartsDialogProps = null! // TODO
+    inspectDialogProps = null! // TODO
+    createDialogProps = null! // TODO
+    editDialogProps = null! // TODO
+    deleteDialogProps = null! // TODO
+
     /**
-     * Returns Workout Results live query ordered by creation date.
+     * Returns live query ordered by creation date.
      */
-    function liveObservable(): Observable<WorkoutResultType[]> {
+    liveObservable(): Observable<WorkoutResultType[]> {
         return liveQuery(() =>
-            db.table(TableEnum.WORKOUT_RESULTS).orderBy('createdAt').reverse().toArray(),
+            this.db.table(TableEnum.WORKOUT_RESULTS).orderBy('createdAt').reverse().toArray(),
         )
     }
 
     /**
-     * Returns chart datasets for the Workout Results associated with a parent Workout.
+     * Returns chart datasets for the record associated with a parent.
      * TODO: Implement for charts.
      */
-    async function getChartDatasets(workoutId: IdType) {
+    async getChartDatasets(workoutId: IdType) {
         console.log('getChartDatasets', workoutId)
         return {
             threeMonths: [],
@@ -32,10 +77,10 @@ export default function WorkoutResultService(db: Database = DB) {
     }
 
     /**
-     * Returns Workout Result by ID.
+     * Returns record by ID.
      */
-    async function get(id: IdType): Promise<WorkoutResultType> {
-        const recordToGet = await db.table(TableEnum.WORKOUT_RESULTS).get(id)
+    async get(id: IdType): Promise<WorkoutResultType> {
+        const recordToGet = await this.db.table(TableEnum.WORKOUT_RESULTS).get(id)
         if (!recordToGet) {
             throw new Error(`Workout Result ID not found: ${id}`)
         }
@@ -43,17 +88,17 @@ export default function WorkoutResultService(db: Database = DB) {
     }
 
     /**
-     * Creates a new Workout Result and updates the parent Workout `lastChild` property.
+     * Creates a new record and updates the parent `lastChild` property.
      */
-    async function add(workoutResult: WorkoutResultType): Promise<WorkoutResultType> {
-        const validatedRecord = workoutResultSchema.parse(workoutResult)
-        await db.transaction(
+    async add(record: WorkoutResultType): Promise<WorkoutResultType> {
+        const validatedRecord = workoutResultSchema.parse(record)
+        await this.db.transaction(
             'rw',
-            db.table(TableEnum.WORKOUT_RESULTS),
-            db.table(TableEnum.WORKOUTS),
+            this.db.table(TableEnum.WORKOUT_RESULTS),
+            this.db.table(TableEnum.WORKOUTS),
             async () => {
-                await db.table(TableEnum.WORKOUT_RESULTS).add(validatedRecord)
-                await updateLastChild(validatedRecord.workoutId)
+                await this.db.table(TableEnum.WORKOUT_RESULTS).add(validatedRecord)
+                await this.updateLastChild(validatedRecord.workoutId)
             },
         )
         return validatedRecord
@@ -62,15 +107,15 @@ export default function WorkoutResultService(db: Database = DB) {
     /**
      * Creates or overwrites a child record and updates the parent record's `lastChild` property.
      */
-    async function put(workoutResult: WorkoutResultType): Promise<WorkoutResultType> {
-        const validatedRecord = workoutResultSchema.parse(workoutResult)
-        await db.transaction(
+    async put(record: WorkoutResultType): Promise<WorkoutResultType> {
+        const validatedRecord = workoutResultSchema.parse(record)
+        await this.db.transaction(
             'rw',
-            db.table(TableEnum.WORKOUT_RESULTS),
-            db.table(TableEnum.WORKOUTS),
+            this.db.table(TableEnum.WORKOUT_RESULTS),
+            this.db.table(TableEnum.WORKOUTS),
             async () => {
-                await db.table(TableEnum.WORKOUT_RESULTS).put(validatedRecord)
-                await updateLastChild(validatedRecord.workoutId)
+                await this.db.table(TableEnum.WORKOUT_RESULTS).put(validatedRecord)
+                await this.updateLastChild(validatedRecord.workoutId)
             },
         )
         return validatedRecord
@@ -79,29 +124,29 @@ export default function WorkoutResultService(db: Database = DB) {
     /**
      * Removes the child record by id and updates the parent record's `lastChild` property.
      */
-    async function remove(id: IdType): Promise<WorkoutResultType> {
-        const recordToDelete = await db.table(TableEnum.WORKOUT_RESULTS).get(id)
-        await db.transaction(
+    async remove(id: IdType): Promise<WorkoutResultType> {
+        const recordToDelete = await this.db.table(TableEnum.WORKOUT_RESULTS).get(id)
+        await this.db.transaction(
             'rw',
-            db.table(TableEnum.WORKOUT_RESULTS),
-            db.table(TableEnum.WORKOUTS),
+            this.db.table(TableEnum.WORKOUT_RESULTS),
+            this.db.table(TableEnum.WORKOUTS),
             async () => {
-                await db.table(TableEnum.WORKOUT_RESULTS).delete(id)
-                await updateLastChild(recordToDelete.workoutId)
+                await this.db.table(TableEnum.WORKOUT_RESULTS).delete(id)
+                await this.updateLastChild(recordToDelete.workoutId)
             },
         )
         return recordToDelete
     }
 
     /**
-     * Imports Workout Results into the database using put and returns a results object.
+     * Imports records into the database using put and returns a results object.
      */
-    async function importData(workoutResults: WorkoutResultType[]) {
+    async importData(records: WorkoutResultType[]) {
         const validRecords: WorkoutResultType[] = []
         const invalidRecords: Partial<WorkoutResultType>[] = []
 
         // Validate each record
-        workoutResults.forEach((record) => {
+        records.forEach((record) => {
             if (workoutResultSchema.safeParse(record).success) {
                 validRecords.push(workoutResultSchema.parse(record)) // Clean record with parse
             } else {
@@ -112,7 +157,7 @@ export default function WorkoutResultService(db: Database = DB) {
         // Put validated records into the database. Catch any bulk errors.
         let bulkError: Record<string, string> = null!
         try {
-            await db.table(TableEnum.WORKOUT_RESULTS).bulkAdd(validRecords)
+            await this.db.table(TableEnum.WORKOUT_RESULTS).bulkAdd(validRecords)
         } catch (error) {
             bulkError = {
                 name: (error as Error)?.name,
@@ -135,9 +180,9 @@ export default function WorkoutResultService(db: Database = DB) {
      * Updates the `lastChild` property of the parent model associated with the `workoutId` with the
      * most recently created child model. Locked records are not updated.
      */
-    async function updateLastChild(workoutId: IdType) {
+    async updateLastChild(workoutId: IdType) {
         const lastChild = (
-            await db
+            await this.db
                 .table(TableEnum.WORKOUT_RESULTS)
                 .where('workoutId')
                 .equals(workoutId)
@@ -146,14 +191,14 @@ export default function WorkoutResultService(db: Database = DB) {
             .filter((record) => !record.status.includes(StatusEnum.LOCKED))
             .reverse()[0]
 
-        await db.table(TableEnum.WORKOUTS).update(workoutId, { lastChild })
+        await this.db.table(TableEnum.WORKOUTS).update(workoutId, { lastChild })
     }
 
     /**
-     * Generates an options list of Workout Results for select box components on the FE.
+     * Generates an options list of records for select box components on the FE.
      */
-    async function getSelectOptions(): Promise<SelectOption[]> {
-        const records = await db
+    async getSelectOptions(): Promise<SelectOption[]> {
+        const records = await this.db
             .table(TableEnum.WORKOUT_RESULTS)
             .orderBy('createdAt')
             .reverse()
@@ -172,16 +217,9 @@ export default function WorkoutResultService(db: Database = DB) {
             }
         })
     }
-
-    return {
-        liveObservable,
-        getChartDatasets,
-        get,
-        add,
-        put,
-        remove,
-        importData,
-        updateLastChild,
-        getSelectOptions,
-    }
 }
+
+/**
+ * Singleton instance exported as default for convenience.
+ */
+export default WorkoutResultService.getSingleton()

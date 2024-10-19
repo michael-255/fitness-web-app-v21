@@ -17,7 +17,6 @@ const { dialogRef, onDialogHide, onDialogCancel, onDialogOK } = useDialogPluginC
 const $q = useQuasar()
 const { log } = useLogger()
 const { onConfirmDialog } = useDialogs()
-const exerciseResultService = ExerciseResultService()
 const selectedStore = useSelectedStore()
 const settingsStore = useSettingsStore()
 
@@ -45,7 +44,7 @@ async function updateExerciseResultSubmit() {
 async function updateSubmit(record: ExerciseResultType) {
     try {
         $q.loading.show()
-        await exerciseResultService.put(record)
+        await ExerciseResultService.put(record)
         log.info('Exercise updated', record)
     } catch (error) {
         log.error(`Error updating Exercise Result`, error as Error)

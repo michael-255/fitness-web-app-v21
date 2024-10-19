@@ -7,14 +7,52 @@ import Setting, {
 } from '@/models/Setting'
 import DB, { Database } from '@/services/db'
 import { DurationEnum, TableEnum } from '@/shared/enums'
-
+import { settingsPageIcon, settingsTableIcon } from '@/shared/icons'
+import { tableColumn } from '@/shared/utils'
 import { liveQuery, type Observable } from 'dexie'
+import BaseService from './BaseService'
 
-export default function SettingService(db: Database = DB) {
+/**
+ * Singleton class for managing most aspects of the Setting model.
+ */
+export class SettingService extends BaseService {
+    private static _instance: SettingService | null = null
+
+    private constructor(public db: Database) {
+        super()
+    }
+
+    static getSingleton(db: Database = DB): SettingService {
+        if (!SettingService._instance) {
+            SettingService._instance = new SettingService(db)
+        }
+        return SettingService._instance
+    }
+
+    labelSingular = 'Setting'
+    labelPlural = 'Settings'
+    modelSchema = settingSchema
+    table = TableEnum.SETTINGS
+    tableColumns = [tableColumn('key', 'Key'), tableColumn('value', 'Value')]
+    displayIcon = settingsPageIcon
+    tableIcon = settingsTableIcon
+    supportsTableColumnFilters = false
+    supportsTableCharts = false
+    supportsCharts = false
+    supportsInspect = false
+    supportsCreate = false
+    supportsEdit = false
+    supportsDelete = false
+    chartsDialogProps = null! // TODO
+    inspectDialogProps = null! // TODO
+    createDialogProps = null! // TODO
+    editDialogProps = null! // TODO
+    deleteDialogProps = null! // TODO
+
     /**
      * Initializes settings with default values if they do not exist in the database.
      */
-    async function initialize(): Promise<SettingType[]> {
+    async initialize(): Promise<SettingType[]> {
         const defaultSettings: {
             [key in SettingKeyEnum]: SettingValueType
         } = {
@@ -29,7 +67,7 @@ export default function SettingService(db: Database = DB) {
 
         const settings = await Promise.all(
             settingids.map(async (key) => {
-                const setting = await db.table(TableEnum.SETTINGS).get(key)
+                const setting = await this.db.table(TableEnum.SETTINGS).get(key)
                 if (setting) {
                     return setting
                 } else {
@@ -41,14 +79,14 @@ export default function SettingService(db: Database = DB) {
             }),
         )
 
-        await Promise.all(settings.map((setting) => db.table(TableEnum.SETTINGS).put(setting)))
+        await Promise.all(settings.map((setting) => this.db.table(TableEnum.SETTINGS).put(setting)))
         return settings
     }
 
     /**
      * Imports Settings into the database using put and returns a results object.
      */
-    async function importData(settings: SettingType[]) {
+    async importData(settings: SettingType[]) {
         const validRecords: SettingType[] = []
         const invalidRecords: Partial<SettingType>[] = []
 
@@ -62,7 +100,9 @@ export default function SettingService(db: Database = DB) {
         })
 
         // Put validated settings into the database
-        await Promise.all(validRecords.map((record) => db.table(TableEnum.SETTINGS).put(record)))
+        await Promise.all(
+            validRecords.map((record) => this.db.table(TableEnum.SETTINGS).put(record)),
+        )
 
         // Return results object for FE handling
         return {
@@ -75,23 +115,23 @@ export default function SettingService(db: Database = DB) {
     /**
      * Custom clear operation for Settings that clears and resets them with defaults.
      */
-    async function clear() {
-        await db.table(TableEnum.SETTINGS).clear()
-        await initialize()
+    async clear() {
+        await this.db.table(TableEnum.SETTINGS).clear()
+        await this.initialize()
     }
 
     /**
      * Returns a Settings live query with default ordering.
      */
-    function liveObservable(): Observable<SettingType[]> {
-        return liveQuery(() => db.table(TableEnum.SETTINGS).toArray())
+    liveObservable(): Observable<SettingType[]> {
+        return liveQuery(() => this.db.table(TableEnum.SETTINGS).toArray())
     }
 
     /**
      * Returns a Setting by key.
      */
-    async function get(settingKey: SettingKeyType): Promise<SettingType> {
-        const modelToGet = await db.table(TableEnum.SETTINGS).get(settingKey)
+    async get(settingKey: SettingKeyType): Promise<SettingType> {
+        const modelToGet = await this.db.table(TableEnum.SETTINGS).get(settingKey)
         if (!modelToGet) {
             throw new Error(`Setting key not found: ${settingKey}`)
         }
@@ -101,18 +141,14 @@ export default function SettingService(db: Database = DB) {
     /**
      * Creates or overwrites a Setting in the database.
      */
-    async function put(setting: SettingType): Promise<SettingType> {
+    async put(setting: SettingType): Promise<SettingType> {
         const validatedSetting = settingSchema.parse(setting)
-        await db.table(TableEnum.SETTINGS).put(validatedSetting)
+        await this.db.table(TableEnum.SETTINGS).put(validatedSetting)
         return validatedSetting
     }
-
-    return {
-        initialize,
-        importData,
-        clear,
-        liveObservable,
-        get,
-        put,
-    }
 }
+
+/**
+ * Singleton instance exported as default for convenience.
+ */
+export default SettingService.getSingleton()

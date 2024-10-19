@@ -30,11 +30,10 @@ const {
     deleteWorkoutDialog,
 } = useWorkoutDialogs()
 const { createWorkoutResultDialog } = useWorkoutResultDialogs()
-const workoutService = WorkoutService()
 
 const subscriptionFinished = ref(false)
 const liveWorkouts: Ref<WorkoutType[]> = ref([])
-const subscription = workoutService.liveDashboardObservable().subscribe({
+const subscription = WorkoutService.liveDashboardObservable().subscribe({
     next: (workouts) => {
         liveWorkouts.value = workouts
         subscriptionFinished.value = true

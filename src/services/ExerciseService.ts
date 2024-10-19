@@ -1,19 +1,69 @@
 import { exerciseSchema, type ExerciseType } from '@/models/Exercise'
 import DB, { Database } from '@/services/db'
 import { StatusEnum, TableEnum } from '@/shared/enums'
+import { databaseIcon, exercisesPageIcon } from '@/shared/icons'
 import type { IdType, SelectOption } from '@/shared/types'
-import { truncateText } from '@/shared/utils'
+import { hiddenTableColumn, tableColumn, truncateText } from '@/shared/utils'
 import { liveQuery, type Observable } from 'dexie'
+import BaseService from './BaseService'
 
-export default function ExerciseService(db: Database = DB) {
+/**
+ * Singleton class for managing most aspects of the Exercise model.
+ */
+export class ExerciseService extends BaseService {
+    private static _instance: ExerciseService | null = null
+
+    private constructor(public db: Database) {
+        super()
+    }
+
+    static getSingleton(db: Database = DB): ExerciseService {
+        if (!ExerciseService._instance) {
+            ExerciseService._instance = new ExerciseService(db)
+        }
+        return ExerciseService._instance
+    }
+
+    labelSingular = 'Exercise'
+    labelPlural = 'Exercises'
+    modelSchema = exerciseSchema
+    table = TableEnum.EXERCISES
+    tableColumns = [
+        hiddenTableColumn('id'),
+        tableColumn('id', 'Id', 'UUID'),
+        tableColumn('createdAt', 'Created Date', 'DATE'),
+        tableColumn('name', 'Name', 'TEXT'),
+        tableColumn('desc', 'Description', 'TEXT'),
+        tableColumn('status', 'Status', 'LIST-PRINT'),
+        tableColumn('lastChild', 'Last Exercise Result', 'JSON'),
+        tableColumn('inputs', 'Exercise Inputs'),
+        tableColumn('initialSetCount', 'Initial Set Count'),
+        tableColumn('restTimer', 'Rest Timer Settings', 'JSON'),
+        tableColumn('tabataTimer', 'Tabata Timer Settings', 'JSON'),
+    ]
+    displayIcon = exercisesPageIcon
+    tableIcon = databaseIcon
+    supportsTableColumnFilters = true
+    supportsTableCharts = false
+    supportsCharts = true
+    supportsInspect = true
+    supportsCreate = true
+    supportsEdit = true
+    supportsDelete = true
+    chartsDialogProps = null! // TODO
+    inspectDialogProps = null! // TODO
+    createDialogProps = null! // TODO
+    editDialogProps = null! // TODO
+    deleteDialogProps = null! // TODO
+
     /**
-     * Returns Exercises live query with records that are not deactivated with the remaining sorted
-     * with locked records first, then favorited records, then alphabetically by name, and finally
-     * by createdAt reversed.
+     * Returns live query with records that are not deactivated with the remaining sorted with
+     * locked records first, then favorited records, then alphabetically by name, and finally by
+     * createdAt reversed.
      */
-    function liveDashboardObservable(): Observable<ExerciseType[]> {
+    liveDashboardObservable(): Observable<ExerciseType[]> {
         return liveQuery(() =>
-            db
+            this.db
                 .table(TableEnum.EXERCISES)
                 .orderBy('name')
                 .filter((record) => !record.status.includes(StatusEnum.DEACTIVATED))
@@ -56,17 +106,17 @@ export default function ExerciseService(db: Database = DB) {
     }
 
     /**
-     * Returns Exercises live query ordered by name.
+     * Returns live query ordered by name.
      */
-    function liveObservable(): Observable<ExerciseType[]> {
-        return liveQuery(() => db.table(TableEnum.EXERCISES).orderBy('name').toArray())
+    liveObservable(): Observable<ExerciseType[]> {
+        return liveQuery(() => this.db.table(TableEnum.EXERCISES).orderBy('name').toArray())
     }
 
     /**
-     * Returns Exercise by ID.
+     * Returns record by ID.
      */
-    async function get(id: IdType): Promise<ExerciseType> {
-        const recordToGet = await db.table(TableEnum.EXERCISES).get(id)
+    async get(id: IdType): Promise<ExerciseType> {
+        const recordToGet = await this.db.table(TableEnum.EXERCISES).get(id)
         if (!recordToGet) {
             throw new Error(`Exercise ID not found: ${id}`)
         }
@@ -76,42 +126,46 @@ export default function ExerciseService(db: Database = DB) {
     /**
      * Creates a new Exercise in the database.
      */
-    async function add(exercise: ExerciseType): Promise<ExerciseType> {
-        const validatedRecord = exerciseSchema.parse(exercise)
-        await db.table(TableEnum.EXERCISES).add(validatedRecord)
+    async add(record: ExerciseType): Promise<ExerciseType> {
+        const validatedRecord = exerciseSchema.parse(record)
+        await this.db.table(TableEnum.EXERCISES).add(validatedRecord)
         return validatedRecord
     }
 
     /**
-     * Creates or overwrites a Exercise in the database.
+     * Creates or overwrites a record in the database.
      */
-    async function put(exercise: ExerciseType): Promise<ExerciseType> {
-        const validatedRecord = exerciseSchema.parse(exercise)
-        await db.table(TableEnum.EXERCISES).put(validatedRecord)
+    async put(record: ExerciseType): Promise<ExerciseType> {
+        const validatedRecord = exerciseSchema.parse(record)
+        await this.db.table(TableEnum.EXERCISES).put(validatedRecord)
         return validatedRecord
     }
 
     /**
-     * Removes the Exercise by id and all associated child records from the database.
+     * Removes the record by id and all associated child records from the database.
      */
-    async function remove(id: IdType): Promise<ExerciseType> {
-        const recordToDelete = await db.table(TableEnum.EXERCISES).get(id)
-        await db.transaction(
+    async remove(id: IdType): Promise<ExerciseType> {
+        const recordToDelete = await this.db.table(TableEnum.EXERCISES).get(id)
+        await this.db.transaction(
             'rw',
-            db.table(TableEnum.EXERCISES),
-            db.table(TableEnum.EXERCISE_RESULTS),
+            this.db.table(TableEnum.EXERCISES),
+            this.db.table(TableEnum.EXERCISE_RESULTS),
             async () => {
-                await db.table(TableEnum.EXERCISES).delete(id)
-                await db.table(TableEnum.EXERCISE_RESULTS).where('exerciseId').equals(id).delete()
+                await this.db.table(TableEnum.EXERCISES).delete(id)
+                await this.db
+                    .table(TableEnum.EXERCISE_RESULTS)
+                    .where('exerciseId')
+                    .equals(id)
+                    .delete()
             },
         )
         return recordToDelete
     }
 
     /**
-     * Imports Exercises into the database using put and returns a results object.
+     * Imports records into the database using put and returns a results object.
      */
-    async function importData(exercises: ExerciseType[]) {
+    async importData(exercises: ExerciseType[]) {
         const validRecords: ExerciseType[] = []
         const invalidRecords: Partial<ExerciseType>[] = []
 
@@ -127,7 +181,7 @@ export default function ExerciseService(db: Database = DB) {
         // Put validated records into the database. Catch any bulk errors.
         let bulkError: Record<string, string> = null!
         try {
-            await db.table(TableEnum.EXERCISES).bulkAdd(validRecords)
+            await this.db.table(TableEnum.EXERCISES).bulkAdd(validRecords)
         } catch (error) {
             bulkError = {
                 name: (error as Error)?.name,
@@ -145,11 +199,11 @@ export default function ExerciseService(db: Database = DB) {
     }
 
     /**
-     * Custom export operation for fetching all Exercises from the database with unneeded fields
+     * Custom export operation for fetching all records from the database with unneeded fields
      * removed.
      */
-    async function exportData() {
-        const records = await db.table(TableEnum.EXERCISES).toArray()
+    async exportData() {
+        const records = await this.db.table(TableEnum.EXERCISES).toArray()
         return records.map((record) => {
             if ('lastChild' in record) {
                 delete record.lastChild
@@ -161,12 +215,12 @@ export default function ExerciseService(db: Database = DB) {
     /**
      * From Parent:
      *
-     * Updates the `lastChild` property of the Exercise associated with the `exerciseId` with the
+     * Updates the `lastChild` property of the record associated with the `exerciseId` with the
      * most recently created child record. Locked records are not updated.
      */
-    async function updateLastChild(exerciseId: IdType) {
+    async updateLastChild(exerciseId: IdType) {
         const lastChild = (
-            await db
+            await this.db
                 .table(TableEnum.EXERCISE_RESULTS)
                 .where('exerciseId')
                 .equals(exerciseId)
@@ -175,27 +229,27 @@ export default function ExerciseService(db: Database = DB) {
             .filter((record) => !record.status.includes(StatusEnum.LOCKED))
             .reverse()[0]
 
-        await db.table(TableEnum.EXERCISES).update(exerciseId, { lastChild })
+        await this.db.table(TableEnum.EXERCISES).update(exerciseId, { lastChild })
     }
 
     /**
-     * Toggles the favorited status on the Exercise's status property.
+     * Toggles the favorited status on the record's status property.
      */
-    async function toggleFavorite(exercise: ExerciseType) {
-        const index = exercise.status.indexOf(StatusEnum.FAVORITED)
+    async toggleFavorite(record: ExerciseType) {
+        const index = record.status.indexOf(StatusEnum.FAVORITED)
         if (index === -1) {
-            exercise.status.push(StatusEnum.FAVORITED)
+            record.status.push(StatusEnum.FAVORITED)
         } else {
-            exercise.status.splice(index, 1)
+            record.status.splice(index, 1)
         }
-        await db.table(TableEnum.EXERCISES).update(exercise.id, { status: exercise.status })
+        await this.db.table(TableEnum.EXERCISES).update(record.id, { status: record.status })
     }
 
     /**
-     * Generates an options list of Exercises for select box components on the FE.
+     * Generates an options list of records for select box components on the FE.
      */
-    async function getSelectOptions(): Promise<SelectOption[]> {
-        const records = await db.table(TableEnum.EXERCISES).orderBy('name').toArray()
+    async getSelectOptions(): Promise<SelectOption[]> {
+        const records = await this.db.table(TableEnum.EXERCISES).orderBy('name').toArray()
 
         return records.map((record) => {
             const name = record.name
@@ -214,18 +268,9 @@ export default function ExerciseService(db: Database = DB) {
             }
         })
     }
-
-    return {
-        liveDashboardObservable,
-        liveObservable,
-        get,
-        add,
-        put,
-        remove,
-        importData,
-        exportData,
-        updateLastChild,
-        toggleFavorite,
-        getSelectOptions,
-    }
 }
+
+/**
+ * Singleton instance exported as default for convenience.
+ */
+export default ExerciseService.getSingleton()

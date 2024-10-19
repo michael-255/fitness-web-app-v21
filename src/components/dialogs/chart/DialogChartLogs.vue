@@ -28,13 +28,12 @@ defineEmits([...useDialogPluginComponent.emits])
 const { dialogRef, onDialogHide, onDialogCancel } = useDialogPluginComponent()
 
 const { log } = useLogger()
-const logService = LogService()
 
 const subscriptionFinished = ref(false)
 const liveLogs: Ref<LogType[]> = ref([])
 const hasRecords = ref(false)
 
-const subscription = logService.liveObservable().subscribe({
+const subscription = LogService.liveObservable().subscribe({
     next: (logs) => {
         liveLogs.value = logs
         subscriptionFinished.value = true

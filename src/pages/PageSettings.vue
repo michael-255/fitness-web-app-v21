@@ -45,12 +45,6 @@ const router = useRouter()
 const { log } = useLogger()
 const { onConfirmDialog } = useDialogs()
 const settingsStore = useSettingsStore()
-const settingService = SettingService()
-const workoutService = WorkoutService()
-const exerciseService = ExerciseService()
-const workoutResultService = WorkoutResultService()
-const exerciseResultService = ExerciseResultService()
-const measurementService = MeasurementService()
 
 const isDevMode = import.meta.env.DEV
 
@@ -93,16 +87,16 @@ function onImportBackup() {
                 log.silentDebug('backup:', backup)
 
                 // NOTE: Logs are ignored during import
-                const settingsImport = await settingService.importData(backup?.settings ?? [])
-                const measurementsImport = await measurementService.importData(
+                const settingsImport = await SettingService.importData(backup?.settings ?? [])
+                const measurementsImport = await MeasurementService.importData(
                     backup?.measurements ?? [],
                 )
-                const workoutsImport = await workoutService.importData(backup?.workouts ?? [])
-                const exercisesImport = await exerciseService.importData(backup?.exercises ?? [])
-                const workoutResultsImport = await workoutResultService.importData(
+                const workoutsImport = await WorkoutService.importData(backup?.workouts ?? [])
+                const exercisesImport = await ExerciseService.importData(backup?.exercises ?? [])
+                const workoutResultsImport = await WorkoutResultService.importData(
                     backup?.workoutResults ?? [],
                 )
-                const exerciseResultsImport = await exerciseResultService.importData(
+                const exerciseResultsImport = await ExerciseResultService.importData(
                     backup?.exerciseResults ?? [],
                 )
 
@@ -195,8 +189,8 @@ function onExportBackup() {
                     settings: await DB.table(TableEnum.SETTINGS).toArray(),
                     logs: await DB.table(TableEnum.LOGS).toArray(),
                     measurements: await DB.table(TableEnum.MEASUREMENTS).toArray(),
-                    workouts: await workoutService.exportData(),
-                    exercises: await exerciseService.exportData(),
+                    workouts: await WorkoutService.exportData(),
+                    exercises: await ExerciseService.exportData(),
                     workoutResults: await DB.table(TableEnum.WORKOUT_RESULTS).toArray(),
                     exerciseResults: await DB.table(TableEnum.EXERCISE_RESULTS).toArray(),
                 } as BackupType
@@ -259,7 +253,7 @@ function onDeleteAppData() {
         onOk: async () => {
             try {
                 $q.loading.show()
-                await settingService.clear()
+                await SettingService.clear()
                 await DB.table(TableEnum.LOGS).clear()
                 // other tables here...
                 log.info('Successfully deleted app data')
@@ -317,8 +311,8 @@ async function createTestData() {
         exerciseGroups: [{ exerciseIds: [exercise.id] }],
     })
 
-    await exerciseService.add(exercise)
-    await workoutService.add(workout)
+    await ExerciseService.add(exercise)
+    await WorkoutService.add(workout)
 
     log.info('Test data added', { exercise, workout })
 }
@@ -376,7 +370,7 @@ async function createTestData() {
                     <q-toggle
                         :model-value="settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)"
                         @update:model-value="
-                            settingService.put({
+                            SettingService.put({
                                 key: SettingKeyEnum.ADVANCED_MODE,
                                 value: $event,
                             })
@@ -401,7 +395,7 @@ async function createTestData() {
                             settingsStore.getKeyValue(SettingKeyEnum.INSTRUCTIONS_OVERLAY)
                         "
                         @update:model-value="
-                            settingService.put({
+                            SettingService.put({
                                 key: SettingKeyEnum.INSTRUCTIONS_OVERLAY,
                                 value: $event,
                             })
@@ -424,7 +418,7 @@ async function createTestData() {
                     <q-toggle
                         :model-value="settingsStore.getKeyValue(SettingKeyEnum.INFO_MESSAGES)"
                         @update:model-value="
-                            settingService.put({
+                            SettingService.put({
                                 key: SettingKeyEnum.INFO_MESSAGES,
                                 value: $event,
                             })
@@ -447,7 +441,7 @@ async function createTestData() {
                     <q-toggle
                         :model-value="settingsStore.getKeyValue(SettingKeyEnum.CONSOLE_LOGS)"
                         @update:model-value="
-                            settingService.put({
+                            SettingService.put({
                                 key: SettingKeyEnum.CONSOLE_LOGS,
                                 value: $event,
                             })
@@ -472,7 +466,7 @@ async function createTestData() {
                             settingsStore.getKeyValue(SettingKeyEnum.LOG_RETENTION_DURATION)
                         "
                         @update:model-value="
-                            settingService.put({
+                            SettingService.put({
                                 key: SettingKeyEnum.LOG_RETENTION_DURATION,
                                 value: $event,
                             })

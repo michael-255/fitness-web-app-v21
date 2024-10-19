@@ -63,19 +63,17 @@ useMeta({
 
 const notify = useQuasar().notify
 const { log } = useLogger()
-const settingService = SettingService()
-const logService = LogService()
 const settingsStore = useSettingsStore()
 
 // Loading live Settings into the store on startup for use throughout the app.
-const subscription = settingService.liveObservable().subscribe({
+const subscription = SettingService.liveObservable().subscribe({
     next: (records) => (settingsStore.settings = records),
     error: (error) => log.error(`Error loading live Settings`, error as Error),
 })
 
 onMounted(async () => {
     try {
-        const settings = await settingService.initialize()
+        const settings = await SettingService.initialize()
         log.silentDebug('Settings initialized', settings)
     } catch (error) {
         // Output the error and notify user since it could be a database or logger failure
@@ -84,7 +82,7 @@ onMounted(async () => {
     }
 
     try {
-        const logsPurged = await logService.purge()
+        const logsPurged = await LogService.purge()
         log.silentDebug('Expired logs purged', { logsPurged })
     } catch (error) {
         log.error('Error purging expired logs', error as Error)

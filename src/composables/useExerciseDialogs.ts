@@ -18,7 +18,6 @@ export default function useExerciseDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
     const { showDialog, onConfirmDialog } = useDialogs()
-    const exerciseService = ExerciseService()
     const selectedStore = useSelectedStore()
     const settingsStore = useSettingsStore()
 
@@ -37,7 +36,7 @@ export default function useExerciseDialogs() {
             onOk: async () => {
                 try {
                     $q.loading.show()
-                    await exerciseService.toggleFavorite(record)
+                    await ExerciseService.toggleFavorite(record)
                     log.info(`${action}d ${record.name}`, record)
                 } catch (error) {
                     log.error(`${action} failed`, error as Error)
@@ -49,7 +48,7 @@ export default function useExerciseDialogs() {
     }
 
     async function chartExerciseDialog(id: string) {
-        const record = await exerciseService.get(id)
+        const record = await ExerciseService.get(id)
         if (!record) {
             log.error('Exercise not found')
             return
@@ -60,7 +59,7 @@ export default function useExerciseDialogs() {
     }
 
     async function inspectExerciseDialog(id: string) {
-        const record = await exerciseService.get(id)
+        const record = await ExerciseService.get(id)
         if (!record) {
             log.error('Exercise not found')
             return
@@ -75,7 +74,7 @@ export default function useExerciseDialogs() {
     }
 
     async function editExerciseDialog(id: string) {
-        const record = await exerciseService.get(id)
+        const record = await ExerciseService.get(id)
         if (!record) {
             log.error('Exercise not found')
             return
@@ -117,7 +116,7 @@ export default function useExerciseDialogs() {
     async function confirmDeleteDialog(id: IdType) {
         try {
             $q.loading.show()
-            const deletedRecord = await exerciseService.remove(id)
+            const deletedRecord = await ExerciseService.remove(id)
             log.info(`Deleted Exercise`, deletedRecord)
         } catch (error) {
             log.error(`Error deleting Exercise`, error as Error)

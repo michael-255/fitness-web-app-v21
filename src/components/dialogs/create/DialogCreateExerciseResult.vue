@@ -17,7 +17,6 @@ const { dialogRef, onDialogHide, onDialogCancel, onDialogOK } = useDialogPluginC
 const $q = useQuasar()
 const { log } = useLogger()
 const { onConfirmDialog } = useDialogs()
-const exerciseResultService = ExerciseResultService()
 const selectedStore = useSelectedStore()
 const settingsStore = useSettingsStore()
 
@@ -45,7 +44,7 @@ async function createExerciseResultSubmit() {
 async function createSubmit(record: ExerciseResultType) {
     try {
         $q.loading.show()
-        await exerciseResultService.add(record)
+        await ExerciseResultService.add(record)
         log.info('Exercise Result created', record)
     } catch (error) {
         log.error(`Error creating Exercise Result`, error as Error)

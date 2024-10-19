@@ -2,23 +2,23 @@
 import PageTable from '@/components/tables/PageTable.vue'
 import SettingService from '@/services/SettingService'
 import { appName } from '@/shared/constants'
-import { settingsTableIcon } from '@/shared/icons'
-import { tableColumn } from '@/shared/utils'
 import { useMeta } from 'quasar'
 
 useMeta({ title: `${appName} - Settings Data Table` })
-
-const settingService = SettingService()
-
-const tableColumns = [tableColumn('key', 'Key'), tableColumn('value', 'Value')]
 </script>
 
 <template>
     <PageTable
-        labelSingular="Setting"
-        labelPlural="Settings"
-        :icon="settingsTableIcon"
-        :tableColumns="tableColumns"
-        :dataObservable="settingService.liveObservable()"
+        :labelSingular="SettingService.labelSingular"
+        :labelPlural="SettingService.labelPlural"
+        :icon="SettingService.tableIcon"
+        :tableColumns="SettingService.tableColumns"
+        :supportsColumnFilters="SettingService.supportsTableColumnFilters"
+        :supportsTableCharts="SettingService.supportsTableCharts"
+        :supportsInspect="SettingService.supportsInspect"
+        :supportsCreate="SettingService.supportsCreate"
+        :supportsEdit="SettingService.supportsEdit"
+        :supportsDelete="SettingService.supportsDelete"
+        :dataObservable="SettingService.liveObservable()"
     />
 </template>

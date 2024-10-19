@@ -5,6 +5,7 @@ import type { MeasurementType } from '@/models/Measurements'
 import type { SettingType } from '@/models/Setting'
 import type { WorkoutType } from '@/models/Workout'
 import type { WorkoutResultType } from '@/models/WorkoutResult'
+import type { Component } from 'vue'
 import { z } from 'zod'
 import type {
     idSchema,
@@ -63,4 +64,9 @@ export type SelectOption = {
     value: IdType
     label: string
     disable: boolean
+}
+
+export type CustomComponentType = {
+    component: Component
+    [key: string]: any
 }

@@ -26,6 +26,7 @@ const useSelectedStore = defineStore({
         workoutResult: {} as WorkoutResultType,
         exercise: {} as ExerciseType,
         exerciseResult: {} as ExerciseResultType,
+        record: {} as Record<string, any>,
     }),
 })
 

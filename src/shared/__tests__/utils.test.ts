@@ -18,7 +18,7 @@ import type { StatusType } from '../types'
 
 it('createId', () => {
     expect(() => createId('BAD' as TableEnum)).toThrow('Invalid Table: BAD')
-    expect(createId(TableEnum.WORKOUTS).startsWith('wop-')).toBe(true)
+    expect(createId(TableEnum.LOGS).startsWith('log-')).toBe(true)
 })
 
 it('hiddenTableColumn', () => {

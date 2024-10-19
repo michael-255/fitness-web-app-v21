@@ -18,7 +18,6 @@ export default function useWorkoutDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
     const { showDialog, onConfirmDialog } = useDialogs()
-    const workoutService = WorkoutService()
     const selectedStore = useSelectedStore()
     const settingsStore = useSettingsStore()
 
@@ -37,7 +36,7 @@ export default function useWorkoutDialogs() {
             onOk: async () => {
                 try {
                     $q.loading.show()
-                    await workoutService.toggleFavorite(record)
+                    await WorkoutService.toggleFavorite(record)
                     log.info(`${action}d ${record.name}`, record)
                 } catch (error) {
                     log.error(`${action} failed`, error as Error)
@@ -49,7 +48,7 @@ export default function useWorkoutDialogs() {
     }
 
     async function chartWorkoutDialog(id: string) {
-        const record = await workoutService.get(id)
+        const record = await WorkoutService.get(id)
         if (!record) {
             log.error('Workout not found')
             return
@@ -60,7 +59,7 @@ export default function useWorkoutDialogs() {
     }
 
     async function inspectWorkoutDialog(id: string) {
-        const record = await workoutService.get(id)
+        const record = await WorkoutService.get(id)
         if (!record) {
             log.error('Workout not found')
             return
@@ -75,7 +74,7 @@ export default function useWorkoutDialogs() {
     }
 
     async function editWorkoutDialog(id: string) {
-        const record = await workoutService.get(id)
+        const record = await WorkoutService.get(id)
         if (!record) {
             log.error('Workout not found')
             return
@@ -117,7 +116,7 @@ export default function useWorkoutDialogs() {
     async function confirmDeleteDialog(id: IdType) {
         try {
             $q.loading.show()
-            const deletedRecord = await workoutService.remove(id)
+            const deletedRecord = await WorkoutService.remove(id)
             log.info(`Deleted Workout`, deletedRecord)
         } catch (error) {
             log.error(`Error deleting Workout`, error as Error)

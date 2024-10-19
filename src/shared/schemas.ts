@@ -17,16 +17,12 @@ export const statusSchema = z.nativeEnum(StatusEnum)
 
 export const idSchema = z.string().refine(
     (id) => {
-        const tablePrefix = id.substring(0, 3)
-        if (tableSchema.safeParse(tablePrefix).success) {
-            // Trim off prefix plus '-' and check if uuid is valid
-            if (z.string().uuid().safeParse(id.substring(4)).success) {
-                return true // uuid valid
-            } else {
-                return false // uuid invalid
-            }
+        // Trim off prefix and check if uuid is valid
+        // Does not validate if the prefix is correct
+        if (z.string().uuid().safeParse(id.substring(4)).success) {
+            return true // uuid valid
         } else {
-            return false // table prefix invalid
+            return false // uuid invalid
         }
     },
     {
