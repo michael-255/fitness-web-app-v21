@@ -61,7 +61,9 @@ export class ExerciseService extends BaseService {
      * locked records first, then favorited records, then alphabetically by name, and finally by
      * createdAt reversed.
      */
-    liveDashboardObservable(): Observable<ExerciseType[]> {
+    liveDashboard(): Observable<ExerciseType[]>
+    liveDashboard(): Observable<Record<string, any>[]>
+    liveDashboard(): Observable<ExerciseType[] | Record<string, any>[]> {
         return liveQuery(() =>
             this.db
                 .table(TableEnum.EXERCISES)
@@ -106,16 +108,20 @@ export class ExerciseService extends BaseService {
     }
 
     /**
-     * Returns live query ordered by name.
+     * Returns live query or records ordered by name.
      */
-    liveObservable(): Observable<ExerciseType[]> {
+    liveTable(): Observable<ExerciseType[]>
+    liveTable(): Observable<Record<string, any>[]>
+    liveTable(): Observable<ExerciseType[] | Record<string, any>[]> {
         return liveQuery(() => this.db.table(TableEnum.EXERCISES).orderBy('name').toArray())
     }
 
     /**
      * Returns record by ID.
      */
-    async get(id: IdType): Promise<ExerciseType> {
+    async get(id: IdType): Promise<ExerciseType>
+    async get(id: IdType): Promise<Record<string, any>>
+    async get(id: IdType): Promise<ExerciseType | Record<string, any>> {
         const recordToGet = await this.db.table(TableEnum.EXERCISES).get(id)
         if (!recordToGet) {
             throw new Error(`Exercise ID not found: ${id}`)
@@ -126,7 +132,9 @@ export class ExerciseService extends BaseService {
     /**
      * Creates a new Exercise in the database.
      */
-    async add(record: ExerciseType): Promise<ExerciseType> {
+    async add(record: ExerciseType): Promise<ExerciseType>
+    async add(record: ExerciseType): Promise<Record<string, any>>
+    async add(record: ExerciseType): Promise<ExerciseType | Record<string, any>> {
         const validatedRecord = exerciseSchema.parse(record)
         await this.db.table(TableEnum.EXERCISES).add(validatedRecord)
         return validatedRecord
@@ -135,7 +143,9 @@ export class ExerciseService extends BaseService {
     /**
      * Creates or overwrites a record in the database.
      */
-    async put(record: ExerciseType): Promise<ExerciseType> {
+    async put(record: ExerciseType): Promise<ExerciseType>
+    async put(record: ExerciseType): Promise<Record<string, any>>
+    async put(record: ExerciseType): Promise<ExerciseType | Record<string, any>> {
         const validatedRecord = exerciseSchema.parse(record)
         await this.db.table(TableEnum.EXERCISES).put(validatedRecord)
         return validatedRecord
@@ -144,7 +154,9 @@ export class ExerciseService extends BaseService {
     /**
      * Removes the record by id and all associated child records from the database.
      */
-    async remove(id: IdType): Promise<ExerciseType> {
+    async remove(id: IdType): Promise<ExerciseType>
+    async remove(id: IdType): Promise<Record<string, any>>
+    async remove(id: IdType): Promise<ExerciseType | Record<string, any>> {
         const recordToDelete = await this.db.table(TableEnum.EXERCISES).get(id)
         await this.db.transaction(
             'rw',
@@ -165,12 +177,12 @@ export class ExerciseService extends BaseService {
     /**
      * Imports records into the database using put and returns a results object.
      */
-    async importData(exercises: ExerciseType[]) {
+    async importData(records: ExerciseType[]) {
         const validRecords: ExerciseType[] = []
         const invalidRecords: Partial<ExerciseType>[] = []
 
         // Validate each record
-        exercises.forEach((exercise) => {
+        records.forEach((exercise) => {
             if (exerciseSchema.safeParse(exercise).success) {
                 validRecords.push(exerciseSchema.parse(exercise)) // Clean record with parse
             } else {

@@ -1,11 +1,54 @@
 import useLogger from '@/composables/useLogger'
-import { useRouter } from 'vue-router'
+import LogService from '@/services/LogService'
+import SettingService from '@/services/SettingService'
+import WorkoutResultService from '@/services/WorkoutResultService'
+import WorkoutService from '@/services/WorkoutService'
+import { RouteNameEnum, TableEnum } from '@/shared/enums'
+import type { RouteServiceType } from '@/shared/types'
+import { useRoute, useRouter } from 'vue-router'
 
 export default function useRouting() {
     // Do NOT return route or router from any composable due to performance issues
+    const route = useRoute()
     const router = useRouter()
     const { log } = useLogger()
 
+    // Current table used by the route is any
+    const routeTable = Array.isArray(route.params.routeTable)
+        ? route.params.routeTable[0]
+        : route.params.routeTable
+
+    // Service associated with the current route table if any
+    let routeService: RouteServiceType = null!
+
+    switch (routeTable) {
+        case TableEnum.SETTINGS:
+            routeService = SettingService
+            break
+        case TableEnum.LOGS:
+            routeService = LogService
+            break
+        case TableEnum.WORKOUTS:
+            routeService = WorkoutService
+            break
+        case TableEnum.WORKOUT_RESULTS:
+            routeService = WorkoutResultService
+            break
+    }
+
+    /**
+     * Go to the specified data table route.
+     */
+    function goToTable(table: TableEnum) {
+        try {
+            router.push({
+                name: RouteNameEnum.TABLE,
+                params: { table },
+            })
+        } catch (error) {
+            log.error('Error accessing Table route', error as Error)
+        }
+    }
     /**
      * Go back if previous route state is part of the app history, otherwise go to root path.
      */
@@ -22,6 +65,9 @@ export default function useRouting() {
     }
 
     return {
+        routeTable,
+        routeService,
+        goToTable,
         goBack,
     }
 }

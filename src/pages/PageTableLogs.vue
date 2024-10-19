@@ -48,7 +48,7 @@ async function inspectLogDialog(id: string) {
         :supportsCreate="LogService.supportsCreate"
         :supportsEdit="LogService.supportsEdit"
         :supportsDelete="LogService.supportsDelete"
-        :dataObservable="LogService.liveObservable()"
+        :dataObservable="LogService.liveTable()"
         @onTableCharts="chartLogsDialog"
         @onInspect="inspectLogDialog"
     />

@@ -19,6 +19,6 @@ useMeta({ title: `${appName} - Settings Data Table` })
         :supportsCreate="SettingService.supportsCreate"
         :supportsEdit="SettingService.supportsEdit"
         :supportsDelete="SettingService.supportsDelete"
-        :dataObservable="SettingService.liveObservable()"
+        :dataObservable="SettingService.liveTable()"
     />
 </template>

@@ -52,7 +52,9 @@ export class SettingService extends BaseService {
     /**
      * Initializes settings with default values if they do not exist in the database.
      */
-    async initialize(): Promise<SettingType[]> {
+    async initialize(): Promise<SettingType[]>
+    async initialize(): Promise<Record<string, any>[]>
+    async initialize(): Promise<SettingType[] | Record<string, any>[]> {
         const defaultSettings: {
             [key in SettingKeyEnum]: SettingValueType
         } = {
@@ -86,12 +88,12 @@ export class SettingService extends BaseService {
     /**
      * Imports Settings into the database using put and returns a results object.
      */
-    async importData(settings: SettingType[]) {
+    async importData(records: SettingType[]) {
         const validRecords: SettingType[] = []
         const invalidRecords: Partial<SettingType>[] = []
 
         // Validate each setting
-        settings.forEach((record) => {
+        records.forEach((record) => {
             if (settingSchema.safeParse(record).success) {
                 validRecords.push(settingSchema.parse(record)) // Clean record with parse
             } else {
@@ -99,7 +101,7 @@ export class SettingService extends BaseService {
             }
         })
 
-        // Put validated settings into the database
+        // Put validated records into the database
         await Promise.all(
             validRecords.map((record) => this.db.table(TableEnum.SETTINGS).put(record)),
         )
@@ -121,16 +123,20 @@ export class SettingService extends BaseService {
     }
 
     /**
-     * Returns a Settings live query with default ordering.
+     * Returns a live query of records with default ordering.
      */
-    liveObservable(): Observable<SettingType[]> {
+    liveTable(): Observable<SettingType[]>
+    liveTable(): Observable<Record<string, any>[]>
+    liveTable(): Observable<SettingType[] | Record<string, any>[]> {
         return liveQuery(() => this.db.table(TableEnum.SETTINGS).toArray())
     }
 
     /**
      * Returns a Setting by key.
      */
-    async get(settingKey: SettingKeyType): Promise<SettingType> {
+    async get(settingKey: SettingKeyType): Promise<SettingType>
+    async get(settingKey: SettingKeyType): Promise<Record<string, any>>
+    async get(settingKey: SettingKeyType): Promise<SettingType | Record<string, any>> {
         const modelToGet = await this.db.table(TableEnum.SETTINGS).get(settingKey)
         if (!modelToGet) {
             throw new Error(`Setting key not found: ${settingKey}`)
@@ -141,7 +147,9 @@ export class SettingService extends BaseService {
     /**
      * Creates or overwrites a Setting in the database.
      */
-    async put(setting: SettingType): Promise<SettingType> {
+    async put(setting: SettingType): Promise<SettingType>
+    async put(setting: SettingType): Promise<Record<string, any>>
+    async put(setting: SettingType): Promise<SettingType | Record<string, any>> {
         const validatedSetting = settingSchema.parse(setting)
         await this.db.table(TableEnum.SETTINGS).put(validatedSetting)
         return validatedSetting

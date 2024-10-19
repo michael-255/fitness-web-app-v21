@@ -33,7 +33,7 @@ const subscriptionFinished = ref(false)
 const liveLogs: Ref<LogType[]> = ref([])
 const hasRecords = ref(false)
 
-const subscription = LogService.liveObservable().subscribe({
+const subscription = LogService.liveTable().subscribe({
     next: (logs) => {
         liveLogs.value = logs
         subscriptionFinished.value = true

@@ -1,5 +1,5 @@
 import type { TableEnum } from '@/shared/enums'
-import type { CustomComponentType } from '@/shared/types'
+import type { StoredComponentType } from '@/shared/types'
 import type { QTableColumn } from 'quasar'
 import type { z } from 'zod'
 import type { Database } from './db'
@@ -26,11 +26,11 @@ export default abstract class BaseService {
     abstract supportsCreate: boolean
     abstract supportsEdit: boolean
     abstract supportsDelete: boolean
-    abstract chartsDialogProps: CustomComponentType
-    abstract inspectDialogProps: CustomComponentType
-    abstract createDialogProps: CustomComponentType
-    abstract editDialogProps: CustomComponentType
-    abstract deleteDialogProps: CustomComponentType
+    abstract chartsDialogProps: StoredComponentType
+    abstract inspectDialogProps: StoredComponentType
+    abstract createDialogProps: StoredComponentType
+    abstract editDialogProps: StoredComponentType
+    abstract deleteDialogProps: StoredComponentType
 
     // eslint-disable-next-line
     initialize(...args: any[]) {
@@ -38,13 +38,13 @@ export default abstract class BaseService {
     }
 
     // eslint-disable-next-line
-    liveDashboardObservable(...args: any[]) {
-        throw new Error('liveDashboardObservable(): Not supported by this Service')
+    liveDashboard(...args: any[]) {
+        throw new Error('liveDashboard(): Not supported by this Service')
     }
 
     // eslint-disable-next-line
-    liveObservable(...args: any[]) {
-        throw new Error('liveObservable(): Not supported by this Service')
+    liveTable(...args: any[]) {
+        throw new Error('liveTable(): Not supported by this Service')
     }
 
     // eslint-disable-next-line

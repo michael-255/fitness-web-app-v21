@@ -29,7 +29,7 @@ const {
         :supportsCreate="ExerciseService.supportsCreate"
         :supportsEdit="ExerciseService.supportsEdit"
         :supportsDelete="ExerciseService.supportsDelete"
-        :dataObservable="ExerciseService.liveObservable()"
+        :dataObservable="ExerciseService.liveTable()"
         @onCharts="chartExerciseDialog"
         @onInspect="inspectExerciseDialog"
         @onCreate="createExerciseDialog"

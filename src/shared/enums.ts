@@ -6,6 +6,7 @@ export enum RouteNameEnum {
     WORKOUTS_DASHBOARD = 'WorkoutsDashboard',
     EXERCISES_DASHBOARD = 'ExercisesDashboard',
     MEASUREMENTS_DASHBOARD = 'MeasurementsDashboard',
+    TABLE = 'Table',
     SETTINGS_TABLE = 'SettingsTable',
     LOGS_TABLE = 'LogsTable',
     WORKOUTS_TABLE = 'WorkoutsTable',

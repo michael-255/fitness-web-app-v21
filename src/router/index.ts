@@ -50,6 +50,21 @@ const router = createRouter({
             ],
         },
         // Table routes are fullscreen and have no layout
+        // {
+        //     path: '/:routeTable/table',
+        //     name: RouteNameEnum.TABLE,
+        //     component: PageTable,
+        //     beforeEnter: (to: any, _: any, next: Function) => {
+        //         const routeTable = to.params.table
+        //         const isRouteTableValid = tableSchema.safeParse(routeTable).success
+
+        //         if (!isRouteTableValid) {
+        //             return next({ name: RouteNameEnum.NOT_FOUND })
+        //         }
+
+        //         return next()
+        //     },
+        // },
         {
             path: '/setttings-table',
             name: RouteNameEnum.SETTINGS_TABLE,

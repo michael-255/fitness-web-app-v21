@@ -66,7 +66,7 @@ const { log } = useLogger()
 const settingsStore = useSettingsStore()
 
 // Loading live Settings into the store on startup for use throughout the app.
-const subscription = SettingService.liveObservable().subscribe({
+const subscription = SettingService.liveTable().subscribe({
     next: (records) => (settingsStore.settings = records),
     error: (error) => log.error(`Error loading live Settings`, error as Error),
 })

@@ -81,9 +81,11 @@ export class LogService extends BaseService {
     }
 
     /**
-     * Returns a Logs live query ordered by creation date.
+     * Returns a live query of records ordered by creation date.
      */
-    liveObservable(): Observable<LogType[]> {
+    liveTable(): Observable<LogType[]>
+    liveTable(): Observable<Record<string, any>[]>
+    liveTable(): Observable<LogType[] | Record<string, any>[]> {
         return liveQuery(() =>
             this.db.table(TableEnum.LOGS).orderBy('createdAt').reverse().toArray(),
         )
@@ -92,7 +94,9 @@ export class LogService extends BaseService {
     /**
      * Returns a Log by Auto ID.
      */
-    async get(autoId: LogAutoIdType): Promise<LogType> {
+    async get(autoId: LogAutoIdType): Promise<LogType>
+    async get(autoId: LogAutoIdType): Promise<Record<string, any>>
+    async get(autoId: LogAutoIdType): Promise<LogType | Record<string, any>> {
         const modelToGet = await this.db.table(TableEnum.LOGS).get(Number(autoId))
         if (!modelToGet) {
             throw new Error(`Log Auto Id not found: ${autoId}`)
@@ -103,7 +107,9 @@ export class LogService extends BaseService {
     /**
      * Creates a new Log in the database.
      */
-    async add(log: LogType): Promise<LogType> {
+    async add(log: LogType): Promise<LogType>
+    async add(log: LogType): Promise<Record<string, any>>
+    async add(log: LogType): Promise<LogType | Record<string, any>> {
         const validatedLog = logSchema.parse(log)
         await this.db.table(TableEnum.LOGS).add(validatedLog)
         return validatedLog

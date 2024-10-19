@@ -44,9 +44,11 @@ export class MeasurementService extends BaseService {
     deleteDialogProps = null! // TODO
 
     /**
-     * Returns live query ordered by creation date.
+     * Returns live query or records ordered by creation date.
      */
-    liveObservable(): Observable<MeasurementType[]> {
+    liveTable(): Observable<MeasurementType[]>
+    liveTable(): Observable<Record<string, any>[]>
+    liveTable(): Observable<MeasurementType[] | Record<string, any>[]> {
         return liveQuery(() =>
             this.db.table(TableEnum.MEASUREMENTS).orderBy('createdAt').reverse().toArray(),
         )
@@ -55,7 +57,9 @@ export class MeasurementService extends BaseService {
     /**
      * Returns record by ID.
      */
-    async get(id: IdType): Promise<MeasurementType> {
+    async get(id: IdType): Promise<MeasurementType>
+    async get(id: IdType): Promise<Record<string, any>>
+    async get(id: IdType): Promise<MeasurementType | Record<string, any>> {
         const recordToGet = await this.db.table(TableEnum.MEASUREMENTS).get(id)
         if (!recordToGet) {
             throw new Error(`Measurement ID not found: ${id}`)
@@ -66,7 +70,9 @@ export class MeasurementService extends BaseService {
     /**
      * Creates a new record in the database.
      */
-    async add(exercise: MeasurementType): Promise<MeasurementType> {
+    async add(exercise: MeasurementType): Promise<MeasurementType>
+    async add(exercise: MeasurementType): Promise<Record<string, any>>
+    async add(exercise: MeasurementType): Promise<MeasurementType | Record<string, any>> {
         const validatedRecord = measurementSchema.parse(exercise)
         await this.db.table(TableEnum.MEASUREMENTS).add(validatedRecord)
         return validatedRecord
@@ -75,7 +81,9 @@ export class MeasurementService extends BaseService {
     /**
      * Creates or overwrites a record in the database.
      */
-    async put(record: MeasurementType): Promise<MeasurementType> {
+    async put(record: MeasurementType): Promise<MeasurementType>
+    async put(record: MeasurementType): Promise<Record<string, any>>
+    async put(record: MeasurementType): Promise<MeasurementType | Record<string, any>> {
         const validatedRecord = measurementSchema.parse(record)
         await this.db.table(TableEnum.MEASUREMENTS).put(validatedRecord)
         return validatedRecord
@@ -84,7 +92,9 @@ export class MeasurementService extends BaseService {
     /**
      * Removes the Measurement by ID.
      */
-    async remove(id: IdType): Promise<MeasurementType> {
+    async remove(id: IdType): Promise<MeasurementType>
+    async remove(id: IdType): Promise<Record<string, any>>
+    async remove(id: IdType): Promise<MeasurementType | Record<string, any>> {
         const recordToDelete = await this.db.table(TableEnum.MEASUREMENTS).get(id)
         await this.db.table(TableEnum.MEASUREMENTS).delete(id)
         return recordToDelete

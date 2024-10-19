@@ -52,9 +52,11 @@ export class WorkoutResultService extends BaseService {
     deleteDialogProps = null! // TODO
 
     /**
-     * Returns live query ordered by creation date.
+     * Returns live query or records ordered by creation date.
      */
-    liveObservable(): Observable<WorkoutResultType[]> {
+    liveTable(): Observable<WorkoutResultType[]>
+    liveTable(): Observable<Record<string, any>[]>
+    liveTable(): Observable<WorkoutResultType[] | Record<string, any>[]> {
         return liveQuery(() =>
             this.db.table(TableEnum.WORKOUT_RESULTS).orderBy('createdAt').reverse().toArray(),
         )
@@ -79,7 +81,9 @@ export class WorkoutResultService extends BaseService {
     /**
      * Returns record by ID.
      */
-    async get(id: IdType): Promise<WorkoutResultType> {
+    async get(id: IdType): Promise<WorkoutResultType>
+    async get(id: IdType): Promise<Record<string, any>>
+    async get(id: IdType): Promise<WorkoutResultType | Record<string, any>> {
         const recordToGet = await this.db.table(TableEnum.WORKOUT_RESULTS).get(id)
         if (!recordToGet) {
             throw new Error(`Workout Result ID not found: ${id}`)
@@ -90,7 +94,9 @@ export class WorkoutResultService extends BaseService {
     /**
      * Creates a new record and updates the parent `lastChild` property.
      */
-    async add(record: WorkoutResultType): Promise<WorkoutResultType> {
+    async add(record: WorkoutResultType): Promise<WorkoutResultType>
+    async add(record: WorkoutResultType): Promise<Record<string, any>>
+    async add(record: WorkoutResultType): Promise<WorkoutResultType | Record<string, any>> {
         const validatedRecord = workoutResultSchema.parse(record)
         await this.db.transaction(
             'rw',
@@ -107,7 +113,9 @@ export class WorkoutResultService extends BaseService {
     /**
      * Creates or overwrites a child record and updates the parent record's `lastChild` property.
      */
-    async put(record: WorkoutResultType): Promise<WorkoutResultType> {
+    async put(record: WorkoutResultType): Promise<WorkoutResultType>
+    async put(record: WorkoutResultType): Promise<Record<string, any>>
+    async put(record: WorkoutResultType): Promise<WorkoutResultType | Record<string, any>> {
         const validatedRecord = workoutResultSchema.parse(record)
         await this.db.transaction(
             'rw',
@@ -124,7 +132,9 @@ export class WorkoutResultService extends BaseService {
     /**
      * Removes the child record by id and updates the parent record's `lastChild` property.
      */
-    async remove(id: IdType): Promise<WorkoutResultType> {
+    async remove(id: IdType): Promise<WorkoutResultType>
+    async remove(id: IdType): Promise<Record<string, any>>
+    async remove(id: IdType): Promise<WorkoutResultType | Record<string, any>> {
         const recordToDelete = await this.db.table(TableEnum.WORKOUT_RESULTS).get(id)
         await this.db.transaction(
             'rw',

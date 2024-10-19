@@ -61,7 +61,9 @@ export class WorkoutService extends BaseService {
      * with locked records first, then favorited records, then alphabetically by name, and finally
      * by createdAt reversed.
      */
-    liveDashboardObservable(): Observable<WorkoutType[]> {
+    liveDashboard(): Observable<WorkoutType[]>
+    liveDashboard(): Observable<Record<string, any>[]>
+    liveDashboard(): Observable<WorkoutType[] | Record<string, any>[]> {
         return liveQuery(() =>
             this.db
                 .table(TableEnum.WORKOUTS)
@@ -108,14 +110,18 @@ export class WorkoutService extends BaseService {
     /**
      * Returns records live query ordered by name.
      */
-    liveObservable(): Observable<WorkoutType[]> {
+    liveTable(): Observable<WorkoutType[]>
+    liveTable(): Observable<Record<string, any>[]>
+    liveTable(): Observable<WorkoutType[] | Record<string, any>> {
         return liveQuery(() => this.db.table(TableEnum.WORKOUTS).orderBy('name').toArray())
     }
 
     /**
      * Returns record by ID.
      */
-    async get(id: IdType): Promise<WorkoutType> {
+    async get(id: IdType): Promise<WorkoutType>
+    async get(id: IdType): Promise<Record<string, any>>
+    async get(id: IdType): Promise<WorkoutType | Record<string, any>> {
         const recordToGet = await this.db.table(TableEnum.WORKOUTS).get(id)
         if (!recordToGet) {
             throw new Error(`Workout ID not found: ${id}`)
@@ -126,7 +132,9 @@ export class WorkoutService extends BaseService {
     /**
      * Creates a new record in the database.
      */
-    async add(record: WorkoutType): Promise<WorkoutType> {
+    async add(record: WorkoutType): Promise<WorkoutType>
+    async add(record: WorkoutType): Promise<Record<string, any>>
+    async add(record: WorkoutType): Promise<WorkoutType | Record<string, any>> {
         const validatedRecord = workoutSchema.parse(record)
         await this.db.table(TableEnum.WORKOUTS).add(validatedRecord)
         return validatedRecord
@@ -135,7 +143,9 @@ export class WorkoutService extends BaseService {
     /**
      * Creates or overwrites a record in the database.
      */
-    async put(record: WorkoutType): Promise<WorkoutType> {
+    async put(record: WorkoutType): Promise<WorkoutType>
+    async put(record: WorkoutType): Promise<Record<string, any>>
+    async put(record: WorkoutType): Promise<WorkoutType | Record<string, any>> {
         const validatedRecord = workoutSchema.parse(record)
         await this.db.table(TableEnum.WORKOUTS).put(validatedRecord)
         return validatedRecord
@@ -144,7 +154,9 @@ export class WorkoutService extends BaseService {
     /**
      * Removes the record by id and all associated child records from the database.
      */
-    async remove(id: IdType): Promise<WorkoutType> {
+    async remove(id: IdType): Promise<WorkoutType>
+    async remove(id: IdType): Promise<Record<string, any>>
+    async remove(id: IdType): Promise<WorkoutType | Record<string, any>> {
         const recordToDelete = await this.db.table(TableEnum.WORKOUTS).get(id)
         await this.db.transaction(
             'rw',
