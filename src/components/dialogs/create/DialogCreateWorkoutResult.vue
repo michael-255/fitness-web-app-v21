@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import FormListCreateWorkoutResult from '@/components/dialogs/create/forms/FormListCreateWorkoutResult.vue'
-import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import type { WorkoutResultType } from '@/models/WorkoutResult'
 import WorkoutResultService from '@/services/WorkoutResultService'
@@ -8,13 +7,13 @@ import { closeIcon, createIcon, saveIcon } from '@/shared/icons'
 import useSelectedStore from '@/stores/selected'
 import { extend, useDialogPluginComponent, useQuasar } from 'quasar'
 import { onUnmounted } from 'vue'
+import DialogConfirm from '../DialogConfirm.vue'
 
 defineEmits([...useDialogPluginComponent.emits])
 const { dialogRef, onDialogHide, onDialogCancel, onDialogOK } = useDialogPluginComponent()
 
 const $q = useQuasar()
 const { log } = useLogger()
-const { onConfirmDialog } = useDialogs()
 const selectedStore = useSelectedStore()
 
 onUnmounted(() => {
@@ -24,24 +23,26 @@ onUnmounted(() => {
 async function createWorkoutResultSubmit() {
     const recordDeepCopy = extend(true, {}, selectedStore.workoutResult) as WorkoutResultType
 
-    onConfirmDialog({
-        title: 'Create Workout Result',
-        message: 'Are you sure you want to create this Workout Result?',
-        color: 'positive',
-        icon: saveIcon,
-        useConfirmationCode: 'NEVER',
-        onOk: async () => {
-            try {
-                $q.loading.show()
-                await WorkoutResultService.add(recordDeepCopy)
-                log.info('Workout Result created', recordDeepCopy)
-            } catch (error) {
-                log.error(`Error creating Workout Result`, error as Error)
-            } finally {
-                $q.loading.hide()
-                onDialogOK()
-            }
+    $q.dialog({
+        component: DialogConfirm,
+        componentProps: {
+            title: 'Create Workout Result',
+            message: 'Are you sure you want to create this Workout Result?',
+            color: 'positive',
+            icon: saveIcon,
+            useConfirmationCode: 'NEVER',
         },
+    }).onOk(async () => {
+        try {
+            $q.loading.show()
+            await WorkoutResultService.add(recordDeepCopy)
+            log.info('Workout Result created', recordDeepCopy)
+        } catch (error) {
+            log.error(`Error creating Workout Result`, error as Error)
+        } finally {
+            $q.loading.hide()
+            onDialogOK()
+        }
     })
 }
 </script>

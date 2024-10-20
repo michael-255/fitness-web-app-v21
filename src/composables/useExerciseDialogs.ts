@@ -1,4 +1,5 @@
 import DialogCreateExercise from '@/components/dialogs/create/DialogCreateExercise.vue'
+import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
 import DialogEditExercise from '@/components/dialogs/edit/DialogEditExercise.vue'
 import DialogInspectExercise from '@/components/dialogs/inspect/DialogInspectExercise.vue'
 import useDialogs from '@/composables/useDialogs'
@@ -15,7 +16,7 @@ import { extend, useQuasar } from 'quasar'
 export default function useExerciseDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
-    const { showDialog, onConfirmDialog } = useDialogs()
+    const { showDialog } = useDialogs()
     const selectedStore = useSelectedStore()
 
     function toggleFavoriteExerciseDialog(exercise: ExerciseType) {
@@ -25,23 +26,25 @@ export default function useExerciseDialogs() {
         const message = `Do you want to ${action.toLocaleLowerCase()} ${record.name}?`
         const icon = record.status.includes(StatusEnum.FAVORITED) ? favoriteOffIcon : favoriteOnIcon
 
-        onConfirmDialog({
-            title: action,
-            message,
-            color: 'info',
-            icon,
-            useConfirmationCode: 'NEVER',
-            onOk: async () => {
-                try {
-                    $q.loading.show()
-                    await ExerciseService.toggleFavorite(record)
-                    log.info(`${action}d ${record.name}`, record)
-                } catch (error) {
-                    log.error(`${action} failed`, error as Error)
-                } finally {
-                    $q.loading.hide()
-                }
+        $q.dialog({
+            component: DialogConfirm,
+            componentProps: {
+                title: action,
+                message,
+                color: 'info',
+                icon,
+                useConfirmationCode: 'NEVER',
             },
+        }).onOk(async () => {
+            try {
+                $q.loading.show()
+                await ExerciseService.toggleFavorite(record)
+                log.info(`${action}d ${record.name}`, record)
+            } catch (error) {
+                log.error(`${action} failed`, error as Error)
+            } finally {
+                $q.loading.hide()
+            }
         })
     }
 
@@ -82,23 +85,25 @@ export default function useExerciseDialogs() {
     }
 
     async function deleteExerciseDialog(id: IdType) {
-        onConfirmDialog({
-            title: 'Delete Exercise',
-            message: `Are you sure you want to delete ${id}?`,
-            color: 'negative',
-            icon: deleteIcon,
-            useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
-            onOk: async () => {
-                try {
-                    $q.loading.show()
-                    const deletedRecord = await ExerciseService.remove(id)
-                    log.info(`Deleted Exercise`, deletedRecord)
-                } catch (error) {
-                    log.error(`Error deleting Exercise`, error as Error)
-                } finally {
-                    $q.loading.hide()
-                }
+        $q.dialog({
+            component: DialogConfirm,
+            componentProps: {
+                title: 'Delete Exercise',
+                message: `Are you sure you want to delete ${id}?`,
+                color: 'negative',
+                icon: deleteIcon,
+                useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
             },
+        }).onOk(async () => {
+            try {
+                $q.loading.show()
+                const deletedRecord = await ExerciseService.remove(id)
+                log.info(`Deleted Exercise`, deletedRecord)
+            } catch (error) {
+                log.error(`Error deleting Exercise`, error as Error)
+            } finally {
+                $q.loading.hide()
+            }
         })
     }
 

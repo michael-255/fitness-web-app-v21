@@ -1,4 +1,5 @@
 import DialogCreateExerciseResult from '@/components/dialogs/create/DialogCreateExerciseResult.vue'
+import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
 import DialogEditExerciseResult from '@/components/dialogs/edit/DialogEditExerciseResult.vue'
 import DialogInspectExerciseResult from '@/components/dialogs/inspect/DialogInspectExerciseResult.vue'
 import useDialogs from '@/composables/useDialogs'
@@ -13,7 +14,7 @@ import { useQuasar } from 'quasar'
 export default function useExerciseResultDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
-    const { showDialog, onConfirmDialog } = useDialogs()
+    const { showDialog } = useDialogs()
     const selectedStore = useSelectedStore()
 
     async function inspectExerciseResultDialog(id: string) {
@@ -46,28 +47,26 @@ export default function useExerciseResultDialogs() {
     }
 
     async function deleteExerciseResultDialog(id: IdType) {
-        onConfirmDialog({
-            title: 'Delete Exercise Result',
-            message: `Are you sure you want to delete ${id}?`,
-            color: 'negative',
-            icon: deleteIcon,
-            useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
-            onOk: async () => {
-                return await confirmDeleteDialog(id)
+        $q.dialog({
+            component: DialogConfirm,
+            componentProps: {
+                title: 'Delete Exercise Result',
+                message: `Are you sure you want to delete ${id}?`,
+                color: 'negative',
+                icon: deleteIcon,
+                useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
             },
+        }).onOk(async () => {
+            try {
+                $q.loading.show()
+                const deletedRecord = await ExerciseResultService.remove(id)
+                log.info(`Deleted Exercise Result`, deletedRecord)
+            } catch (error) {
+                log.error(`Error deleting Exercise Result`, error as Error)
+            } finally {
+                $q.loading.hide()
+            }
         })
-    }
-
-    async function confirmDeleteDialog(id: IdType) {
-        try {
-            $q.loading.show()
-            const deletedRecord = await ExerciseResultService.remove(id)
-            log.info(`Deleted Exercise Result`, deletedRecord)
-        } catch (error) {
-            log.error(`Error deleting Exercise Result`, error as Error)
-        } finally {
-            $q.loading.hide()
-        }
     }
 
     return {

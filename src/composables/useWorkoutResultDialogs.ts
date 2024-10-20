@@ -1,4 +1,5 @@
 import DialogCreateWorkoutResult from '@/components/dialogs/create/DialogCreateWorkoutResult.vue'
+import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
 import DialogEditWorkoutResult from '@/components/dialogs/edit/DialogEditWorkoutResult.vue'
 import DialogInspectWorkoutResult from '@/components/dialogs/inspect/DialogInspectWorkoutResult.vue'
 import useDialogs from '@/composables/useDialogs'
@@ -13,7 +14,7 @@ import { useQuasar } from 'quasar'
 export default function useWorkoutResultDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
-    const { showDialog, onConfirmDialog } = useDialogs()
+    const { showDialog } = useDialogs()
     const selectedStore = useSelectedStore()
 
     async function inspectWorkoutResultDialog(id: string) {
@@ -46,23 +47,25 @@ export default function useWorkoutResultDialogs() {
     }
 
     async function deleteWorkoutResultDialog(id: IdType) {
-        onConfirmDialog({
-            title: 'Delete Workout Result',
-            message: `Are you sure you want to delete ${id}?`,
-            color: 'negative',
-            icon: deleteIcon,
-            useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
-            onOk: async () => {
-                try {
-                    $q.loading.show()
-                    const deletedRecord = await WorkoutResultService.remove(id)
-                    log.info(`Deleted Workout Result`, deletedRecord)
-                } catch (error) {
-                    log.error(`Error deleting Workout Result`, error as Error)
-                } finally {
-                    $q.loading.hide()
-                }
+        $q.dialog({
+            component: DialogConfirm,
+            componentProps: {
+                title: 'Delete Workout Result',
+                message: `Are you sure you want to delete ${id}?`,
+                color: 'negative',
+                icon: deleteIcon,
+                useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
             },
+        }).onOk(async () => {
+            try {
+                $q.loading.show()
+                const deletedRecord = await WorkoutResultService.remove(id)
+                log.info(`Deleted Workout Result`, deletedRecord)
+            } catch (error) {
+                log.error(`Error deleting Workout Result`, error as Error)
+            } finally {
+                $q.loading.hide()
+            }
         })
     }
 

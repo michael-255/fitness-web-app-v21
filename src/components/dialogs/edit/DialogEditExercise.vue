@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import FormListEditExercise from '@/components/dialogs/edit/forms/FormListEditExercise.vue'
-import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import type { ExerciseType } from '@/models/Exercise'
 import ExerciseService from '@/services/ExerciseService'
@@ -8,13 +7,13 @@ import { closeIcon, createIcon, saveIcon } from '@/shared/icons'
 import useSelectedStore from '@/stores/selected'
 import { extend, useDialogPluginComponent, useQuasar } from 'quasar'
 import { onUnmounted } from 'vue'
+import DialogConfirm from '../DialogConfirm.vue'
 
 defineEmits([...useDialogPluginComponent.emits])
 const { dialogRef, onDialogHide, onDialogCancel, onDialogOK } = useDialogPluginComponent()
 
 const $q = useQuasar()
 const { log } = useLogger()
-const { onConfirmDialog } = useDialogs()
 const selectedStore = useSelectedStore()
 
 onUnmounted(() => {
@@ -24,24 +23,26 @@ onUnmounted(() => {
 async function updateExerciseSubmit() {
     const recordDeepCopy = extend(true, {}, selectedStore.exercise) as ExerciseType
 
-    onConfirmDialog({
-        title: 'Update Exercise',
-        message: 'Are you sure you want to update this Exercise?',
-        color: 'positive',
-        icon: saveIcon,
-        useConfirmationCode: 'NEVER',
-        onOk: async () => {
-            try {
-                $q.loading.show()
-                await ExerciseService.put(recordDeepCopy)
-                log.info('Exercise updated', recordDeepCopy)
-            } catch (error) {
-                log.error(`Error updating Exercise`, error as Error)
-            } finally {
-                $q.loading.hide()
-                onDialogOK()
-            }
+    $q.dialog({
+        component: DialogConfirm,
+        componentProps: {
+            title: 'Update Exercise',
+            message: 'Are you sure you want to update this Exercise?',
+            color: 'positive',
+            icon: saveIcon,
+            useConfirmationCode: 'NEVER',
         },
+    }).onOk(async () => {
+        try {
+            $q.loading.show()
+            await ExerciseService.put(recordDeepCopy)
+            log.info('Exercise updated', recordDeepCopy)
+        } catch (error) {
+            log.error(`Error updating Exercise`, error as Error)
+        } finally {
+            $q.loading.hide()
+            onDialogOK()
+        }
     })
 }
 </script>

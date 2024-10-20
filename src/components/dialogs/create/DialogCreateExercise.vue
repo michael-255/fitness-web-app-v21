@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import FormListCreateExercise from '@/components/dialogs/create/forms/FormListCreateExercise.vue'
-import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import type { ExerciseType } from '@/models/Exercise'
 import ExerciseService from '@/services/ExerciseService'
@@ -8,13 +7,13 @@ import { closeIcon, createIcon, saveIcon } from '@/shared/icons'
 import useSelectedStore from '@/stores/selected'
 import { extend, useDialogPluginComponent, useQuasar } from 'quasar'
 import { onUnmounted } from 'vue'
+import DialogConfirm from '../DialogConfirm.vue'
 
 defineEmits([...useDialogPluginComponent.emits])
 const { dialogRef, onDialogHide, onDialogCancel, onDialogOK } = useDialogPluginComponent()
 
 const $q = useQuasar()
 const { log } = useLogger()
-const { onConfirmDialog } = useDialogs()
 const selectedStore = useSelectedStore()
 
 onUnmounted(() => {
@@ -24,29 +23,27 @@ onUnmounted(() => {
 async function createExerciseSubmit() {
     const recordDeepCopy = extend(true, {}, selectedStore.exercise) as ExerciseType
 
-    onConfirmDialog({
-        title: 'Create Exercise',
-        message: 'Are you sure you want to create this Exercise?',
-        color: 'positive',
-        icon: saveIcon,
-        useConfirmationCode: 'NEVER',
-        onOk: async () => {
-            return await createSubmit(recordDeepCopy)
+    $q.dialog({
+        component: DialogConfirm,
+        componentProps: {
+            title: 'Create Exercise',
+            message: 'Are you sure you want to create this Exercise?',
+            color: 'positive',
+            icon: saveIcon,
+            useConfirmationCode: 'NEVER',
         },
+    }).onOk(async () => {
+        try {
+            $q.loading.show()
+            await ExerciseService.add(recordDeepCopy)
+            log.info('Exercise created', recordDeepCopy)
+        } catch (error) {
+            log.error(`Error creating Exercise`, error as Error)
+        } finally {
+            $q.loading.hide()
+            onDialogOK()
+        }
     })
-}
-
-async function createSubmit(record: ExerciseType) {
-    try {
-        $q.loading.show()
-        await ExerciseService.add(record)
-        log.info('Exercise created', record)
-    } catch (error) {
-        log.error(`Error creating Exercise`, error as Error)
-    } finally {
-        $q.loading.hide()
-        onDialogOK()
-    }
 }
 </script>
 
