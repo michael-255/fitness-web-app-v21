@@ -2,24 +2,23 @@
 import DialogChartLogs from '@/components/dialogs/chart/DialogChartLogs.vue'
 import DialogInspectLog from '@/components/dialogs/inspect/DialogInspectLog.vue'
 import PageTable from '@/components/tables/PageTable.vue'
-import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import LogService from '@/services/LogService'
 import { appName } from '@/shared/constants'
 import useSelectedStore from '@/stores/selected'
-import { useMeta } from 'quasar'
+import { useMeta, useQuasar } from 'quasar'
 
 useMeta({ title: `${appName} - Logs Data Table` })
 
+const $q = useQuasar()
 const { log } = useLogger()
-const { showDialog } = useDialogs()
 const selectedStore = useSelectedStore()
 
 /**
  * Opens charts dialog for Logs. This is defined here since it is the only place it is used.
  */
 async function chartLogsDialog() {
-    showDialog({ component: DialogChartLogs })
+    $q.dialog({ component: DialogChartLogs })
 }
 
 /**
@@ -32,7 +31,7 @@ async function inspectLogDialog(id: string) {
     }
     selectedStore.log = record
     // Only use this where needed so this component isn't being needlessly imported
-    showDialog({ component: DialogInspectLog })
+    $q.dialog({ component: DialogInspectLog })
 }
 </script>
 

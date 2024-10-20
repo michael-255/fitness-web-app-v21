@@ -2,7 +2,6 @@ import DialogCreateExerciseResult from '@/components/dialogs/create/DialogCreate
 import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
 import DialogEditExerciseResult from '@/components/dialogs/edit/DialogEditExerciseResult.vue'
 import DialogInspectExerciseResult from '@/components/dialogs/inspect/DialogInspectExerciseResult.vue'
-import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import ExerciseResult from '@/models/ExerciseResult'
 import ExerciseResultService from '@/services/ExerciseResultService'
@@ -14,7 +13,6 @@ import { useQuasar } from 'quasar'
 export default function useExerciseResultDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
-    const { showDialog } = useDialogs()
     const selectedStore = useSelectedStore()
 
     async function inspectExerciseResultDialog(id: string) {
@@ -24,7 +22,7 @@ export default function useExerciseResultDialogs() {
             return
         }
         selectedStore.exerciseResult = record
-        showDialog({ component: DialogInspectExerciseResult })
+        $q.dialog({ component: DialogInspectExerciseResult })
     }
 
     async function createExerciseResultDialog(exerciseId?: IdType) {
@@ -33,7 +31,7 @@ export default function useExerciseResultDialogs() {
         } else {
             selectedStore.exerciseResult = new ExerciseResult({ exerciseId: undefined! })
         }
-        showDialog({ component: DialogCreateExerciseResult })
+        $q.dialog({ component: DialogCreateExerciseResult })
     }
 
     async function editExerciseResultDialog(id: string) {
@@ -43,7 +41,7 @@ export default function useExerciseResultDialogs() {
             return
         }
         selectedStore.exerciseResult = record
-        showDialog({ component: DialogEditExerciseResult })
+        $q.dialog({ component: DialogEditExerciseResult })
     }
 
     async function deleteExerciseResultDialog(id: IdType) {

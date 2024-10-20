@@ -2,7 +2,6 @@ import DialogCreateWorkoutResult from '@/components/dialogs/create/DialogCreateW
 import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
 import DialogEditWorkoutResult from '@/components/dialogs/edit/DialogEditWorkoutResult.vue'
 import DialogInspectWorkoutResult from '@/components/dialogs/inspect/DialogInspectWorkoutResult.vue'
-import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import WorkoutResult from '@/models/WorkoutResult'
 import WorkoutResultService from '@/services/WorkoutResultService'
@@ -14,7 +13,6 @@ import { useQuasar } from 'quasar'
 export default function useWorkoutResultDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
-    const { showDialog } = useDialogs()
     const selectedStore = useSelectedStore()
 
     async function inspectWorkoutResultDialog(id: string) {
@@ -24,7 +22,7 @@ export default function useWorkoutResultDialogs() {
             return
         }
         selectedStore.workoutResult = record
-        showDialog({ component: DialogInspectWorkoutResult })
+        $q.dialog({ component: DialogInspectWorkoutResult })
     }
 
     async function createWorkoutResultDialog(workoutId?: IdType) {
@@ -33,7 +31,7 @@ export default function useWorkoutResultDialogs() {
         } else {
             selectedStore.workoutResult = new WorkoutResult({ workoutId: undefined! })
         }
-        showDialog({ component: DialogCreateWorkoutResult })
+        $q.dialog({ component: DialogCreateWorkoutResult })
     }
 
     async function editWorkoutResultDialog(id: string) {
@@ -43,7 +41,7 @@ export default function useWorkoutResultDialogs() {
             return
         }
         selectedStore.workoutResult = record
-        showDialog({ component: DialogEditWorkoutResult })
+        $q.dialog({ component: DialogEditWorkoutResult })
     }
 
     async function deleteWorkoutResultDialog(id: IdType) {

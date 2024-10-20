@@ -2,7 +2,6 @@ import DialogCreateWorkout from '@/components/dialogs/create/DialogCreateWorkout
 import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
 import DialogEditWorkout from '@/components/dialogs/edit/DialogEditWorkout.vue'
 import DialogInspectWorkout from '@/components/dialogs/inspect/DialogInspectWorkout.vue'
-import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import type { WorkoutType } from '@/models/Workout'
 import Workout from '@/models/Workout'
@@ -16,7 +15,6 @@ import { extend, useQuasar } from 'quasar'
 export default function useWorkoutDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
-    const { showDialog } = useDialogs()
     const selectedStore = useSelectedStore()
 
     function toggleFavoriteWorkoutDialog(workout: WorkoutType) {
@@ -56,7 +54,7 @@ export default function useWorkoutDialogs() {
         }
         selectedStore.workout = record
         // TODO
-        // showDialog({ component: DialogChartWorkout })
+        // $q.dialog({ component: DialogChartWorkout })
     }
 
     async function inspectWorkoutDialog(id: string) {
@@ -66,12 +64,12 @@ export default function useWorkoutDialogs() {
             return
         }
         selectedStore.workout = record
-        showDialog({ component: DialogInspectWorkout })
+        $q.dialog({ component: DialogInspectWorkout })
     }
 
     async function createWorkoutDialog() {
         selectedStore.workout = new Workout({})
-        showDialog({ component: DialogCreateWorkout })
+        $q.dialog({ component: DialogCreateWorkout })
     }
 
     async function editWorkoutDialog(id: string) {
@@ -81,7 +79,7 @@ export default function useWorkoutDialogs() {
             return
         }
         selectedStore.workout = record
-        showDialog({ component: DialogEditWorkout })
+        $q.dialog({ component: DialogEditWorkout })
     }
 
     async function deleteWorkoutDialog(id: IdType) {

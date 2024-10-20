@@ -2,7 +2,6 @@ import DialogCreateExercise from '@/components/dialogs/create/DialogCreateExerci
 import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
 import DialogEditExercise from '@/components/dialogs/edit/DialogEditExercise.vue'
 import DialogInspectExercise from '@/components/dialogs/inspect/DialogInspectExercise.vue'
-import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import type { ExerciseType } from '@/models/Exercise'
 import Exercise, { ExerciseInputEnum } from '@/models/Exercise'
@@ -16,7 +15,6 @@ import { extend, useQuasar } from 'quasar'
 export default function useExerciseDialogs() {
     const $q = useQuasar()
     const { log } = useLogger()
-    const { showDialog } = useDialogs()
     const selectedStore = useSelectedStore()
 
     function toggleFavoriteExerciseDialog(exercise: ExerciseType) {
@@ -56,7 +54,7 @@ export default function useExerciseDialogs() {
         }
         selectedStore.exercise = record
         // TODO
-        // showDialog({ component: DialogChartExercise })
+        // $q.dialog({ component: DialogChartExercise })
     }
 
     async function inspectExerciseDialog(id: string) {
@@ -66,12 +64,12 @@ export default function useExerciseDialogs() {
             return
         }
         selectedStore.exercise = record
-        showDialog({ component: DialogInspectExercise })
+        $q.dialog({ component: DialogInspectExercise })
     }
 
     async function createExerciseDialog() {
         selectedStore.exercise = new Exercise({ inputs: ExerciseInputEnum.CHECKLIST })
-        showDialog({ component: DialogCreateExercise })
+        $q.dialog({ component: DialogCreateExercise })
     }
 
     async function editExerciseDialog(id: string) {
@@ -81,7 +79,7 @@ export default function useExerciseDialogs() {
             return
         }
         selectedStore.exercise = record
-        showDialog({ component: DialogEditExercise })
+        $q.dialog({ component: DialogEditExercise })
     }
 
     async function deleteExerciseDialog(id: IdType) {
