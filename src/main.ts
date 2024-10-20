@@ -56,4 +56,5 @@ app.use(Quasar, {
         // ..and many more (check Installation card on each Quasar component/directive/plugin)
     },
 })
+
 app.mount('#app')

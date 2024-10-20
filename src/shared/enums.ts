@@ -38,7 +38,7 @@ export enum TableEnum {
  * Status indicators used to modify how the app treats a record with it.
  */
 export enum StatusEnum {
-    LOCKED = 'Locked', // Shared
+    LOCKED = 'Locked', // Shared - No user interaction allowed
     DEACTIVATED = 'Deactivated', // Parent
     FAVORITED = 'Favorited', // Parent
 }

@@ -1,5 +1,4 @@
 import { exerciseSchema, type ExerciseType } from '@/models/Exercise'
-import DB, { Database } from '@/services/db'
 import { StatusEnum, TableEnum } from '@/shared/enums'
 import { databaseIcon, exercisesPageIcon } from '@/shared/icons'
 import type { IdType, SelectOption } from '@/shared/types'
@@ -11,17 +10,8 @@ import BaseService from './BaseService'
  * Singleton class for managing most aspects of the Exercise model.
  */
 export class ExerciseService extends BaseService {
-    private static _instance: ExerciseService | null = null
-
-    private constructor(public db: Database) {
+    public constructor() {
         super()
-    }
-
-    static getSingleton(db: Database = DB): ExerciseService {
-        if (!ExerciseService._instance) {
-            ExerciseService._instance = new ExerciseService(db)
-        }
-        return ExerciseService._instance
     }
 
     labelSingular = 'Exercise'
@@ -50,11 +40,6 @@ export class ExerciseService extends BaseService {
     supportsCreate = true
     supportsEdit = true
     supportsDelete = true
-    chartsDialogProps = null! // TODO
-    inspectDialogProps = null! // TODO
-    createDialogProps = null! // TODO
-    editDialogProps = null! // TODO
-    deleteDialogProps = null! // TODO
 
     /**
      * Returns live query with records that are not deactivated with the remaining sorted with
@@ -285,4 +270,4 @@ export class ExerciseService extends BaseService {
 /**
  * Singleton instance exported as default for convenience.
  */
-export default ExerciseService.getSingleton()
+export default ExerciseService.instance()

@@ -1,8 +1,8 @@
 import type { TableEnum } from '@/shared/enums'
-import type { DialogComponentType } from '@/shared/types'
 import type { QTableColumn } from 'quasar'
 import type { z } from 'zod'
 import type { Database } from './db'
+import DB from './db'
 
 /**
  * Abstract base class for all Services to extend. This defines properties and methods that other
@@ -11,7 +11,41 @@ import type { Database } from './db'
  * `null!` if they will not be used.
  */
 export default abstract class BaseService {
-    abstract db: Database // This should be handled by the singleton constructor
+    /**
+     * Map of instances of each Service class. This is used to ensure that only one instance of each
+     * Service class is created and used throughout the application.
+     */
+    private static _instances: Map<new () => BaseService, BaseService> = new Map()
+
+    /**
+     * Database instance used by all Services. This is set when the first Service is created by
+     * the protected constructor.
+     */
+    private static _database: Database = null!
+
+    protected constructor(database: Database = DB) {
+        if (!BaseService._database) {
+            BaseService._database = database
+        }
+    }
+
+    /**
+     * Singleton pattern that returns an instance of a class that extends the BaseService class.
+     */
+    static instance<S extends BaseService>(this: new () => S): S {
+        if (!BaseService._instances.has(this)) {
+            BaseService._instances.set(this, new this())
+        }
+        return BaseService._instances.get(this) as S
+    }
+
+    /**
+     * Convenience method for accessing the Database instance.
+     */
+    protected get db(): Database {
+        return BaseService._database
+    }
+
     abstract labelSingular: string
     abstract labelPlural: string
     abstract modelSchema: z.ZodSchema<any>
@@ -26,11 +60,31 @@ export default abstract class BaseService {
     abstract supportsCreate: boolean
     abstract supportsEdit: boolean
     abstract supportsDelete: boolean
-    abstract chartsDialogProps: DialogComponentType
-    abstract inspectDialogProps: DialogComponentType
-    abstract createDialogProps: DialogComponentType
-    abstract editDialogProps: DialogComponentType
-    abstract deleteDialogProps: DialogComponentType
+
+    // eslint-disable-next-line
+    prepareChartsDialog(...args: any[]) {
+        throw new Error('prepareChartsDialog(): Not supported by this Service')
+    }
+
+    // eslint-disable-next-line
+    prepareInspectDialog(...args: any[]) {
+        throw new Error('prepareInspectDialog(): Not supported by this Service')
+    }
+
+    // eslint-disable-next-line
+    prepareCreateDialog(...args: any[]) {
+        throw new Error('prepareCreateDialog(): Not supported by this Service')
+    }
+
+    // eslint-disable-next-line
+    prepareEditDialog(...args: any[]) {
+        throw new Error('prepareEditDialog(): Not supported by this Service')
+    }
+
+    // eslint-disable-next-line
+    prepareDeleteDialog(...args: any[]) {
+        throw new Error('prepareDeleteDialog(): Not supported by this Service')
+    }
 
     // eslint-disable-next-line
     initialize(...args: any[]) {

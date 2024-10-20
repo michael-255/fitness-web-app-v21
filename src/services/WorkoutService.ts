@@ -1,5 +1,4 @@
 import { workoutSchema, type WorkoutType } from '@/models/Workout'
-import DB, { Database } from '@/services/db'
 import { StatusEnum, TableEnum } from '@/shared/enums'
 import { databaseIcon, workoutsPageIcon } from '@/shared/icons'
 import type { IdType, SelectOption } from '@/shared/types'
@@ -11,17 +10,8 @@ import BaseService from './BaseService'
  * Singleton class for managing most aspects of the Workout model.
  */
 export class WorkoutService extends BaseService {
-    private static _instance: WorkoutService | null = null
-
-    private constructor(public db: Database) {
+    public constructor() {
         super()
-    }
-
-    static getSingleton(db: Database = DB): WorkoutService {
-        if (!WorkoutService._instance) {
-            WorkoutService._instance = new WorkoutService(db)
-        }
-        return WorkoutService._instance
     }
 
     labelSingular = 'Workout'
@@ -50,11 +40,6 @@ export class WorkoutService extends BaseService {
     supportsCreate = true
     supportsEdit = true
     supportsDelete = true
-    chartsDialogProps = null! // TODO
-    inspectDialogProps = null! // TODO
-    createDialogProps = null! // TODO
-    editDialogProps = null! // TODO
-    deleteDialogProps = null! // TODO
 
     /**
      * Returns records live query with records that are not deactivated with the remaining sorted
@@ -285,4 +270,4 @@ export class WorkoutService extends BaseService {
 /**
  * Singleton instance exported as default for convenience.
  */
-export default WorkoutService.getSingleton()
+export default WorkoutService.instance()

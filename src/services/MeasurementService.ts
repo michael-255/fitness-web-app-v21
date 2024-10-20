@@ -1,5 +1,4 @@
 import { measurementSchema, type MeasurementType } from '@/models/Measurements'
-import DB, { Database } from '@/services/db'
 import { TableEnum } from '@/shared/enums'
 import { databaseIcon, measurementsPageIcon } from '@/shared/icons'
 import type { IdType } from '@/shared/types'
@@ -10,17 +9,8 @@ import BaseService from './BaseService'
  * Singleton class for managing most aspects of the Measurement model.
  */
 export class MeasurementService extends BaseService {
-    private static _instance: MeasurementService | null = null
-
-    private constructor(public db: Database) {
+    public constructor() {
         super()
-    }
-
-    static getSingleton(db: Database = DB): MeasurementService {
-        if (!MeasurementService._instance) {
-            MeasurementService._instance = new MeasurementService(db)
-        }
-        return MeasurementService._instance
     }
 
     labelSingular = 'Measurement'
@@ -37,11 +27,6 @@ export class MeasurementService extends BaseService {
     supportsCreate = false // TODO
     supportsEdit = false // TODO
     supportsDelete = false // TODO
-    chartsDialogProps = null! // TODO
-    inspectDialogProps = null! // TODO
-    createDialogProps = null! // TODO
-    editDialogProps = null! // TODO
-    deleteDialogProps = null! // TODO
 
     /**
      * Returns live query or records ordered by creation date.
@@ -140,4 +125,4 @@ export class MeasurementService extends BaseService {
 /**
  * Singleton instance exported as default for convenience.
  */
-export default MeasurementService.getSingleton()
+export default MeasurementService.instance()

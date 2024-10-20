@@ -5,7 +5,6 @@ import Setting, {
     type SettingType,
     type SettingValueType,
 } from '@/models/Setting'
-import DB, { Database } from '@/services/db'
 import { DurationEnum, TableEnum } from '@/shared/enums'
 import { settingsPageIcon, settingsTableIcon } from '@/shared/icons'
 import { tableColumn } from '@/shared/utils'
@@ -16,17 +15,8 @@ import BaseService from './BaseService'
  * Singleton class for managing most aspects of the Setting model.
  */
 export class SettingService extends BaseService {
-    private static _instance: SettingService | null = null
-
-    private constructor(public db: Database) {
+    public constructor() {
         super()
-    }
-
-    static getSingleton(db: Database = DB): SettingService {
-        if (!SettingService._instance) {
-            SettingService._instance = new SettingService(db)
-        }
-        return SettingService._instance
     }
 
     labelSingular = 'Setting'
@@ -43,11 +33,6 @@ export class SettingService extends BaseService {
     supportsCreate = false
     supportsEdit = false
     supportsDelete = false
-    chartsDialogProps = null! // TODO
-    inspectDialogProps = null! // TODO
-    createDialogProps = null! // TODO
-    editDialogProps = null! // TODO
-    deleteDialogProps = null! // TODO
 
     /**
      * Initializes settings with default values if they do not exist in the database.
@@ -159,4 +144,4 @@ export class SettingService extends BaseService {
 /**
  * Singleton instance exported as default for convenience.
  */
-export default SettingService.getSingleton()
+export default SettingService.instance()

@@ -5,13 +5,7 @@ import type { MeasurementType } from '@/models/Measurements'
 import type { SettingType } from '@/models/Setting'
 import type { WorkoutType } from '@/models/Workout'
 import type { WorkoutResultType } from '@/models/WorkoutResult'
-import type { ExerciseResultService } from '@/services/ExerciseResultService'
-import type { ExerciseService } from '@/services/ExerciseService'
-import type { LogService } from '@/services/LogService'
-import type { MeasurementService } from '@/services/MeasurementService'
-import type { SettingService } from '@/services/SettingService'
-import type { WorkoutResultService } from '@/services/WorkoutResultService'
-import type { WorkoutService } from '@/services/WorkoutService'
+import type BaseService from '@/services/BaseService'
 import type { Component } from 'vue'
 import { z } from 'zod'
 import type {
@@ -32,14 +26,7 @@ export type TableType = z.infer<typeof tableSchema>
 
 export type RouteNameType = z.infer<typeof routeNameSchema>
 
-export type RouteServiceType =
-    | SettingService
-    | LogService
-    | WorkoutService
-    | WorkoutResultService
-    | ExerciseService
-    | ExerciseResultService
-    | MeasurementService
+export type ServiceType = InstanceType<new (...args: any[]) => BaseService>
 
 //
 // Common
@@ -82,7 +69,7 @@ export type SelectOption = {
     disable: boolean
 }
 
-export type DialogComponentType = {
+export type CustomComponentType = {
     component: Component
-    componentProps: Record<string, any>
+    componentProps?: Record<string, any>
 }

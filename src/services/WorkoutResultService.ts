@@ -1,5 +1,4 @@
 import { workoutResultSchema, type WorkoutResultType } from '@/models/WorkoutResult'
-import DB, { Database } from '@/services/db'
 import { StatusEnum, TableEnum } from '@/shared/enums'
 import { databaseIcon } from '@/shared/icons'
 import type { IdType, SelectOption } from '@/shared/types'
@@ -11,17 +10,8 @@ import BaseService from './BaseService'
  * Singleton class for managing most aspects of the Workout Result model.
  */
 export class WorkoutResultService extends BaseService {
-    private static _instance: WorkoutResultService | null = null
-
-    private constructor(public db: Database) {
+    public constructor() {
         super()
-    }
-
-    static getSingleton(db: Database = DB): WorkoutResultService {
-        if (!WorkoutResultService._instance) {
-            WorkoutResultService._instance = new WorkoutResultService(db)
-        }
-        return WorkoutResultService._instance
     }
 
     labelSingular = 'Workout Result'
@@ -45,11 +35,6 @@ export class WorkoutResultService extends BaseService {
     supportsCreate = true
     supportsEdit = true
     supportsDelete = true
-    chartsDialogProps = null! // TODO
-    inspectDialogProps = null! // TODO
-    createDialogProps = null! // TODO
-    editDialogProps = null! // TODO
-    deleteDialogProps = null! // TODO
 
     /**
      * Returns live query or records ordered by creation date.
@@ -232,4 +217,4 @@ export class WorkoutResultService extends BaseService {
 /**
  * Singleton instance exported as default for convenience.
  */
-export default WorkoutResultService.getSingleton()
+export default WorkoutResultService.instance()

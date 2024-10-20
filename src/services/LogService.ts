@@ -1,6 +1,5 @@
 import { logSchema, type LogAutoIdType, type LogType } from '@/models/Log'
 import { SettingKeyEnum } from '@/models/Setting'
-import DB, { Database } from '@/services/db'
 import { DurationEnum, DurationMSEnum, TableEnum } from '@/shared/enums'
 import { logsTableIcon } from '@/shared/icons'
 import { hiddenTableColumn, tableColumn } from '@/shared/utils'
@@ -11,17 +10,8 @@ import BaseService from './BaseService'
  * Singleton class for managing most aspects of the Log model.
  */
 export class LogService extends BaseService {
-    private static _instance: LogService | null = null
-
-    private constructor(public db: Database) {
+    public constructor() {
         super()
-    }
-
-    static getSingleton(db: Database = DB): LogService {
-        if (!LogService._instance) {
-            LogService._instance = new LogService(db)
-        }
-        return LogService._instance
     }
 
     labelSingular = 'Log'
@@ -45,11 +35,6 @@ export class LogService extends BaseService {
     supportsCreate = false
     supportsEdit = false
     supportsDelete = false
-    chartsDialogProps = null! // TODO
-    inspectDialogProps = null! // TODO
-    createDialogProps = null! // TODO
-    editDialogProps = null! // TODO
-    deleteDialogProps = null! // TODO
 
     /**
      * Purges logs based on the log retention duration setting. Returns the number of logs purged.
@@ -119,4 +104,4 @@ export class LogService extends BaseService {
 /**
  * Singleton instance exported as default for convenience.
  */
-export default LogService.getSingleton()
+export default LogService.instance()

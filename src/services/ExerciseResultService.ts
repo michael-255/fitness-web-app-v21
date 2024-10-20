@@ -1,5 +1,4 @@
 import { exerciseResultSchema, type ExerciseResultType } from '@/models/ExerciseResult'
-import DB, { Database } from '@/services/db'
 import { StatusEnum, TableEnum } from '@/shared/enums'
 import { databaseIcon } from '@/shared/icons'
 import type { IdType, SelectOption } from '@/shared/types'
@@ -11,17 +10,8 @@ import BaseService from './BaseService'
  * Singleton class for managing most aspects of the Exercise Result model.
  */
 export class ExerciseResultService extends BaseService {
-    private static _instance: ExerciseResultService | null = null
-
-    private constructor(public db: Database) {
+    public constructor() {
         super()
-    }
-
-    static getSingleton(db: Database = DB): ExerciseResultService {
-        if (!ExerciseResultService._instance) {
-            ExerciseResultService._instance = new ExerciseResultService(db)
-        }
-        return ExerciseResultService._instance
     }
 
     labelSingular = 'Exercise Result'
@@ -45,11 +35,6 @@ export class ExerciseResultService extends BaseService {
     supportsCreate = true
     supportsEdit = true
     supportsDelete = true
-    chartsDialogProps = null! // TODO
-    inspectDialogProps = null! // TODO
-    createDialogProps = null! // TODO
-    editDialogProps = null! // TODO
-    deleteDialogProps = null! // TODO
 
     /**
      * Returns live query of records ordered by creation date.
@@ -232,4 +217,4 @@ export class ExerciseResultService extends BaseService {
 /**
  * Singleton instance exported as default for convenience.
  */
-export default ExerciseResultService.getSingleton()
+export default ExerciseResultService.instance()
