@@ -82,7 +82,7 @@ export type SelectOption = {
     disable: boolean
 }
 
-export type StoredComponentType = {
+export type DialogComponentType = {
     component: Component
-    [key: string]: any
+    componentProps: Record<string, any>
 }

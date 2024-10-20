@@ -6,6 +6,9 @@ import { appName } from '@/shared/constants'
 import { debugIcon, errorIcon, infoIcon, warnIcon } from '@/shared/icons'
 import { colors, useQuasar } from 'quasar'
 
+/**
+ * Logger meant to be used in the Vue application frontend code.
+ */
 export default function useLogger() {
     const notify = useQuasar().notify
     const loggerName = `%c${appName}`

@@ -1,5 +1,5 @@
 import type { TableEnum } from '@/shared/enums'
-import type { StoredComponentType } from '@/shared/types'
+import type { DialogComponentType } from '@/shared/types'
 import type { QTableColumn } from 'quasar'
 import type { z } from 'zod'
 import type { Database } from './db'
@@ -26,11 +26,11 @@ export default abstract class BaseService {
     abstract supportsCreate: boolean
     abstract supportsEdit: boolean
     abstract supportsDelete: boolean
-    abstract chartsDialogProps: StoredComponentType
-    abstract inspectDialogProps: StoredComponentType
-    abstract createDialogProps: StoredComponentType
-    abstract editDialogProps: StoredComponentType
-    abstract deleteDialogProps: StoredComponentType
+    abstract chartsDialogProps: DialogComponentType
+    abstract inspectDialogProps: DialogComponentType
+    abstract createDialogProps: DialogComponentType
+    abstract editDialogProps: DialogComponentType
+    abstract deleteDialogProps: DialogComponentType
 
     // eslint-disable-next-line
     initialize(...args: any[]) {
