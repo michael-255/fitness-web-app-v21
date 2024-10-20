@@ -37,7 +37,7 @@ async function goToDonate() {
 
 <template>
     <q-dialog
-        :model-value="Boolean(settingsStore.getKeyValue(SettingKeyEnum.INSTRUCTIONS_OVERLAY))"
+        :model-value="Boolean(settingsStore.instructionsOverlay)"
         @update:model-value="
             SettingService.put({
                 key: SettingKeyEnum.INSTRUCTIONS_OVERLAY,

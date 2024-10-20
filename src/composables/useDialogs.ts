@@ -64,16 +64,16 @@ export default function useDialogs() {
         message,
         icon,
         color,
-        requiresConfirmation,
-        confirmationText,
+        useConfirmationCode,
+        confirmationCode,
         onOk,
     }: {
         title: string
         message: string
         icon: string
         color: string
-        requiresConfirmation?: boolean
-        confirmationText?: string
+        useConfirmationCode: 'ALWAYS' | 'NEVER' | 'ADVANCED-MODE-CONTROLLED'
+        confirmationCode?: string
         onOk: () => Promise<void>
     }) {
         showDialog({
@@ -82,8 +82,8 @@ export default function useDialogs() {
             message,
             icon,
             color,
-            requiresConfirmation,
-            confirmationText,
+            useConfirmationCode,
+            confirmationCode,
             onOk,
         })
     }

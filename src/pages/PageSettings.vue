@@ -79,6 +79,7 @@ function onImportBackup() {
         message: 'Import backup data from a JSON file into the app database?',
         color: 'info',
         icon: importFileIcon,
+        useConfirmationCode: 'NEVER',
         onOk: async () => {
             try {
                 $q.loading.show()
@@ -177,6 +178,7 @@ function onExportBackup() {
         message: `Export all app data into the backup file ${filename}?`,
         color: 'info',
         icon: exportFileIcon,
+        useConfirmationCode: 'NEVER',
         onOk: async () => {
             try {
                 $q.loading.show()
@@ -225,7 +227,7 @@ function onDeleteLogs() {
         message: 'Are you sure you want to delete all app logs from the database?',
         color: 'negative',
         icon: deleteIcon,
-        requiresConfirmation: true,
+        useConfirmationCode: 'ALWAYS',
         onOk: async () => {
             try {
                 $q.loading.show()
@@ -249,7 +251,7 @@ function onDeleteAppData() {
         message: 'Are you sure you want to delete all app data?',
         color: 'negative',
         icon: deleteXIcon,
-        requiresConfirmation: true,
+        useConfirmationCode: 'ALWAYS',
         onOk: async () => {
             try {
                 $q.loading.show()
@@ -276,7 +278,7 @@ function onDeleteDatabase() {
             'Delete the underlining database? All data will be lost. You must reload the website after this action to reinitialize the database.',
         color: 'negative',
         icon: deleteSweepIcon,
-        requiresConfirmation: true,
+        useConfirmationCode: 'ALWAYS',
         onOk: async () => {
             try {
                 $q.loading.show()
@@ -368,7 +370,7 @@ async function createTestData() {
 
                 <q-item-section side>
                     <q-toggle
-                        :model-value="settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)"
+                        :model-value="settingsStore.advancedMode"
                         @update:model-value="
                             SettingService.put({
                                 key: SettingKeyEnum.ADVANCED_MODE,
@@ -391,9 +393,7 @@ async function createTestData() {
 
                 <q-item-section side>
                     <q-toggle
-                        :model-value="
-                            settingsStore.getKeyValue(SettingKeyEnum.INSTRUCTIONS_OVERLAY)
-                        "
+                        :model-value="settingsStore.instructionsOverlay"
                         @update:model-value="
                             SettingService.put({
                                 key: SettingKeyEnum.INSTRUCTIONS_OVERLAY,
@@ -416,7 +416,7 @@ async function createTestData() {
 
                 <q-item-section side>
                     <q-toggle
-                        :model-value="settingsStore.getKeyValue(SettingKeyEnum.INFO_MESSAGES)"
+                        :model-value="settingsStore.infoMessages"
                         @update:model-value="
                             SettingService.put({
                                 key: SettingKeyEnum.INFO_MESSAGES,
@@ -439,7 +439,7 @@ async function createTestData() {
 
                 <q-item-section side>
                     <q-toggle
-                        :model-value="settingsStore.getKeyValue(SettingKeyEnum.CONSOLE_LOGS)"
+                        :model-value="settingsStore.consoleLogs"
                         @update:model-value="
                             SettingService.put({
                                 key: SettingKeyEnum.CONSOLE_LOGS,
@@ -462,9 +462,7 @@ async function createTestData() {
 
                 <q-item-section side>
                     <q-select
-                        :model-value="
-                            settingsStore.getKeyValue(SettingKeyEnum.LOG_RETENTION_DURATION)
-                        "
+                        :model-value="settingsStore.logRetentionDuration"
                         @update:model-value="
                             SettingService.put({
                                 key: SettingKeyEnum.LOG_RETENTION_DURATION,

@@ -2,12 +2,10 @@
 import FormListEditWorkout from '@/components/dialogs/edit/forms/FormListEditWorkout.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
-import { SettingKeyEnum } from '@/models/Setting'
 import type { WorkoutType } from '@/models/Workout'
 import WorkoutService from '@/services/WorkoutService'
 import { closeIcon, createIcon, saveIcon } from '@/shared/icons'
 import useSelectedStore from '@/stores/selected'
-import useSettingsStore from '@/stores/settings'
 import { extend, useDialogPluginComponent, useQuasar } from 'quasar'
 import { onUnmounted } from 'vue'
 
@@ -18,7 +16,6 @@ const $q = useQuasar()
 const { log } = useLogger()
 const { onConfirmDialog } = useDialogs()
 const selectedStore = useSelectedStore()
-const settingsStore = useSettingsStore()
 
 onUnmounted(() => {
     selectedStore.$reset()
@@ -26,32 +23,26 @@ onUnmounted(() => {
 
 async function updateWorkoutSubmit() {
     const recordDeepCopy = extend(true, {}, selectedStore.workout) as WorkoutType
-    if (settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)) {
-        return await updateSubmit(recordDeepCopy)
-    } else {
-        onConfirmDialog({
-            title: 'Update Workout',
-            message: 'Are you sure you want to update this Workout?',
-            color: 'positive',
-            icon: saveIcon,
-            onOk: async () => {
-                return await updateSubmit(recordDeepCopy)
-            },
-        })
-    }
-}
 
-async function updateSubmit(record: WorkoutType) {
-    try {
-        $q.loading.show()
-        await WorkoutService.put(record)
-        log.info('Workout updated', record)
-    } catch (error) {
-        log.error(`Error updating Workout`, error as Error)
-    } finally {
-        $q.loading.hide()
-        onDialogOK()
-    }
+    onConfirmDialog({
+        title: 'Update Workout',
+        message: 'Are you sure you want to update this Workout?',
+        color: 'positive',
+        icon: saveIcon,
+        useConfirmationCode: 'NEVER',
+        onOk: async () => {
+            try {
+                $q.loading.show()
+                await WorkoutService.put(recordDeepCopy)
+                log.info('Workout updated', recordDeepCopy)
+            } catch (error) {
+                log.error(`Error updating Workout`, error as Error)
+            } finally {
+                $q.loading.hide()
+                onDialogOK()
+            }
+        },
+    })
 }
 </script>
 

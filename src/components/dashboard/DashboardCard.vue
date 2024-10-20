@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import NewlinedTextArea from '@/components/dashboard/shared/NewlinedTextArea.vue'
-import { SettingKeyEnum } from '@/models/Setting'
 import {
     addEntryIcon,
     chartsIcon,
@@ -148,7 +147,7 @@ const settingsStore = useSettingsStore()
             </q-item-section>
         </q-item>
 
-        <q-item v-if="recordDesc && !settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)">
+        <q-item v-if="recordDesc && !settingsStore.advancedMode">
             <q-item-section>
                 <q-item-label>
                     <NewlinedTextArea :text="recordDesc" />

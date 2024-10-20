@@ -4,12 +4,10 @@ import DialogInspectExerciseResult from '@/components/dialogs/inspect/DialogInsp
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
 import ExerciseResult from '@/models/ExerciseResult'
-import { SettingKeyEnum } from '@/models/Setting'
 import ExerciseResultService from '@/services/ExerciseResultService'
 import { deleteIcon } from '@/shared/icons'
 import type { IdType } from '@/shared/types'
 import useSelectedStore from '@/stores/selected'
-import useSettingsStore from '@/stores/settings'
 import { useQuasar } from 'quasar'
 
 export default function useExerciseResultDialogs() {
@@ -17,7 +15,6 @@ export default function useExerciseResultDialogs() {
     const { log } = useLogger()
     const { showDialog, onConfirmDialog } = useDialogs()
     const selectedStore = useSelectedStore()
-    const settingsStore = useSettingsStore()
 
     async function inspectExerciseResultDialog(id: string) {
         const record = await ExerciseResultService.get(id)
@@ -49,33 +46,16 @@ export default function useExerciseResultDialogs() {
     }
 
     async function deleteExerciseResultDialog(id: IdType) {
-        const title = 'Delete Exercise Result'
-        const message = `Are you sure you want to delete ${id}?`
-        const color = 'negative'
-        const icon = deleteIcon
-
-        if (settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)) {
-            onConfirmDialog({
-                title,
-                message,
-                color,
-                icon,
-                onOk: async () => {
-                    return await confirmDeleteDialog(id)
-                },
-            })
-        } else {
-            onConfirmDialog({
-                title,
-                message,
-                color,
-                icon,
-                requiresConfirmation: true,
-                onOk: async () => {
-                    return await confirmDeleteDialog(id)
-                },
-            })
-        }
+        onConfirmDialog({
+            title: 'Delete Exercise Result',
+            message: `Are you sure you want to delete ${id}?`,
+            color: 'negative',
+            icon: deleteIcon,
+            useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
+            onOk: async () => {
+                return await confirmDeleteDialog(id)
+            },
+        })
     }
 
     async function confirmDeleteDialog(id: IdType) {

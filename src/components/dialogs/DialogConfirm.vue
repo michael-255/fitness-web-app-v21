@@ -1,23 +1,38 @@
 <script setup lang="ts">
+import useSettingsStore from '@/stores/settings'
 import { useDialogPluginComponent } from 'quasar'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 const props = defineProps<{
     title: string
     message: string
     color: string
     icon: string
-    requiresConfirmation?: boolean
-    confirmationText?: string
+    useConfirmationCode: 'ALWAYS' | 'NEVER' | 'ADVANCED-MODE-CONTROLLED'
+    confirmationCode?: string
 }>()
 
 defineEmits([...useDialogPluginComponent.emits])
 const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
-// Converting the confirmation text to all uppercase
-// User doesn't have to worry about case sensitivity
-const confirmationText = (props.confirmationText ?? 'YES').toLocaleUpperCase()
+const settingsStore = useSettingsStore()
+
+/**
+ * Converting the code to all uppercase so user doesn't have to worry about case sensitivity.
+ * Default confirmation code is 'YES' if no prop is provided.
+ */
+const confirmationCode = (props.confirmationCode ?? 'YES').toLocaleUpperCase()
 const input = ref('')
+
+/**
+ * Whether the dialog uses a confirmation code.
+ */
+const usesConfirmationCode = computed(() => {
+    return (
+        props.useConfirmationCode === 'ALWAYS' ||
+        (props.useConfirmationCode === 'ADVANCED-MODE-CONTROLLED' && !settingsStore.advancedMode)
+    )
+})
 </script>
 
 <template>
@@ -30,11 +45,11 @@ const input = ref('')
 
             <q-card-section class="q-mt-lg">{{ message }}</q-card-section>
 
-            <q-card-section v-if="requiresConfirmation">
-                Enter "{{ confirmationText }}" below to unlock the confirm button.
+            <q-card-section v-if="usesConfirmationCode">
+                Enter "{{ confirmationCode }}" below to unlock the confirm button.
             </q-card-section>
 
-            <q-card-section v-if="requiresConfirmation">
+            <q-card-section v-if="usesConfirmationCode">
                 <q-input
                     class="text-h6"
                     autofocus
@@ -47,8 +62,8 @@ const input = ref('')
             <q-card-actions align="right">
                 <q-btn flat label="Cancel" @click="onDialogCancel" />
                 <q-btn
-                    v-if="requiresConfirmation"
-                    :disable="input !== confirmationText"
+                    v-if="usesConfirmationCode"
+                    :disable="input !== confirmationCode"
                     flat
                     label="Confirm"
                     :color="color"

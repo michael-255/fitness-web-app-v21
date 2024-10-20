@@ -2,12 +2,10 @@
 import FormListCreateWorkout from '@/components/dialogs/create/forms/FormListCreateWorkout.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
-import { SettingKeyEnum } from '@/models/Setting'
 import type { WorkoutType } from '@/models/Workout'
 import WorkoutService from '@/services/WorkoutService'
 import { closeIcon, createIcon, saveIcon } from '@/shared/icons'
 import useSelectedStore from '@/stores/selected'
-import useSettingsStore from '@/stores/settings'
 import { extend, useDialogPluginComponent, useQuasar } from 'quasar'
 import { onUnmounted } from 'vue'
 
@@ -18,7 +16,6 @@ const $q = useQuasar()
 const { log } = useLogger()
 const { onConfirmDialog } = useDialogs()
 const selectedStore = useSelectedStore()
-const settingsStore = useSettingsStore()
 
 onUnmounted(() => {
     selectedStore.$reset()
@@ -26,32 +23,26 @@ onUnmounted(() => {
 
 async function createWorkoutSubmit() {
     const recordDeepCopy = extend(true, {}, selectedStore.workout) as WorkoutType
-    if (settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)) {
-        return await createSubmit(recordDeepCopy)
-    } else {
-        onConfirmDialog({
-            title: 'Create Workout',
-            message: 'Are you sure you want to create this Workout?',
-            color: 'positive',
-            icon: saveIcon,
-            onOk: async () => {
-                return await createSubmit(recordDeepCopy)
-            },
-        })
-    }
-}
 
-async function createSubmit(record: WorkoutType) {
-    try {
-        $q.loading.show()
-        await WorkoutService.add(record)
-        log.info('Workout created', record)
-    } catch (error) {
-        log.error(`Error creating Workout`, error as Error)
-    } finally {
-        $q.loading.hide()
-        onDialogOK()
-    }
+    onConfirmDialog({
+        title: 'Create Workout',
+        message: 'Are you sure you want to create this Workout?',
+        color: 'positive',
+        icon: saveIcon,
+        useConfirmationCode: 'NEVER',
+        onOk: async () => {
+            try {
+                $q.loading.show()
+                await WorkoutService.add(recordDeepCopy)
+                log.info('Workout created', recordDeepCopy)
+            } catch (error) {
+                log.error(`Error creating Workout`, error as Error)
+            } finally {
+                $q.loading.hide()
+                onDialogOK()
+            }
+        },
+    })
 }
 </script>
 

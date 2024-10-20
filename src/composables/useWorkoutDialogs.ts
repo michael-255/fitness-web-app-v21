@@ -3,7 +3,6 @@ import DialogEditWorkout from '@/components/dialogs/edit/DialogEditWorkout.vue'
 import DialogInspectWorkout from '@/components/dialogs/inspect/DialogInspectWorkout.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
-import { SettingKeyEnum } from '@/models/Setting'
 import type { WorkoutType } from '@/models/Workout'
 import Workout from '@/models/Workout'
 import WorkoutService from '@/services/WorkoutService'
@@ -11,7 +10,6 @@ import { StatusEnum } from '@/shared/enums'
 import { deleteIcon, favoriteOffIcon, favoriteOnIcon } from '@/shared/icons'
 import type { IdType } from '@/shared/types'
 import useSelectedStore from '@/stores/selected'
-import useSettingsStore from '@/stores/settings'
 import { extend, useQuasar } from 'quasar'
 
 export default function useWorkoutDialogs() {
@@ -19,7 +17,6 @@ export default function useWorkoutDialogs() {
     const { log } = useLogger()
     const { showDialog, onConfirmDialog } = useDialogs()
     const selectedStore = useSelectedStore()
-    const settingsStore = useSettingsStore()
 
     function toggleFavoriteWorkoutDialog(workout: WorkoutType) {
         // Deep copy to prevent issues with the database calls later
@@ -33,6 +30,7 @@ export default function useWorkoutDialogs() {
             message,
             color: 'info',
             icon,
+            useConfirmationCode: 'NEVER',
             onOk: async () => {
                 try {
                     $q.loading.show()
@@ -84,45 +82,24 @@ export default function useWorkoutDialogs() {
     }
 
     async function deleteWorkoutDialog(id: IdType) {
-        const title = 'Delete Workout'
-        const message = `Are you sure you want to delete ${id}?`
-        const color = 'negative'
-        const icon = deleteIcon
-
-        if (settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)) {
-            onConfirmDialog({
-                title,
-                message,
-                color,
-                icon,
-                onOk: async () => {
-                    return await confirmDeleteDialog(id)
-                },
-            })
-        } else {
-            onConfirmDialog({
-                title,
-                message,
-                color,
-                icon,
-                requiresConfirmation: true,
-                onOk: async () => {
-                    return await confirmDeleteDialog(id)
-                },
-            })
-        }
-    }
-
-    async function confirmDeleteDialog(id: IdType) {
-        try {
-            $q.loading.show()
-            const deletedRecord = await WorkoutService.remove(id)
-            log.info(`Deleted Workout`, deletedRecord)
-        } catch (error) {
-            log.error(`Error deleting Workout`, error as Error)
-        } finally {
-            $q.loading.hide()
-        }
+        onConfirmDialog({
+            title: 'Delete Workout',
+            message: `Are you sure you want to delete ${id}?`,
+            color: 'negative',
+            icon: deleteIcon,
+            useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
+            onOk: async () => {
+                try {
+                    $q.loading.show()
+                    const deletedRecord = await WorkoutService.remove(id)
+                    log.info(`Deleted Workout`, deletedRecord)
+                } catch (error) {
+                    log.error(`Error deleting Workout`, error as Error)
+                } finally {
+                    $q.loading.hide()
+                }
+            },
+        })
     }
 
     return {

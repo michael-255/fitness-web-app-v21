@@ -2,12 +2,10 @@
 import FormListEditWorkoutResult from '@/components/dialogs/edit/forms/FormListEditWorkoutResult.vue'
 import useDialogs from '@/composables/useDialogs'
 import useLogger from '@/composables/useLogger'
-import { SettingKeyEnum } from '@/models/Setting'
 import type { WorkoutResultType } from '@/models/WorkoutResult'
 import WorkoutResultService from '@/services/WorkoutResultService'
 import { closeIcon, createIcon, saveIcon } from '@/shared/icons'
 import useSelectedStore from '@/stores/selected'
-import useSettingsStore from '@/stores/settings'
 import { extend, useDialogPluginComponent, useQuasar } from 'quasar'
 import { onUnmounted } from 'vue'
 
@@ -18,7 +16,6 @@ const $q = useQuasar()
 const { log } = useLogger()
 const { onConfirmDialog } = useDialogs()
 const selectedStore = useSelectedStore()
-const settingsStore = useSettingsStore()
 
 onUnmounted(() => {
     selectedStore.$reset()
@@ -26,32 +23,26 @@ onUnmounted(() => {
 
 async function updateWorkoutResultSubmit() {
     const recordDeepCopy = extend(true, {}, selectedStore.workoutResult) as WorkoutResultType
-    if (settingsStore.getKeyValue(SettingKeyEnum.ADVANCED_MODE)) {
-        return await updateSubmit(recordDeepCopy)
-    } else {
-        onConfirmDialog({
-            title: 'Update Workout Result',
-            message: 'Are you sure you want to update this Workout Result?',
-            color: 'positive',
-            icon: saveIcon,
-            onOk: async () => {
-                return await updateSubmit(recordDeepCopy)
-            },
-        })
-    }
-}
 
-async function updateSubmit(record: WorkoutResultType) {
-    try {
-        $q.loading.show()
-        await WorkoutResultService.put(record)
-        log.info('Workout updated', record)
-    } catch (error) {
-        log.error(`Error updating Workout Result`, error as Error)
-    } finally {
-        $q.loading.hide()
-        onDialogOK()
-    }
+    onConfirmDialog({
+        title: 'Update Workout Result',
+        message: 'Are you sure you want to update this Workout Result?',
+        color: 'positive',
+        icon: saveIcon,
+        useConfirmationCode: 'NEVER',
+        onOk: async () => {
+            try {
+                $q.loading.show()
+                await WorkoutResultService.put(recordDeepCopy)
+                log.info('Workout updated', recordDeepCopy)
+            } catch (error) {
+                log.error(`Error updating Workout Result`, error as Error)
+            } finally {
+                $q.loading.hide()
+                onDialogOK()
+            }
+        },
+    })
 }
 </script>
 
