@@ -1,14 +1,13 @@
 import type { TableEnum } from '@/shared/enums'
-import type { QTableColumn } from 'quasar'
+import type { IdType, SelectOption, ServiceType } from '@/shared/types'
+import type { Observable } from 'dexie'
+import type { QDialogOptions, QTableColumn } from 'quasar'
 import type { z } from 'zod'
-import type { Database } from './db'
-import DB from './db'
+import DB, { Database } from './db'
 
 /**
  * Abstract base class for all Services to extend. This defines properties and methods that other
  * Services may have. Only override the methods that are needed for the specific extending Service.
- * For properties, assign them a value in the extending Service if they will be used, or set them to
- * `null!` if they will not be used.
  */
 export default abstract class BaseService {
     /**
@@ -54,105 +53,112 @@ export default abstract class BaseService {
     abstract displayIcon: string
     abstract tableIcon: string
     abstract supportsTableColumnFilters: boolean
-    abstract supportsTableCharts: boolean
+    abstract supportsActivityCharts: boolean
     abstract supportsCharts: boolean
     abstract supportsInspect: boolean
     abstract supportsCreate: boolean
     abstract supportsEdit: boolean
     abstract supportsDelete: boolean
 
-    // eslint-disable-next-line
-    prepareChartsDialog(...args: any[]) {
-        throw new Error('prepareChartsDialog(): Not supported by this Service')
+    parentService(): ServiceType {
+        throw new Error('Not supported by Service')
+    }
+
+    childService(): ServiceType {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    prepareInspectDialog(...args: any[]) {
-        throw new Error('prepareInspectDialog(): Not supported by this Service')
+    activityChartsDialogOptions(): QDialogOptions {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    prepareCreateDialog(...args: any[]) {
-        throw new Error('prepareCreateDialog(): Not supported by this Service')
+    chartsDialogOptions(id: IdType): QDialogOptions {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    prepareEditDialog(...args: any[]) {
-        throw new Error('prepareEditDialog(): Not supported by this Service')
+    inspectDialogOptions(id: IdType): QDialogOptions {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    prepareDeleteDialog(...args: any[]) {
-        throw new Error('prepareDeleteDialog(): Not supported by this Service')
+    createDialogOptions(parentId?: IdType): QDialogOptions {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    initialize(...args: any[]) {
-        throw new Error('initialize(): Not supported by this Service')
+    editDialogOptions(id: IdType): QDialogOptions {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    liveDashboard(...args: any[]) {
-        throw new Error('liveDashboard(): Not supported by this Service')
+    deleteDialogOptions(id: IdType): QDialogOptions {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    liveTable(...args: any[]) {
-        throw new Error('liveTable(): Not supported by this Service')
+    toggleFavoriteDialogOptions(id: IdType): QDialogOptions {
+        throw new Error('Not supported by Service')
+    }
+
+    async initialize(): Promise<Record<string, any>[]> {
+        throw new Error('Not supported by Service')
+    }
+
+    liveDashboard(): Observable<Record<string, any>[]> {
+        throw new Error('Not supported by Service')
+    }
+
+    liveTable(): Observable<Record<string, any>[]> {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    get(...args: any[]) {
-        throw new Error('get(): Not supported by this Service')
+    async get(id: IdType): Promise<Record<string, any>> {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    add(...args: any[]) {
-        throw new Error('add(): Not supported by this Service')
+    async add(record: Record<string, any>): Promise<Record<string, any>> {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    put(...args: any[]) {
-        throw new Error('put(): Not supported by this Service')
+    async put(record: Record<string, any>): Promise<Record<string, any>> {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    remove(...args: any[]) {
-        throw new Error('remove(): Not supported by this Service')
+    async remove(id: IdType): Promise<Record<string, any>> {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    clear(...args: any[]) {
-        throw new Error('clear(): Not supported by this Service')
+    async importData(records: Record<string, any>[]): Promise<{
+        validRecords: Record<string, any>[]
+        invalidRecords: Partial<Record<string, any>>[]
+        importedCount: number
+    }> {
+        throw new Error('Not supported by Service')
+    }
+
+    async exportData(): Promise<Record<string, any>[]> {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    importData(...args: any[]) {
-        throw new Error('importData(): Not supported by this Service')
+    async updateLastChild(parentId: IdType): Promise<void> {
+        throw new Error('Not supported by Service')
     }
 
     // eslint-disable-next-line
-    exportData(...args: any[]) {
-        throw new Error('exportData(): Not supported by this Service')
+    async toggleFavorite(record: Record<string, any>): Promise<void> {
+        throw new Error('Not supported by Service')
     }
 
-    // eslint-disable-next-line
-    updateLastChild(...args: any[]) {
-        throw new Error('updateLastChild(): Not supported by this Service')
-    }
-
-    // eslint-disable-next-line
-    toggleFavorite(...args: any[]) {
-        throw new Error('toggleFavorite(): Not supported by this Service')
-    }
-
-    // eslint-disable-next-line
-    getSelectOptions(...args: any[]) {
-        throw new Error('getSelectOptions(): Not supported by this Service')
-    }
-
-    // eslint-disable-next-line
-    purge(...args: any[]) {
-        throw new Error('purge(): Not supported by this Service')
+    async getSelectOptions(): Promise<SelectOption[]> {
+        throw new Error('Not supported by Service')
     }
 }
