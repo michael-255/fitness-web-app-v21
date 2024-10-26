@@ -27,13 +27,13 @@ app.use(Quasar, {
     config: {
         dark: true,
         brand: {
-            primary: '#1976d2', // indigo (Primary Brand Color)
+            primary: '#1976d2', // blue-8 (Primary Brand Color)
             secondary: '#607d8b', // blue-grey (LOG)
             accent: '#673ab7', // deep-purple-6 (DEBUG)
             info: '#0d47a1', // blue-10 (INFO)
             warning: '#ff6f00', // amber-10 (WARN)
             negative: '#C10015', // negative (ERROR)
-            positive: '#4caf50', // green
+            positive: '#4caf50', // positive (SUCCESS)
             dark: '#1d1d1d',
             'dark-page': '#121212',
         },
