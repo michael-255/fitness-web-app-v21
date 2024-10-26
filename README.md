@@ -6,6 +6,8 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
+-   Copy over all changes from `web-app-template-v5` to `fitness-tracker`
+
 -   `Workouts`
     -   Install Vue Draggable Next `npm i -S vuedraggable@next`
     -   `TEST` Vue Draggable Next on a page

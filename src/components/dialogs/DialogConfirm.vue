@@ -46,7 +46,7 @@ const usesConfirmationCode = computed(() => {
             <q-card-section class="q-mt-lg">{{ message }}</q-card-section>
 
             <q-card-section v-if="usesConfirmationCode">
-                Enter "{{ confirmationCode }}" below to unlock the confirm button.
+                Enter <strong>{{ confirmationCode }}</strong> to unlock this operation.
             </q-card-section>
 
             <q-card-section v-if="usesConfirmationCode">

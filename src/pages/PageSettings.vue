@@ -238,7 +238,7 @@ function onDeleteLogs() {
         try {
             $q.loading.show()
             await DB.table(TableEnum.LOGS).clear()
-            log.info('Successfully deleted logs')
+            log.info('Successfully deleted Logs')
         } catch (error) {
             log.error(`Error deleting Logs`, error as Error)
         } finally {
