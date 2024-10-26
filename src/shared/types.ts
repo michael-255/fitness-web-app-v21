@@ -1,6 +1,5 @@
 import type { ExerciseType } from '@/models/Exercise'
 import type { ExerciseResultType } from '@/models/ExerciseResult'
-import type { LogType } from '@/models/Log'
 import type { MeasurementType } from '@/models/Measurements'
 import type { SettingType } from '@/models/Setting'
 import type { WorkoutType } from '@/models/Workout'
@@ -49,9 +48,10 @@ export type StatusType = z.infer<typeof statusSchema>
 export type BackupType = {
     appName: string
     databaseVersion: string
-    createdAt: number
+    createdAt: TimestampType
+    // Logs are ignored
     settings: SettingType[]
-    logs: LogType[]
+    dailyPlans: DailyPlanType[]
     measurements: MeasurementType[]
     workouts: WorkoutType[]
     workoutResults: WorkoutResultType[]
@@ -71,5 +71,5 @@ export type SelectOption = {
 
 export type ComponentWithPropsType = {
     component: Component
-    componentProps?: Record<string, any>
+    props?: Record<string, any>
 }

@@ -113,7 +113,7 @@ watch(dateTimePicker, () => {
                     :rules="[
                         (val: string) =>
                             textLineSchema.safeParse(val).success ||
-                            `Name must be between ${LimitEnum.MIN_TEXT_LINE} and ${LimitEnum.MAX_TEXT_LINE} characters`,
+                            `Name must be between 1 and ${LimitEnum.MAX_TEXT_LINE} characters`,
                     ]"
                     :maxlength="LimitEnum.MAX_TEXT_LINE"
                     :disable="isDisabled"

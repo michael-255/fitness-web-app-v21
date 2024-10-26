@@ -1,8 +1,7 @@
 import { DurationMSEnum, TableEnum } from '@/shared/enums'
 import { date, uid, type QTableColumn } from 'quasar'
-import { computed } from 'vue'
 import { tableSchema } from './schemas'
-import type { IdType, StatusType } from './types'
+import type { IdType } from './types'
 
 /**
  * Creates an Id with the table encoded in the prefix. Encoding this extra information helps with
@@ -24,6 +23,9 @@ export function createId(table: TableEnum) {
             break
         case TableEnum.LOGS:
             prefix = 'log'
+            break
+        case TableEnum.DAILY_PLANS:
+            prefix = 'dpl'
             break
         case TableEnum.WORKOUTS:
             prefix = 'wop'
@@ -210,30 +212,6 @@ export function durationFromMs(milliseconds: number | null | undefined): string 
     const secondsStr = seconds > 0 ? `${seconds}s` : ''
 
     return `${daysStr}${hoursStr}${minutesStr}${secondsStr}`
-}
-
-/**
- * Function that returns a Vue computed boolean for managing status toggle switches. Determines if a
- * target status is in selected status array, and will remove or add it based on the computed value.
- * @param selectedStatus From `selectedStore.{record}.status`
- * @param targetStatus Status your looking for in the `selectedStatus`
- * @returns Vue computed boolean
- */
-export function computedStatusToggle(selectedStatus: StatusType[], targetStatus: StatusType) {
-    return computed({
-        get: () => selectedStatus?.includes(targetStatus),
-        set: (value) => {
-            if (!selectedStatus) {
-                selectedStatus = []
-            }
-            const index = selectedStatus.indexOf(targetStatus)
-            if (value && index === -1) {
-                selectedStatus.push(targetStatus)
-            } else if (!value && index !== -1) {
-                selectedStatus.splice(index, 1)
-            }
-        },
-    })
 }
 
 /**

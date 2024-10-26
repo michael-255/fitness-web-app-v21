@@ -32,13 +32,9 @@ export const idSchema = z.string().refine(
 
 export const timestampSchema = z.number().int()
 
-export const textLineSchema = z
-    .string()
-    .min(LimitEnum.MIN_TEXT_LINE)
-    .max(LimitEnum.MAX_TEXT_LINE)
-    .trim()
+export const textLineSchema = z.string().min(1).max(LimitEnum.MAX_TEXT_LINE).trim()
 
-export const textAreaSchema = z.string().max(LimitEnum.MAX_TEXT_AREA).trim() // For desc, notes, etc.
+export const textAreaSchema = z.string().max(LimitEnum.MAX_TEXT_AREA).trim() // desc, notes, etc.
 
 export const statusListSchema = z
     .nativeEnum(StatusEnum)

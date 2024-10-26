@@ -3,17 +3,11 @@
  */
 export enum RouteNameEnum {
     MENU_LAYOUT = 'MenuLayout',
+    DAILY_PLANS_DASHBOARD = 'DailyPlansDashboard',
     WORKOUTS_DASHBOARD = 'WorkoutsDashboard',
     EXERCISES_DASHBOARD = 'ExercisesDashboard',
     MEASUREMENTS_DASHBOARD = 'MeasurementsDashboard',
     TABLE = 'Table',
-    SETTINGS_TABLE = 'SettingsTable',
-    LOGS_TABLE = 'LogsTable',
-    WORKOUTS_TABLE = 'WorkoutsTable',
-    WORKOUT_RESULTS_TABLE = 'WorkoutResultsTable',
-    EXERCISES_TABLE = 'ExercisesTable',
-    EXERCISE_RESULTS_TABLE = 'ExerciseResultsTable',
-    MEASUREMENTS_TABLE = 'MeasurementsTable',
     SETTINGS = 'Settings',
     ABOUT = 'About',
     DONATE = 'Donate',
@@ -21,17 +15,17 @@ export enum RouteNameEnum {
 }
 
 /**
- * Shortened string representations of database tables. Used as prefixes for Ids.
- * This can help with database operations and debugging.
+ * URL slug safe string representations of database table names.
  */
 export enum TableEnum {
     SETTINGS = 'settings', // Standalone
     LOGS = 'logs', // Standalone
-    MEASUREMENTS = 'mea', // Standalone
-    WORKOUTS = 'wop', // Parent
-    WORKOUT_RESULTS = 'wor', // Child
-    EXERCISES = 'exp', // Parent
-    EXERCISE_RESULTS = 'exr', // Child
+    DAILY_PLANS = 'daily-plans', // Standalone
+    MEASUREMENTS = 'measurements', // Standalone
+    WORKOUTS = 'workouts', // Parent
+    WORKOUT_RESULTS = 'workout-results', // Child
+    EXERCISES = 'exercises', // Parent
+    EXERCISE_RESULTS = 'exercise-results', // Child
 }
 
 /**
@@ -39,17 +33,13 @@ export enum TableEnum {
  */
 export enum StatusEnum {
     LOCKED = 'Locked', // Shared - No user interaction allowed
-    DEACTIVATED = 'Deactivated', // Parent
+    HIDDEN = 'Hidden', // Parent
     FAVORITED = 'Favorited', // Parent
 }
 
 export enum LimitEnum {
-    MAX_ID = 30,
-    MAX_FILE_SIZE = 1_000_000,
-    MAX_TEXT_AREA = 250,
-    MIN_TEXT_LINE = 1,
+    MAX_TEXT_AREA = 300,
     MAX_TEXT_LINE = 50,
-    MIN_SETS = 1,
     MAX_SETS = 30,
     MAX_WEIGHT = 9_999,
     MAX_REPS = 9_999,
