@@ -1,31 +1,42 @@
 import LayoutMenu from '@/layouts/LayoutMenu.vue'
+import PageDashboardDailyPlans from '@/pages/PageDashboardDailyPlans.vue'
+import PageDashboardExercises from '@/pages/PageDashboardExercises.vue'
+import PageDashboardMeasurements from '@/pages/PageDashboardMeasurements.vue'
 import PageDashboardWorkouts from '@/pages/PageDashboardWorkouts.vue'
+import PageTable from '@/pages/PageTable.vue'
 import { RouteNameEnum } from '@/shared/enums'
+import { tableSchema } from '@/shared/schemas'
 import { createRouter, createWebHistory } from 'vue-router'
 
 const router = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes: [
+        // Dashboard components are more unique and will likely need dedicated routes
         {
             path: '/',
-            redirect: `/workouts`, // Your default route
+            redirect: `/daily-plans`, // Your default route
             name: RouteNameEnum.MENU_LAYOUT,
             component: LayoutMenu, // Must use a different layout for other primary routes
             children: [
                 {
-                    path: '/workouts',
+                    path: '/daily-plans',
+                    name: RouteNameEnum.DAILY_PLANS_DASHBOARD,
+                    component: PageDashboardDailyPlans, // TODO
+                },
+                {
+                    path: '/workouts-dashboard',
                     name: RouteNameEnum.WORKOUTS_DASHBOARD,
-                    component: PageDashboardWorkouts,
+                    component: PageDashboardWorkouts, // TODO
                 },
                 {
-                    path: '/exercises',
+                    path: '/exercises-dashboard',
                     name: RouteNameEnum.EXERCISES_DASHBOARD,
-                    component: () => import('@/pages/PageDashboardExercises.vue'),
+                    component: PageDashboardExercises, // TODO
                 },
                 {
-                    path: '/measurements',
+                    path: '/measurements-dashboard',
                     name: RouteNameEnum.MEASUREMENTS_DASHBOARD,
-                    component: () => import('@/pages/PageDashboardMeasurements.vue'),
+                    component: PageDashboardMeasurements, // TODO
                 },
                 {
                     path: '/settings',
@@ -50,55 +61,21 @@ const router = createRouter({
             ],
         },
         // Table routes are fullscreen and have no layout
-        // {
-        //     path: '/:routeTable/table',
-        //     name: RouteNameEnum.TABLE,
-        //     component: PageTable,
-        //     beforeEnter: (to: any, _: any, next: Function) => {
-        //         const routeTable = to.params.table
-        //         const isRouteTableValid = tableSchema.safeParse(routeTable).success
+        {
+            path: '/:table/table',
+            name: RouteNameEnum.TABLE,
+            component: PageTable,
+            beforeEnter: (to: any, _: any, next: Function) => {
+                const routeTable = to.params.table
+                const isRouteTable = tableSchema.safeParse(routeTable).success
 
-        //         if (!isRouteTableValid) {
-        //             return next({ name: RouteNameEnum.NOT_FOUND })
-        //         }
-
-        //         return next()
-        //     },
-        // },
-        {
-            path: '/setttings-table',
-            name: RouteNameEnum.SETTINGS_TABLE,
-            component: () => import('@/pages/PageTableSettings.vue'),
-        },
-        {
-            path: '/logs-table',
-            name: RouteNameEnum.LOGS_TABLE,
-            component: () => import('@/pages/PageTableLogs.vue'),
-        },
-        {
-            path: '/workouts-table',
-            name: RouteNameEnum.WORKOUTS_TABLE,
-            component: () => import('@/pages/PageTableWorkouts.vue'),
-        },
-        {
-            path: '/workout-results-table',
-            name: RouteNameEnum.WORKOUT_RESULTS_TABLE,
-            component: () => import('@/pages/PageTableWorkoutResults.vue'),
-        },
-        {
-            path: '/exercises-table',
-            name: RouteNameEnum.EXERCISES_TABLE,
-            component: () => import('@/pages/PageTableExercises.vue'),
-        },
-        {
-            path: '/exercise-results-table',
-            name: RouteNameEnum.EXERCISE_RESULTS_TABLE,
-            component: () => import('@/pages/PageTableExerciseResults.vue'),
-        },
-        {
-            path: '/measurements-table',
-            name: RouteNameEnum.MEASUREMENTS_TABLE,
-            component: () => import('@/pages/PageTableMeasurements.vue'),
+                if (!isRouteTable) {
+                    return next({
+                        name: RouteNameEnum.NOT_FOUND,
+                    })
+                }
+                return next()
+            },
         },
     ],
 })

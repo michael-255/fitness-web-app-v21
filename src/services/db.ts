@@ -1,3 +1,4 @@
+import DailyPlan from '@/models/DailyPlan'
 import Exercise from '@/models/Exercise'
 import ExerciseResult from '@/models/ExerciseResult'
 import Log from '@/models/Log'

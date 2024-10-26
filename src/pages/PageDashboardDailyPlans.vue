@@ -3,11 +3,11 @@ import ResponsivePage from '@/components/shared/ResponsivePage.vue'
 import { appName } from '@/shared/constants'
 import { useMeta } from 'quasar'
 
-useMeta({ title: `${appName} - Workouts Dashboard` })
+useMeta({ title: `${appName} - Daily Plans Dashboard` })
 </script>
 
 <template>
     <ResponsivePage>
-        <div>Workouts Dashboard</div>
+        <div>Daily Plans Dashboard</div>
     </ResponsivePage>
 </template>
