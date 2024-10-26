@@ -21,6 +21,7 @@ export class Database extends Dexie {
     // Required for easier TypeScript usage
     [TableEnum.SETTINGS]!: Table<Setting>;
     [TableEnum.LOGS]!: Table<Log>;
+    [TableEnum.DAILY_PLANS]!: Table<DailyPlan>;
     [TableEnum.MEASUREMENTS]!: Table<Measurement>;
     [TableEnum.WORKOUTS]!: Table<Workout>;
     [TableEnum.EXERCISES]!: Table<Exercise>;
@@ -33,7 +34,8 @@ export class Database extends Dexie {
         this.version(1).stores({
             // Required indexes
             [TableEnum.SETTINGS]: '&key',
-            [TableEnum.LOGS]: '++autoId, createdAt',
+            [TableEnum.LOGS]: '&id, createdAt',
+            [TableEnum.DAILY_PLANS]: '&id',
             [TableEnum.MEASUREMENTS]: '&id, field, createdAt',
             [TableEnum.WORKOUTS]: '&id, name, *status',
             [TableEnum.EXERCISES]: '&id, name, *status',
@@ -44,6 +46,7 @@ export class Database extends Dexie {
         // Required for converting objects to classes
         this[TableEnum.SETTINGS].mapToClass(Setting)
         this[TableEnum.LOGS].mapToClass(Log)
+        this[TableEnum.DAILY_PLANS].mapToClass(DailyPlan)
         this[TableEnum.MEASUREMENTS].mapToClass(Measurement)
         this[TableEnum.WORKOUTS].mapToClass(Workout)
         this[TableEnum.EXERCISES].mapToClass(Exercise)
