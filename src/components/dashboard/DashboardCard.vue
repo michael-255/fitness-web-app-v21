@@ -42,7 +42,7 @@ const emit = defineEmits<{
     <q-card>
         <q-item class="q-mt-sm">
             <q-item-section top>
-                <q-item-label class="text-bold text-body1">
+                <q-item-label class="text-body1">
                     {{ recordName }}
                 </q-item-label>
 
