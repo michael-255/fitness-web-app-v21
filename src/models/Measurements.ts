@@ -36,7 +36,7 @@ export enum MeasurementFieldEnum {
     LEFT_CALF = 'Left Calf',
     RIGHT_CALF = 'Right Calf',
     // Lab Work
-    // TODO
+    // TODO - A1C, Cholesterol, etc.
 }
 
 //

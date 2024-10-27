@@ -6,7 +6,10 @@ your workouts, exercises, and overall fitness journey.
 
 ## TODO
 
--   Copy over all changes from `web-app-template-v5` to `fitness-tracker`
+-   Implement the `Measurements` modules for it's Dashboard
+
+    -   Collect record types together based on the category
+    -   How to handle editing a record in the module (if at all)?
 
 -   `Workouts`
     -   Install Vue Draggable Next `npm i -S vuedraggable@next`
