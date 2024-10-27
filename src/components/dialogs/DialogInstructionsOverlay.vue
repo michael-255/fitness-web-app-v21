@@ -3,12 +3,12 @@ import Setting, { SettingKeyEnum } from '@/models/Setting'
 import SettingService from '@/services/SettingService'
 import { appDescription, appName } from '@/shared/constants'
 import {
+    checkIcon,
     databaseIcon,
     donatePageIcon,
     downIcon,
     recommendIcon,
     settingsPageIcon,
-    workoutsPageIcon,
 } from '@/shared/icons'
 import useSettingsStore from '@/stores/settings'
 import { ref, type Ref } from 'vue'
@@ -45,6 +45,7 @@ async function goToDonate() {
             })
         "
         persistent
+        v-on:keyup.enter="onCloseWelcomeOverlay"
     >
         <q-card flat square>
             <q-card-section>
@@ -64,7 +65,7 @@ async function goToDonate() {
 
                 <p>
                     <q-btn
-                        :icon="workoutsPageIcon"
+                        :icon="checkIcon"
                         label="Examples"
                         color="primary"
                         size="sm"

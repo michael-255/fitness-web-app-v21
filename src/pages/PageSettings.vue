@@ -1,23 +1,15 @@
 <script setup lang="ts">
 import DialogConfirm from '@/components/dialogs/DialogConfirm.vue'
-import PageFabMenu from '@/components/shared/PageFabMenu.vue'
-import PageHeading from '@/components/shared/PageHeading.vue'
-import ResponsivePage from '@/components/shared/ResponsivePage.vue'
+import PageFabMenu from '@/components/page/PageFabMenu.vue'
+import PageHeading from '@/components/page/PageHeading.vue'
+import PageResponsive from '@/components/page/PageResponsive.vue'
 import useLogger from '@/composables/useLogger'
-import Exercise, { ExerciseInputEnum } from '@/models/Exercise'
 import { SettingKeyEnum } from '@/models/Setting'
-import Workout from '@/models/Workout'
 import DB from '@/services/db'
-import ExerciseResultService from '@/services/ExerciseResultService'
-import ExerciseService from '@/services/ExerciseService'
-import MeasurementService from '@/services/MeasurementService'
 import SettingService from '@/services/SettingService'
-import WorkoutResultService from '@/services/WorkoutResultService'
-import WorkoutService from '@/services/WorkoutService'
 import { appDatabaseVersion, appName } from '@/shared/constants'
-import { DurationEnum, LimitEnum, RouteNameEnum, TableEnum } from '@/shared/enums'
+import { DurationEnum, RouteNameEnum, TableEnum } from '@/shared/enums'
 import {
-    createIcon,
     databaseIcon,
     deleteIcon,
     deleteSweepIcon,
@@ -80,7 +72,7 @@ function onImportBackup() {
             message: 'Import backup data from a JSON file into the app database?',
             color: 'info',
             icon: importFileIcon,
-            useConfirmationCode: 'NEVER',
+            useUnlock: 'NEVER',
         },
     }).onOk(async () => {
         try {
@@ -91,56 +83,30 @@ function onImportBackup() {
 
             // NOTE: Logs are ignored during import
             const settingsImport = await SettingService.importData(backup?.settings ?? [])
-            const measurementsImport = await MeasurementService.importData(
-                backup?.measurements ?? [],
-            )
-            const workoutsImport = await WorkoutService.importData(backup?.workouts ?? [])
-            const exercisesImport = await ExerciseService.importData(backup?.exercises ?? [])
-            const workoutResultsImport = await WorkoutResultService.importData(
-                backup?.workoutResults ?? [],
-            )
-            const exerciseResultsImport = await ExerciseResultService.importData(
-                backup?.exerciseResults ?? [],
-            )
+            // TODO
 
             // Check for invalid records
             const hasInvalidRecords = [
                 settingsImport.invalidRecords,
-                measurementsImport.invalidRecords,
-                workoutsImport.invalidRecords,
-                exercisesImport.invalidRecords,
-                workoutResultsImport.invalidRecords,
-                exerciseResultsImport.invalidRecords,
+                // TODO
             ].some((record) => Array.isArray(record) && record.length > 0)
 
             if (hasInvalidRecords) {
                 log.warn('Import skipping invalid records', {
                     invalidSettings: settingsImport.invalidRecords,
-                    invalidMeasurements: measurementsImport.invalidRecords,
-                    invalidWorkouts: workoutsImport.invalidRecords,
-                    invalidExercises: exercisesImport.invalidRecords,
-                    invalidWorkoutResults: workoutResultsImport.invalidRecords,
-                    invalidExerciseResults: exerciseResultsImport.invalidRecords,
+                    // TODO
                 })
             }
 
             // Check for bulk import errors
             // NOTE: Settings don't have bulk error
             const hasBulkErrors = [
-                measurementsImport.bulkError,
-                workoutsImport.bulkError,
-                exercisesImport.bulkError,
-                workoutResultsImport.bulkError,
-                exerciseResultsImport.bulkError,
+                // TODO
             ].some((error) => error)
 
             if (hasBulkErrors) {
                 log.warn('Import skipping existing records', {
-                    blukErrorMeasurements: measurementsImport.bulkError,
-                    bulkErrorWorkouts: workoutsImport.bulkError,
-                    bulkErrorExercises: exercisesImport.bulkError,
-                    bulkErrorWorkoutResults: workoutResultsImport.bulkError,
-                    bulkErrorExerciseResults: exerciseResultsImport.bulkError,
+                    // TODO
                 })
             }
 
@@ -148,13 +114,8 @@ function onImportBackup() {
                 appName: backup.appName,
                 createdAt: backup.createdAt,
                 databaseVersion: backup.databaseVersion,
-                logsDiscarded: backup?.logs?.length ?? 0, // Logs are ignored during import
                 settingsImported: settingsImport.importedCount,
-                measurementsImported: measurementsImport.importedCount,
-                workoutsImported: workoutsImport.importedCount,
-                exercisesImported: exercisesImport.importedCount,
-                workoutResultsImported: workoutResultsImport.importedCount,
-                exerciseResultsImported: exerciseResultsImport.importedCount,
+                // TODO
             })
 
             importFile.value = null // Clear input
@@ -181,29 +142,33 @@ function onExportBackup() {
             message: `Export all app data into the backup file ${filename}?`,
             color: 'info',
             icon: exportFileIcon,
-            useConfirmationCode: 'NEVER',
+            useUnlock: 'NEVER',
         },
     }).onOk(async () => {
         try {
             $q.loading.show()
 
-            // NOTE: Some tables have a custom export method
+            // NOTE: Some tables have a custom export method and Logs are ignored
             const backup: BackupType = {
                 appName: appName,
                 databaseVersion: appDatabaseVersion,
                 createdAt: Date.now(),
+                // Logs are ignored
                 settings: await DB.table(TableEnum.SETTINGS).toArray(),
-                logs: await DB.table(TableEnum.LOGS).toArray(),
-                measurements: await DB.table(TableEnum.MEASUREMENTS).toArray(),
-                workouts: await WorkoutService.exportData(),
-                exercises: await ExerciseService.exportData(),
-                workoutResults: await DB.table(TableEnum.WORKOUT_RESULTS).toArray(),
-                exerciseResults: await DB.table(TableEnum.EXERCISE_RESULTS).toArray(),
-            } as BackupType
+                // TODO
+                dailyPlans: [],
+                measurements: [],
+                workouts: [],
+                workoutResults: [],
+                exercises: [],
+                exerciseResults: [],
+            }
 
             log.silentDebug('backup:', backup)
 
-            const exported = exportFile(filename, JSON.stringify(backup), {
+            const backupJson = JSON.stringify(backup)
+
+            const exported = exportFile(filename, backupJson, {
                 encoding: 'UTF-8',
                 mimeType: 'application/json',
             })
@@ -229,10 +194,10 @@ function onDeleteLogs() {
         component: DialogConfirm,
         componentProps: {
             title: 'Delete Logs',
-            message: 'Are you sure you want to delete all app logs from the database?',
+            message: 'Are you sure you want to delete all Logs?',
             color: 'negative',
             icon: deleteIcon,
-            useConfirmationCode: 'ALWAYS',
+            useUnlock: 'ALWAYS',
         },
     }).onOk(async () => {
         try {
@@ -250,25 +215,25 @@ function onDeleteLogs() {
 /**
  * Deletes all app data including configuration and user data from the database.
  */
-function onDeleteAppData() {
+function onDeleteData() {
     $q.dialog({
         component: DialogConfirm,
         componentProps: {
-            title: 'Delete App Data',
-            message: 'Are you sure you want to delete all app data?',
+            title: 'Delete Data',
+            message: 'Are you sure you want to delete all of your data?',
             color: 'negative',
             icon: deleteXIcon,
-            useConfirmationCode: 'ALWAYS',
+            useUnlock: 'ALWAYS',
         },
     }).onOk(async () => {
         try {
             $q.loading.show()
             await SettingService.clear()
             await DB.table(TableEnum.LOGS).clear()
-            // other tables here...
-            log.info('Successfully deleted app data')
+            // TODO
+            log.info('Successfully deleted data')
         } catch (error) {
-            log.error(`Error deleting app data`, error as Error)
+            log.error(`Error deleting data`, error as Error)
         } finally {
             $q.loading.hide()
         }
@@ -287,7 +252,7 @@ function onDeleteDatabase() {
                 'Delete the underlining database? All data will be lost. You must reload the website after this action to reinitialize the database.',
             color: 'negative',
             icon: deleteSweepIcon,
-            useConfirmationCode: 'ALWAYS',
+            useUnlock: 'ALWAYS',
         },
     }).onOk(async () => {
         try {
@@ -309,28 +274,50 @@ function onDeleteDatabase() {
 /**
  * Allows for the creation of test data when the app is in local DEV mode.
  */
-async function createTestData() {
-    // This will need to be expanded later for more complex test data
-    const exercise = new Exercise({
-        name: 'Exercise: ' + new Date().toISOString(),
-        desc: 'This is just a test exercise.',
-        inputs: ExerciseInputEnum.CHECKLIST,
-    })
-    const workout = new Workout({
-        name: 'Workout: ' + new Date().toISOString(),
-        desc: 'This is just a test workout.',
-        exerciseGroups: [{ exerciseIds: [exercise.id] }],
-    })
+// async function createTestData() {
+//     // Example
+//     const example = new Example({
+//         name: `Generated: ${compactDateFromMs(Date.now())}`,
+//         desc: 'This is an Example description. These descriptions can be quite long and detailed at 250 characters. Here is my attempt fill this space with text that makes sense. I want to see what this looks like when you are at the limit. This is enough.',
+//     })
 
-    await ExerciseService.add(exercise)
-    await WorkoutService.add(workout)
+//     // Example Results
+//     const exampleResults = []
+//     const numberOfDays = 600
+//     const currentDate = Date.now()
 
-    log.info('Test data added', { exercise, workout })
-}
+//     // First record
+//     const recentExampleResult = new ExampleResult({
+//         parentId: example.id,
+//         createdAt: currentDate,
+//         note: 'This is the Example Result note. MOST RECENT!',
+//         mockData: 0,
+//     })
+//     example.lastChild = recentExampleResult
+//     exampleResults.push(recentExampleResult)
+
+//     for (let i = 1; i < numberOfDays; i++) {
+//         exampleResults.push(
+//             new ExampleResult({
+//                 parentId: example.id,
+//                 createdAt: currentDate - i * DurationMSEnum['One Day'],
+//                 note: `This is the Example Result note: Index ${i}`,
+//                 mockData: Math.floor(Math.random() * (i / 2)) + i / 2,
+//             }),
+//         )
+//     }
+
+//     await ExampleService.add(example)
+//     await ExampleResultService.importData(exampleResults)
+//     log.debug('Test Example added with debug', example)
+//     log.warn('Test Example added with warn', example)
+//     log.info('Test Example added with info', example)
+//     log.error('Test Example added with error', example)
+// }
 </script>
 
 <template>
-    <ResponsivePage>
+    <PageResponsive>
         <PageFabMenu
             :isLoading="$q.loading.isActive"
             :subButtons="[
@@ -338,13 +325,21 @@ async function createTestData() {
                     label: 'Logs Data',
                     color: 'secondary',
                     icon: logsTableIcon,
-                    handleClick: () => router.push({ name: RouteNameEnum.LOGS_TABLE }),
+                    handleClick: () =>
+                        router.push({
+                            name: RouteNameEnum.TABLE,
+                            params: { table: TableEnum.LOGS },
+                        }),
                 },
                 {
                     label: 'Settings Data',
                     color: 'secondary',
                     icon: settingsTableIcon,
-                    handleClick: () => router.push({ name: RouteNameEnum.SETTINGS_TABLE }),
+                    handleClick: () =>
+                        router.push({
+                            name: RouteNameEnum.TABLE,
+                            params: { table: TableEnum.SETTINGS },
+                        }),
                 },
                 {
                     label: 'About',
@@ -394,7 +389,7 @@ async function createTestData() {
 
             <q-item tag="label" :disable="$q.loading.isActive">
                 <q-item-section top>
-                    <q-item-label>Show Instructions Overlay</q-item-label>
+                    <q-item-label>Show Instructions</q-item-label>
                     <q-item-label caption>
                         Redisplays the welcome message and app usage instructions.
                     </q-item-label>
@@ -419,7 +414,7 @@ async function createTestData() {
                 <q-item-section top>
                     <q-item-label>Show Info Messages</q-item-label>
                     <q-item-label caption>
-                        Show confirmation popup messages for actions that were completed.
+                        Show popup messages for actions that were completed.
                     </q-item-label>
                 </q-item-section>
 
@@ -499,9 +494,8 @@ async function createTestData() {
                 <q-item-section top>
                     <q-item-label>Import</q-item-label>
                     <q-item-label caption>
-                        Import data into the app from a JSON file. The app expects the data in the
-                        file to be structured the same as the exported version. Logs are ignored
-                        during imports.
+                        Import your data from a JSON or CSV file. The app expects the data in the
+                        file to be structured the same as the exported version.
                     </q-item-label>
                 </q-item-section>
             </q-item>
@@ -511,11 +505,11 @@ async function createTestData() {
                     <q-file
                         v-model="importFile"
                         :disable="$q.loading.isActive"
+                        label="Import File"
                         clearable
                         dense
                         outlined
                         accept="application/json"
-                        :max-file-size="LimitEnum.MAX_FILE_SIZE"
                         @rejected="onRejectedFile"
                     >
                         <template v-slot:before>
@@ -534,17 +528,18 @@ async function createTestData() {
                 <q-item-section top>
                     <q-item-label>Export</q-item-label>
                     <q-item-label caption>
-                        Export your data as a JSON file. Do this on a regularly basis so you have a
-                        backup of your data.
+                        Export your data as a JSON or CSV file. Do this on a regularly basis so you
+                        have a backup of your data. Logs are not exported.
                     </q-item-label>
                 </q-item-section>
             </q-item>
 
             <q-item>
                 <q-btn
+                    color="primary"
+                    label="Export as JSON"
                     :icon="exportFileIcon"
                     :disable="$q.loading.isActive"
-                    color="primary"
                     @click="onExportBackup()"
                 />
             </q-item>
@@ -579,7 +574,7 @@ async function createTestData() {
 
             <q-item>
                 <q-item-section top>
-                    <q-item-label>Delete App Data</q-item-label>
+                    <q-item-label>Delete Data</q-item-label>
                     <q-item-label caption>
                         Permanently delete all configuration and user data from the app.
                     </q-item-label>
@@ -591,7 +586,7 @@ async function createTestData() {
                     :icon="deleteXIcon"
                     :disable="$q.loading.isActive"
                     color="negative"
-                    @click="onDeleteAppData()"
+                    @click="onDeleteData()"
                 />
             </q-item>
 
@@ -600,7 +595,7 @@ async function createTestData() {
                     <q-item-label>Delete Database</q-item-label>
                     <q-item-label caption>
                         Delete the underlining browser database and all of its data (requires app
-                        reload).
+                        reload). This may be required if your app is having database issues.
                     </q-item-label>
                 </q-item-section>
             </q-item>
@@ -614,7 +609,7 @@ async function createTestData() {
                 />
             </q-item>
 
-            <q-item v-if="isDevMode">
+            <!-- <q-item v-if="isDevMode">
                 <q-item-section top>
                     <q-item-label>Create Test Data</q-item-label>
                     <q-item-label caption>
@@ -630,9 +625,9 @@ async function createTestData() {
                     color="accent"
                     @click="createTestData"
                 />
-            </q-item>
+            </q-item> -->
         </q-list>
-    </ResponsivePage>
+    </PageResponsive>
 </template>
 
 <style scoped>

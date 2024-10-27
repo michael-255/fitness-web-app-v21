@@ -1,3 +1,4 @@
+import type { DailyPlanType } from '@/models/DailyPlan'
 import type { ExerciseType } from '@/models/Exercise'
 import type { ExerciseResultType } from '@/models/ExerciseResult'
 import type { MeasurementType } from '@/models/Measurements'

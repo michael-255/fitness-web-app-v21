@@ -1,4 +1,5 @@
 import useLogger from '@/composables/useLogger'
+import DailyPlanService from '@/services/DailyPlanService'
 import ExerciseResultService from '@/services/ExerciseResultService'
 import ExerciseService from '@/services/ExerciseService'
 import LogService from '@/services/LogService'
@@ -18,9 +19,9 @@ export default function useRouting() {
     const { log } = useLogger()
 
     // Current table used by the route is any
-    const routeTable = Array.isArray(route.params.routeTable)
-        ? route.params.routeTable[0]
-        : route.params.routeTable
+    const routeTable = Array.isArray(route.params.table)
+        ? route.params.table[0]
+        : route.params.table
 
     // Service associated with the current route table if any
     let routeService: ServiceType = null!
@@ -31,6 +32,9 @@ export default function useRouting() {
             break
         case TableEnum.LOGS:
             routeService = LogService
+            break
+        case TableEnum.DAILY_PLANS:
+            routeService = DailyPlanService
             break
         case TableEnum.WORKOUTS:
             routeService = WorkoutService
@@ -62,6 +66,7 @@ export default function useRouting() {
             log.error('Error accessing Table route', error as Error)
         }
     }
+
     /**
      * Go back if previous route state is part of the app history, otherwise go to root path.
      */

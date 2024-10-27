@@ -32,11 +32,7 @@ export enum ExerciseInputEnum {
 
 export const exerciseInputSchema = z.nativeEnum(ExerciseInputEnum)
 
-export const initialSetCountSchema = z
-    .number()
-    .int()
-    .min(LimitEnum.MIN_SETS)
-    .max(LimitEnum.MAX_SETS)
+export const initialSetCountSchema = z.number().int().min(1).max(LimitEnum.MAX_SETS)
 
 /**
  * Rest timer minimum is 30 seconds and maximum is 15 minutes.

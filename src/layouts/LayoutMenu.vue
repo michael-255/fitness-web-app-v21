@@ -22,6 +22,15 @@ const isDesktop = computed(() => $q.screen.gt.xs)
                     no-caps
                     :icon="workoutsPageIcon"
                     exact
+                    :to="{ name: RouteNameEnum.DAILY_PLANS_DASHBOARD }"
+                >
+                    <template v-if="isDesktop">Daily Plans</template>
+                </q-route-tab>
+
+                <q-route-tab
+                    no-caps
+                    :icon="workoutsPageIcon"
+                    exact
                     :to="{ name: RouteNameEnum.WORKOUTS_DASHBOARD }"
                 >
                     <template v-if="isDesktop">Workouts</template>

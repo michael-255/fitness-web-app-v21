@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import PageFabMenu from '@/components/shared/PageFabMenu.vue'
-import PageHeading from '@/components/shared/PageHeading.vue'
-import ResponsivePage from '@/components/shared/ResponsivePage.vue'
+import PageFabMenu from '@/components/page/PageFabMenu.vue'
+import PageHeading from '@/components/page/PageHeading.vue'
+import PageResponsive from '@/components/page/PageResponsive.vue'
 import { appDescription, appName } from '@/shared/constants'
 import { codeIcon, donatePageIcon, infoIcon } from '@/shared/icons'
 import { useMeta } from 'quasar'
@@ -10,7 +10,7 @@ useMeta({ title: `${appName} - About` })
 </script>
 
 <template>
-    <ResponsivePage>
+    <PageResponsive>
         <PageFabMenu />
 
         <PageHeading :headingIcon="infoIcon" headingTitle="About" />
@@ -56,5 +56,5 @@ useMeta({ title: `${appName} - About` })
                 </q-item-section>
             </q-item>
         </q-list>
-    </ResponsivePage>
+    </PageResponsive>
 </template>

@@ -14,29 +14,29 @@ const router = createRouter({
         // Dashboard components are more unique and will likely need dedicated routes
         {
             path: '/',
-            redirect: `/daily-plans`, // Your default route
+            redirect: `/daily-plans-dashboard`, // Your default route
             name: RouteNameEnum.MENU_LAYOUT,
             component: LayoutMenu, // Must use a different layout for other primary routes
             children: [
                 {
-                    path: '/daily-plans',
+                    path: '/daily-plans-dashboard',
                     name: RouteNameEnum.DAILY_PLANS_DASHBOARD,
-                    component: PageDashboardDailyPlans, // TODO
+                    component: PageDashboardDailyPlans,
                 },
                 {
                     path: '/workouts-dashboard',
                     name: RouteNameEnum.WORKOUTS_DASHBOARD,
-                    component: PageDashboardWorkouts, // TODO
+                    component: PageDashboardWorkouts,
                 },
                 {
                     path: '/exercises-dashboard',
                     name: RouteNameEnum.EXERCISES_DASHBOARD,
-                    component: PageDashboardExercises, // TODO
+                    component: PageDashboardExercises,
                 },
                 {
                     path: '/measurements-dashboard',
                     name: RouteNameEnum.MEASUREMENTS_DASHBOARD,
-                    component: PageDashboardMeasurements, // TODO
+                    component: PageDashboardMeasurements,
                 },
                 {
                     path: '/settings',

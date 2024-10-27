@@ -1,43 +1,97 @@
 <script setup lang="ts">
 import useLogger from '@/composables/useLogger'
-import { deleteIcon } from '@/shared/icons'
-import type { IdType } from '@/shared/types'
-import { useQuasar } from 'quasar'
-import { onMounted } from 'vue'
-import DialogConfirm from './DialogConfirm.vue'
+import { deleteIcon, lockIcon, unlockIcon } from '@/shared/icons'
+import type { IdType, ServiceType } from '@/shared/types'
+import useSettingsStore from '@/stores/settings'
+import { useDialogPluginComponent, useQuasar } from 'quasar'
+import { computed, ref } from 'vue'
 
 /**
- * Based off of DialogConfirm. This dialog is a templateless component for deleting a record.
+ * Dialog for deleting a single record.
  */
 const props = defineProps<{
     id: IdType
-    labelSingular: string
-    deleteMethod: (id: IdType) => Promise<Record<string, any>>
+    service: ServiceType
+    useUnlock: 'ALWAYS' | 'NEVER' | 'ADVANCED-MODE-CONTROLLED'
 }>()
+
+defineEmits([...useDialogPluginComponent.emits])
+const { dialogRef, onDialogHide, onDialogOK, onDialogCancel } = useDialogPluginComponent()
 
 const $q = useQuasar()
 const { log } = useLogger()
+const settingsStore = useSettingsStore()
 
-onMounted(() => {
-    $q.dialog({
-        component: DialogConfirm,
-        componentProps: {
-            title: `Delete ${props.labelSingular} TEST`,
-            message: `Are you sure you want to delete ${props.id}?`,
-            color: 'negative',
-            icon: deleteIcon,
-            useConfirmationCode: 'ADVANCED-MODE-CONTROLLED',
-        },
-    }).onOk(async () => {
-        try {
-            $q.loading.show()
-            const deletedRecord = await props.deleteMethod(props.id)
-            log.info(`Deleted ${props.labelSingular}`, deletedRecord)
-        } catch (error) {
-            log.error(`Error deleting ${props.labelSingular}`, error as Error)
-        } finally {
-            $q.loading.hide()
-        }
-    })
+const toggle = ref(false)
+
+/**
+ * Whether the dialog uses an unlock.
+ */
+const usesUnlock = computed(() => {
+    return (
+        props.useUnlock === 'ALWAYS' ||
+        (props.useUnlock === 'ADVANCED-MODE-CONTROLLED' && !settingsStore.advancedMode)
+    )
 })
+
+async function onDelete() {
+    log.silentDebug('Delete dialog', { id: props.id, service: props.service })
+    try {
+        $q.loading.show()
+        const deletedRecord = await props.service.remove(props.id)
+        log.info(`Deleted ${props.service.labelSingular}`, deletedRecord)
+    } catch (error) {
+        log.error(`Error deleting ${props.service.labelSingular}`, error as Error)
+    } finally {
+        $q.loading.hide()
+        onDialogOK() // Close the dialog at this point
+    }
+}
 </script>
+
+<template>
+    <q-dialog ref="dialogRef" @hide="onDialogHide" v-on:keyup.enter="onDelete">
+        <q-card class="q-dialog-plugin">
+            <q-card-section class="bg-negative text-white q-pt-sm q-pb-xs">
+                <q-icon :name="deleteIcon" size="sm" class="q-pb-sm q-mr-md" />
+                <span class="text-h6">Delete {{ service.labelSingular }}</span>
+            </q-card-section>
+
+            <q-card-section class="q-mt-lg">
+                Are you sure you want to delete {{ id }}?
+            </q-card-section>
+
+            <q-card-section v-if="usesUnlock">
+                <q-item tag="label">
+                    <q-item-section>
+                        <q-item-label>Unlock Required</q-item-label>
+                        <q-item-label caption> Toggle this operation on to proceed. </q-item-label>
+                    </q-item-section>
+
+                    <q-item-section side>
+                        <q-toggle
+                            v-model="toggle"
+                            color="negative"
+                            size="xl"
+                            :unchecked-icon="lockIcon"
+                            :checked-icon="unlockIcon"
+                        />
+                    </q-item-section>
+                </q-item>
+            </q-card-section>
+
+            <q-card-actions align="right">
+                <q-btn flat label="Cancel" @click="onDialogCancel" />
+                <q-btn
+                    v-if="usesUnlock"
+                    :disable="!toggle"
+                    flat
+                    label="Delete"
+                    :color="toggle ? 'negative' : 'grey'"
+                    @click="onDelete"
+                />
+                <q-btn v-else flat label="Delete" color="negative" @click="onDelete" />
+            </q-card-actions>
+        </q-card>
+    </q-dialog>
+</template>

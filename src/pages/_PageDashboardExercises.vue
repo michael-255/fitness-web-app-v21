@@ -3,7 +3,7 @@ import DashboardCard from '@/components/dashboard/DashboardCard.vue'
 import DashboardEmptyMessage from '@/components/dashboard/DashboardEmptyMessage.vue'
 import PageFabMenu from '@/components/shared/PageFabMenu.vue'
 import PageHeading from '@/components/shared/PageHeading.vue'
-import ResponsivePage from '@/components/shared/ResponsivePage.vue'
+import PageResponsive from '@/components/shared/PageResponsive.vue'
 import useExerciseDialogs from '@/composables/useExerciseDialogs'
 import useExerciseResultDialogs from '@/composables/useExerciseResultDialogs'
 import useLogger from '@/composables/useLogger'
@@ -50,7 +50,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <ResponsivePage>
+    <PageResponsive>
         <PageFabMenu
             :isLoading="$q.loading.isActive"
             :subButtons="[
@@ -115,5 +115,5 @@ onUnmounted(() => {
                 </q-item-section>
             </q-item>
         </q-list>
-    </ResponsivePage>
+    </PageResponsive>
 </template>
