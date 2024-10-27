@@ -44,8 +44,8 @@ import {
     symRoundedSettingsApplications,
     symRoundedStat2,
     symRoundedStickyNote2,
-    symRoundedStorage,
     symRoundedStraighten,
+    symRoundedTactic,
     symRoundedTune,
     symRoundedViewWeek,
     symRoundedWarning,
@@ -66,6 +66,7 @@ export const errorIcon = symRoundedError
 // Pages (Views)
 export const donatePageIcon = symRoundedRedeem
 export const settingsPageIcon = symRoundedSettings
+export const plansPageIcon = symRoundedTactic
 export const workoutsPageIcon = symRoundedAssignment
 export const exercisesPageIcon = symRoundedFitnessCenter
 export const measurementsPageIcon = symRoundedStraighten
@@ -109,7 +110,6 @@ export const verticalDotMenuIcon = symRoundedMoreVert
 export const columnsIcon = symRoundedViewWeek
 export const optionsIcon = symRoundedTune
 export const databaseIcon = symRoundedDatabase
-export const storageIcon = symRoundedStorage
 export const codeIcon = symRoundedCode
 export const webIcon = symRoundedLanguage
 export const noteIcon = symRoundedStickyNote2

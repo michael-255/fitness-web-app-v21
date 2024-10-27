@@ -1,7 +1,8 @@
-import { planSchema } from '@/models/Plan'
+import { planSchema, type PlanType } from '@/models/Plan'
 import { TableEnum } from '@/shared/enums'
 import { calendarCheckIcon, databaseIcon } from '@/shared/icons'
 import { hiddenTableColumn, tableColumn } from '@/shared/utils'
+import { liveQuery, type Observable } from 'dexie'
 import BaseService from './BaseService'
 
 /**
@@ -30,6 +31,26 @@ export class PlanService extends BaseService {
     supportsCreate = false
     supportsEdit = false
     supportsDelete = false
+
+    /**
+     * Returns live query with records that are not hidden with the remaining sorted with
+     * locked records first, then favorited records, then alphabetically by name, and finally
+     * by createdAt reversed.
+     */
+    liveDashboard(): Observable<PlanType[]>
+    liveDashboard(): Observable<Record<string, any>[]>
+    liveDashboard(): Observable<PlanType[] | Record<string, any>[]> {
+        return liveQuery(() => this.db.table(TableEnum.PLANS).toArray())
+    }
+
+    /**
+     * Returns live query or records ordered by name.
+     */
+    liveTable(): Observable<PlanType[]>
+    liveTable(): Observable<Record<string, any>[]>
+    liveTable(): Observable<PlanType[] | Record<string, any>[]> {
+        return liveQuery(() => this.db.table(TableEnum.PLANS).toArray())
+    }
 }
 
 /**

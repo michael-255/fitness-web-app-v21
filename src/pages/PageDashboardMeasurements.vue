@@ -8,6 +8,7 @@ import { RouteNameEnum, TableEnum } from '@/shared/enums'
 import {
     addIcon,
     chartsIcon,
+    databaseIcon,
     dietWeightModuleIcon,
     healthModuleIcon,
     labWorkModuleIcon,
@@ -33,7 +34,7 @@ const phTimestamp = Date.now()
                 {
                     label: 'Measurements Data',
                     color: 'primary',
-                    icon: measurementsPageIcon,
+                    icon: databaseIcon,
                     handleClick: () =>
                         router.push({
                             name: RouteNameEnum.TABLE,
