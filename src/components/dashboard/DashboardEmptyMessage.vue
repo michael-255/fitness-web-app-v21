@@ -16,7 +16,7 @@ const $q = useQuasar()
 </script>
 
 <template>
-    <q-item class="q-mb-md">
+    <q-item class="rounded-dashed-border q-mb-md">
         <q-item-section>
             <q-item-label class="text-h6 q-mb-md">{{ title }}</q-item-label>
 
@@ -35,3 +35,10 @@ const $q = useQuasar()
         </q-item-section>
     </q-item>
 </template>
+
+<style scoped>
+.rounded-dashed-border {
+    border-radius: 10px;
+    border: 3px dashed #4caf50;
+}
+</style>

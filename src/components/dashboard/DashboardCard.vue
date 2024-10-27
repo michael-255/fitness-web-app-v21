@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import NewlinedTextArea from '@/components/dashboard/shared/NewlinedTextArea.vue'
+import NewlinedTextArea from '@/components/dashboard/NewlinedTextArea.vue'
 import {
     addEntryIcon,
     chartsIcon,
@@ -12,7 +12,6 @@ import {
 } from '@/shared/icons'
 import type { TextAreaType, TextLineType, TimestampType } from '@/shared/types'
 import { compactDateFromMs, timeAgo } from '@/shared/utils'
-import useSettingsStore from '@/stores/settings'
 
 defineProps<{
     recordName: TextLineType
@@ -37,8 +36,6 @@ const emit = defineEmits<{
     (event: 'onFavorite'): void
     (event: 'onAddEntry'): void
 }>()
-
-const settingsStore = useSettingsStore()
 </script>
 
 <template>
@@ -147,7 +144,7 @@ const settingsStore = useSettingsStore()
             </q-item-section>
         </q-item>
 
-        <q-item v-if="recordDesc && !settingsStore.advancedMode">
+        <q-item v-if="recordDesc">
             <q-item-section>
                 <q-item-label>
                     <NewlinedTextArea :text="recordDesc" />
@@ -157,8 +154,8 @@ const settingsStore = useSettingsStore()
 
         <q-item v-if="recordLastChildNote">
             <q-item-section>
-                <q-item-label class="text-grey-5 text-italic">
-                    <div class="text-caption">Previous Note:</div>
+                <q-item-label class="text-grey-5">
+                    <div>Previous Note:</div>
                     <NewlinedTextArea :text="recordLastChildNote" />
                 </q-item-label>
             </q-item-section>
