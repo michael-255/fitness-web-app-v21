@@ -91,7 +91,7 @@ interface ExerciseParams {
     name?: TextLineType
     desc?: TextAreaType
     lastChild?: ExerciseResultType
-    inputs: ExerciseInputType // Required, not defaulted
+    inputs?: ExerciseInputType
     initialSetCount?: InitialSetCountType
     restTimer?: RestTimerType
     tabataTimer?: TabataTimerType
@@ -109,7 +109,7 @@ export default class Exercise {
     name: TextLineType
     desc: TextAreaType
     lastChild?: ExerciseResultType
-    inputs: ExerciseInputType // Required, not defaulted
+    inputs: ExerciseInputType
     initialSetCount: InitialSetCountType
     restTimer?: RestTimerType
     tabataTimer?: TabataTimerType
@@ -121,7 +121,7 @@ export default class Exercise {
         this.name = params.name ?? 'My Exercise'
         this.desc = params.desc ?? ''
         this.lastChild = params.lastChild ?? undefined
-        this.inputs = params.inputs // Required, not defaulted
+        this.inputs = params.inputs ?? ExerciseInputEnum.CHECKLIST
         this.initialSetCount = params.initialSetCount ?? 1
         this.restTimer = params.restTimer ?? undefined
         this.tabataTimer = params.tabataTimer ?? undefined
