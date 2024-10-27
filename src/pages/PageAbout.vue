@@ -41,6 +41,7 @@ useMeta({ title: `${appName} - About` })
                         label="GitHub"
                         target="_blank"
                         href="https://github.com/michael-255"
+                        rel="noopener noreferrer"
                         :icon="codeIcon"
                     />
                 </q-item-section>

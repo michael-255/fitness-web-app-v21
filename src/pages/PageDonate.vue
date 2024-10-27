@@ -41,6 +41,7 @@ useMeta({ title: `${appName} - Donate` })
                         label="Support me on Ko-fi"
                         target="_blank"
                         href="https://ko-fi.com/michael255"
+                        rel="noopener noreferrer"
                         :icon="webIcon"
                     />
                 </q-item-section>
