@@ -16,7 +16,7 @@ export const workoutResultSchema = z.object({
     id: idSchema,
     createdAt: timestampSchema,
     status: statusListSchema,
-    workoutId: idSchema,
+    parentId: idSchema,
     note: textAreaSchema,
     finishedAt: timestampSchema.optional(),
     warmupResultGroups: z.array(exerciseResultGroupSchema),
@@ -36,7 +36,7 @@ interface WorkoutResultParams {
     id?: IdType
     createdAt?: TimestampType
     status?: StatusType[]
-    workoutId: IdType // Parent reference required, never defaulted
+    parentId: IdType // Parent reference required, never defaulted
     note?: TextAreaType
     finishedAt?: TimestampType
     warmupResultGroups?: ExerciseResultGroupType[]
@@ -53,7 +53,7 @@ export default class WorkoutResult {
     id: IdType
     createdAt: TimestampType
     status: StatusType[]
-    workoutId: IdType
+    parentId: IdType
     note: TextAreaType
     finishedAt?: TimestampType
     warmupResultGroups: ExerciseResultGroupType[]
@@ -64,7 +64,7 @@ export default class WorkoutResult {
         this.id = params.id ?? createId(TableEnum.WORKOUT_RESULTS)
         this.createdAt = params.createdAt ?? Date.now()
         this.status = params.status ?? []
-        this.workoutId = params.workoutId // Parent reference required, never defaulted
+        this.parentId = params.parentId // Parent reference required, never defaulted
         this.note = params.note ?? ''
         this.finishedAt = params.finishedAt ?? undefined
         this.warmupResultGroups = params.warmupResultGroups ?? []

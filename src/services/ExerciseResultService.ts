@@ -168,17 +168,6 @@ export class ExerciseResultService extends BaseService {
     }
 
     /**
-     * Returns live query of records ordered by creation date.
-     */
-    liveTable(): Observable<ExerciseResultType[]>
-    liveTable(): Observable<Record<string, any>[]>
-    liveTable(): Observable<ExerciseResultType[] | Record<string, any>[]> {
-        return liveQuery(() =>
-            this.db.table(TableEnum.EXERCISE_RESULTS).orderBy('createdAt').reverse().toArray(),
-        )
-    }
-
-    /**
      * Returns chart datasets for the records associated with a parent.
      * TODO: Implement for charts.
      */
@@ -192,6 +181,17 @@ export class ExerciseResultService extends BaseService {
             hasRecordsBeyondThreeMonths: false,
             hasRecordsBeyondOneYear: false,
         }
+    }
+
+    /**
+     * Returns live query of records ordered by creation date.
+     */
+    liveTable(): Observable<ExerciseResultType[]>
+    liveTable(): Observable<Record<string, any>[]>
+    liveTable(): Observable<ExerciseResultType[] | Record<string, any>[]> {
+        return liveQuery(() =>
+            this.db.table(TableEnum.EXERCISE_RESULTS).orderBy('createdAt').reverse().toArray(),
+        )
     }
 
     /**

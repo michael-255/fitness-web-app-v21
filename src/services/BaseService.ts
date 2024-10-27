@@ -103,6 +103,27 @@ export default abstract class BaseService {
         throw new Error('Not supported by Service')
     }
 
+    // eslint-disable-next-line
+    async getChartDatasets(parentId: IdType): Promise<{
+        threeMonths: {
+            x: any
+            y: any
+        }[]
+        oneYear: {
+            x: any
+            y: any
+        }[]
+        allTime: {
+            x: any
+            y: any
+        }[]
+        hasRecords: boolean
+        hasRecordsBeyondThreeMonths: boolean
+        hasRecordsBeyondOneYear: boolean
+    }> {
+        throw new Error('Not supported by Service')
+    }
+
     async initialize(): Promise<Record<string, any>[]> {
         throw new Error('Not supported by Service')
     }
