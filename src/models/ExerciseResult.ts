@@ -52,7 +52,7 @@ export const exerciseResultSchema = z.object({
     id: idSchema,
     createdAt: timestampSchema,
     status: statusListSchema,
-    exerciseId: idSchema,
+    parentId: idSchema,
     note: textAreaSchema,
     checklistSets: z.array(checklistSetSchema).optional(),
     cardioSets: z.array(cardioSetSchema).optional(),
@@ -83,7 +83,7 @@ interface ExerciseResultParams {
     id?: IdType
     createdAt?: TimestampType
     status?: StatusType[]
-    exerciseId: IdType // Parent reference required, never defaulted
+    parentId: IdType // Parent reference required, never defaulted
     note?: TextAreaType
     checklistSets?: ChecklistSetType[]
     cardioSets?: CardioSetType[]
@@ -101,7 +101,7 @@ export default class ExerciseResult {
     id: IdType
     createdAt: TimestampType
     status: StatusType[]
-    exerciseId: IdType
+    parentId: IdType
     note: TextAreaType
     checklistSets?: ChecklistSetType[]
     cardioSets?: CardioSetType[]
@@ -113,7 +113,7 @@ export default class ExerciseResult {
         this.id = params.id ?? createId(TableEnum.EXERCISE_RESULTS)
         this.createdAt = params.createdAt ?? Date.now()
         this.status = params.status ?? []
-        this.exerciseId = params.exerciseId // Parent reference required, never defaulted
+        this.parentId = params.parentId // Parent reference required, never defaulted
         this.note = params.note ?? ''
         this.checklistSets = params.checklistSets ?? undefined
         this.cardioSets = params.cardioSets ?? undefined

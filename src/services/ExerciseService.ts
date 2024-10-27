@@ -34,7 +34,7 @@ export class ExerciseService extends BaseService {
     displayIcon = exercisesPageIcon
     tableIcon = databaseIcon
     supportsTableColumnFilters = true
-    supportsTableCharts = false
+    supportsActivityCharts = true
     supportsCharts = true
     supportsInspect = true
     supportsCreate = true
@@ -42,9 +42,9 @@ export class ExerciseService extends BaseService {
     supportsDelete = true
 
     /**
-     * Returns live query with records that are not deactivated with the remaining sorted with
-     * locked records first, then favorited records, then alphabetically by name, and finally by
-     * createdAt reversed.
+     * Returns live query with records that are not hidden with the remaining sorted with
+     * locked records first, then favorited records, then alphabetically by name, and finally
+     * by createdAt reversed.
      */
     liveDashboard(): Observable<ExerciseType[]>
     liveDashboard(): Observable<Record<string, any>[]>
@@ -53,7 +53,7 @@ export class ExerciseService extends BaseService {
             this.db
                 .table(TableEnum.EXERCISES)
                 .orderBy('name')
-                .filter((record) => !record.status.includes(StatusEnum.DEACTIVATED))
+                .filter((record) => !record.status.includes(StatusEnum.HIDDEN))
                 .toArray()
                 .then((records) =>
                     records.sort((a, b) => {
@@ -109,7 +109,7 @@ export class ExerciseService extends BaseService {
     async get(id: IdType): Promise<ExerciseType | Record<string, any>> {
         const recordToGet = await this.db.table(TableEnum.EXERCISES).get(id)
         if (!recordToGet) {
-            throw new Error(`Exercise ID not found: ${id}`)
+            throw new Error(`${this.labelSingular} ID not found: ${id}`)
         }
         return recordToGet!
     }
@@ -120,7 +120,7 @@ export class ExerciseService extends BaseService {
     async add(record: ExerciseType): Promise<ExerciseType>
     async add(record: ExerciseType): Promise<Record<string, any>>
     async add(record: ExerciseType): Promise<ExerciseType | Record<string, any>> {
-        const validatedRecord = exerciseSchema.parse(record)
+        const validatedRecord = this.modelSchema.parse(record)
         await this.db.table(TableEnum.EXERCISES).add(validatedRecord)
         return validatedRecord
     }
@@ -131,7 +131,7 @@ export class ExerciseService extends BaseService {
     async put(record: ExerciseType): Promise<ExerciseType>
     async put(record: ExerciseType): Promise<Record<string, any>>
     async put(record: ExerciseType): Promise<ExerciseType | Record<string, any>> {
-        const validatedRecord = exerciseSchema.parse(record)
+        const validatedRecord = this.modelSchema.parse(record)
         await this.db.table(TableEnum.EXERCISES).put(validatedRecord)
         return validatedRecord
     }
@@ -151,7 +151,7 @@ export class ExerciseService extends BaseService {
                 await this.db.table(TableEnum.EXERCISES).delete(id)
                 await this.db
                     .table(TableEnum.EXERCISE_RESULTS)
-                    .where('exerciseId')
+                    .where('parentId')
                     .equals(id)
                     .delete()
             },
@@ -168,8 +168,8 @@ export class ExerciseService extends BaseService {
 
         // Validate each record
         records.forEach((exercise) => {
-            if (exerciseSchema.safeParse(exercise).success) {
-                validRecords.push(exerciseSchema.parse(exercise)) // Clean record with parse
+            if (this.modelSchema.safeParse(exercise).success) {
+                validRecords.push(this.modelSchema.parse(exercise)) // Clean record with parse
             } else {
                 invalidRecords.push(exercise)
             }
@@ -185,6 +185,10 @@ export class ExerciseService extends BaseService {
                 message: (error as Error)?.message,
             }
         }
+
+        // Update lastChild property for each parent record
+        const parentIds = validRecords.map((record) => record.id)
+        await Promise.all(parentIds.map((parentId) => this.updateLastChild(parentId)))
 
         // Return results object for FE handling
         return {
@@ -212,21 +216,21 @@ export class ExerciseService extends BaseService {
     /**
      * From Parent:
      *
-     * Updates the `lastChild` property of the record associated with the `exerciseId` with the
+     * Updates the `lastChild` property of the record associated with the `parentId` with the
      * most recently created child record. Locked records are not updated.
      */
-    async updateLastChild(exerciseId: IdType) {
+    async updateLastChild(parentId: IdType) {
         const lastChild = (
             await this.db
                 .table(TableEnum.EXERCISE_RESULTS)
-                .where('exerciseId')
-                .equals(exerciseId)
+                .where('parentId')
+                .equals(parentId)
                 .sortBy('createdAt')
         )
             .filter((record) => !record.status.includes(StatusEnum.LOCKED))
             .reverse()[0]
 
-        await this.db.table(TableEnum.EXERCISES).update(exerciseId, { lastChild })
+        await this.db.table(TableEnum.EXERCISES).update(parentId, { lastChild })
     }
 
     /**
@@ -243,24 +247,28 @@ export class ExerciseService extends BaseService {
     }
 
     /**
-     * Generates an options list of records for select box components on the FE.
+     * Generates an options list of records for select box components on the FE. Hidden records are
+     * not included in the list.
      */
     async getSelectOptions(): Promise<SelectOption[]> {
-        const records = await this.db.table(TableEnum.EXERCISES).orderBy('name').toArray()
+        const records = await this.db
+            .table(TableEnum.EXERCISES)
+            .orderBy('name')
+            .filter((record) => !record.status.includes(StatusEnum.HIDDEN))
+            .toArray()
 
-        return records.map((record) => {
+        return records.map((record: ExerciseType) => {
             const name = record.name
             const id = truncateText(record.id, 8, '*')
             const favorite = record.status.includes(StatusEnum.FAVORITED) ? '⭐' : ''
             const locked = record.status.includes(StatusEnum.LOCKED) ? '🔒' : ''
-            const deactiviated = record.status.includes(StatusEnum.DEACTIVATED) ? '🚫' : ''
             const disable =
                 record.status.includes(StatusEnum.LOCKED) ||
-                record.status.includes(StatusEnum.DEACTIVATED)
+                record.status.includes(StatusEnum.HIDDEN)
 
             return {
                 value: record.id as IdType,
-                label: `${name} (${id}) ${locked}${deactiviated}${favorite}`,
+                label: `${name} (${id}) ${locked}${favorite}`,
                 disable,
             }
         })
