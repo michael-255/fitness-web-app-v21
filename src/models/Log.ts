@@ -1,5 +1,7 @@
-import { timestampSchema } from '@/shared/schemas'
-import type { TimestampType } from '@/shared/types'
+import { TableEnum } from '@/shared/enums'
+import { idSchema, timestampSchema } from '@/shared/schemas'
+import type { IdType, TimestampType } from '@/shared/types'
+import { createId } from '@/shared/utils'
 import { z } from 'zod'
 
 //
@@ -17,8 +19,6 @@ export enum LogLevelEnum {
 // Schemas
 //
 
-export const logAutoIdSchema = z.number().int().optional()
-
 export const logLevelSchema = z.nativeEnum(LogLevelEnum)
 
 export const logLabelSchema = z.string().trim()
@@ -26,7 +26,7 @@ export const logLabelSchema = z.string().trim()
 export const logDetailsSchema = z.record(z.any()).or(z.instanceof(Error)).optional()
 
 export const logSchema = z.object({
-    autoId: logAutoIdSchema,
+    id: idSchema,
     createdAt: timestampSchema,
     logLevel: logLevelSchema,
     label: logLabelSchema,
@@ -37,7 +37,6 @@ export const logSchema = z.object({
 // Types
 //
 
-export type LogAutoIdType = z.infer<typeof logAutoIdSchema>
 export type LogLevelType = z.infer<typeof logLevelSchema>
 export type LogLabelType = z.infer<typeof logLabelSchema>
 export type LogDetailsType = z.infer<typeof logDetailsSchema>
@@ -60,13 +59,14 @@ interface LogParams {
  * This model is used for all internal logging. Logs can also be reviewed in app.
  */
 export default class Log {
-    autoId: LogAutoIdType // Handled by Dexie
+    id: IdType
     createdAt: TimestampType
     logLevel: LogLevelType
     label: LogLabelType
     details: LogDetailsType
 
     constructor(params: LogParams) {
+        this.id = createId(TableEnum.LOGS)
         this.createdAt = Date.now()
         this.logLevel = params.logLevel
         this.label = params.label

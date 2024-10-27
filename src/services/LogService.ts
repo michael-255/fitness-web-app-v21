@@ -1,9 +1,16 @@
-import { logSchema, type LogAutoIdType, type LogType } from '@/models/Log'
+import DialogChartActivityLogs from '@/components/dialogs/chart/DialogChartActivityLogs.vue'
+import DialogInspect from '@/components/dialogs/DialogInspect.vue'
+import InspectItemDate from '@/components/dialogs/inspect/InspectItemDate.vue'
+import InspectItemObject from '@/components/dialogs/inspect/InspectItemObject.vue'
+import InspectItemString from '@/components/dialogs/inspect/InspectItemString.vue'
+import { logSchema, type LogType } from '@/models/Log'
 import { SettingKeyEnum } from '@/models/Setting'
 import { DurationEnum, DurationMSEnum, TableEnum } from '@/shared/enums'
 import { logsTableIcon } from '@/shared/icons'
+import type { IdType } from '@/shared/types'
 import { hiddenTableColumn, tableColumn } from '@/shared/utils'
 import { liveQuery, type Observable } from 'dexie'
+import type { QDialogOptions } from 'quasar'
 import BaseService from './BaseService'
 
 /**
@@ -19,8 +26,8 @@ export class LogService extends BaseService {
     modelSchema = logSchema
     table = TableEnum.LOGS
     tableColumns = [
-        hiddenTableColumn('autoId'),
-        tableColumn('autoId', 'Auto Id'),
+        hiddenTableColumn('id'),
+        tableColumn('id', 'Id', 'UUID'),
         tableColumn('createdAt', 'Created Date', 'DATE'),
         tableColumn('logLevel', 'Log Level'),
         tableColumn('label', 'Label', 'TEXT'),
@@ -29,12 +36,57 @@ export class LogService extends BaseService {
     displayIcon = logsTableIcon
     tableIcon = logsTableIcon
     supportsTableColumnFilters = true
-    supportsTableCharts = true
+    supportsActivityCharts = true
     supportsCharts = false
     supportsInspect = true
     supportsCreate = false
     supportsEdit = false
     supportsDelete = false
+
+    /**
+     * Returns QDialogOptions options for the chart dialog.
+     * @example $q.dialog(service.activityChartsDialogOptions(id))
+     */
+    activityChartsDialogOptions(): QDialogOptions {
+        return { component: DialogChartActivityLogs }
+    }
+
+    /**
+     * Returns QDialogOptions options for the inspect dialog.
+     * @example $q.dialog(service.inspectDialogOptions(id))
+     */
+    inspectDialogOptions(id: IdType): QDialogOptions {
+        return {
+            component: DialogInspect,
+            componentProps: {
+                id,
+                service: this,
+                inspectComponents: [
+                    { component: InspectItemString, props: { label: 'Id', recordKey: 'id' } },
+                    {
+                        component: InspectItemDate,
+                        props: { label: 'Created Date', recordKey: 'createdAt' },
+                    },
+                    {
+                        component: InspectItemString,
+                        props: { label: 'Log Level', recordKey: 'logLevel' },
+                    },
+                    {
+                        component: InspectItemString,
+                        props: { label: 'Description', recordKey: 'desc' },
+                    },
+                    {
+                        component: InspectItemString,
+                        props: { label: 'Label', recordKey: 'label' },
+                    },
+                    {
+                        component: InspectItemObject,
+                        props: { label: 'Details', recordKey: 'details' },
+                    },
+                ],
+            },
+        }
+    }
 
     /**
      * Purges logs based on the log retention duration setting. Returns the number of logs purged.
@@ -59,7 +111,7 @@ export class LogService extends BaseService {
                 const logAge = now - logTimestamp
                 return logAge > maxLogAgeMs
             })
-            .map((log: LogType) => log.autoId!) // Map remaining Log ids for removal
+            .map((log: LogType) => log.id!) // Map remaining Log ids for removal
 
         await this.db.table(TableEnum.LOGS).bulkDelete(removableLogs)
         return removableLogs.length // Number of logs deleted
@@ -79,12 +131,12 @@ export class LogService extends BaseService {
     /**
      * Returns a Log by Auto ID.
      */
-    async get(autoId: LogAutoIdType): Promise<LogType>
-    async get(autoId: LogAutoIdType): Promise<Record<string, any>>
-    async get(autoId: LogAutoIdType): Promise<LogType | Record<string, any>> {
-        const modelToGet = await this.db.table(TableEnum.LOGS).get(Number(autoId))
+    async get(id: IdType): Promise<LogType>
+    async get(id: IdType): Promise<Record<string, any>>
+    async get(id: IdType): Promise<LogType | Record<string, any>> {
+        const modelToGet = await this.db.table(TableEnum.LOGS).get(id)
         if (!modelToGet) {
-            throw new Error(`Log Auto Id not found: ${autoId}`)
+            throw new Error(`Log ID not found: ${id}`)
         }
         return modelToGet!
     }
