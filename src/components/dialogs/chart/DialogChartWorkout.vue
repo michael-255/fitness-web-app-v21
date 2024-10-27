@@ -22,7 +22,7 @@ const { dialogRef, onDialogHide, onDialogCancel } = useDialogPluginComponent()
     >
         <q-toolbar class="bg-info text-white toolbar-height">
             <q-icon :name="chartsIcon" size="sm" class="q-mx-sm" />
-            <q-toolbar-title>Exercise Charts</q-toolbar-title>
+            <q-toolbar-title>Workout Charts</q-toolbar-title>
             <q-btn flat round :icon="closeIcon" @click="onDialogCancel" />
         </q-toolbar>
 
