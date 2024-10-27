@@ -47,7 +47,7 @@ onUnmounted(() => {
                 {
                     label: 'Workouts Data',
                     color: 'primary',
-                    icon: databaseIcon,
+                    icon: workoutsPageIcon,
                     handleClick: () =>
                         router.push({
                             name: RouteNameEnum.TABLE,
@@ -56,7 +56,7 @@ onUnmounted(() => {
                 },
                 {
                     label: 'Workout Results Data',
-                    color: 'warning',
+                    color: 'primary',
                     icon: databaseIcon,
                     handleClick: () =>
                         router.push({
