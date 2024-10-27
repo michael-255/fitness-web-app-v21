@@ -1,10 +1,27 @@
-import { exerciseResultSchema, type ExerciseResultType } from '@/models/ExerciseResult'
+import DialogChartActivityExerciseResults from '@/components/dialogs/chart/DialogChartActivityExerciseResults.vue'
+import DialogCreate from '@/components/dialogs/DialogCreate.vue'
+import DialogDelete from '@/components/dialogs/DialogDelete.vue'
+import DialogEdit from '@/components/dialogs/DialogEdit.vue'
+import DialogInspect from '@/components/dialogs/DialogInspect.vue'
+import FormItemCreatedDate from '@/components/dialogs/forms/FormItemCreatedDate.vue'
+import FormItemId from '@/components/dialogs/forms/FormItemId.vue'
+import FormItemNote from '@/components/dialogs/forms/FormItemNote.vue'
+import FormItemParentId from '@/components/dialogs/forms/FormItemParentId.vue'
+import InspectItemDate from '@/components/dialogs/inspect/InspectItemDate.vue'
+import InspectItemList from '@/components/dialogs/inspect/InspectItemList.vue'
+import InspectItemString from '@/components/dialogs/inspect/InspectItemString.vue'
+import ExerciseResult, {
+    exerciseResultSchema,
+    type ExerciseResultType,
+} from '@/models/ExerciseResult'
 import { StatusEnum, TableEnum } from '@/shared/enums'
 import { databaseIcon } from '@/shared/icons'
-import type { IdType, SelectOption } from '@/shared/types'
+import type { IdType, SelectOption, ServiceType } from '@/shared/types'
 import { hiddenTableColumn, tableColumn, truncateText } from '@/shared/utils'
 import { liveQuery, type Observable } from 'dexie'
+import type { QDialogOptions } from 'quasar'
 import BaseService from './BaseService'
+import { ExerciseService } from './ExerciseService'
 
 /**
  * Singleton class for managing most aspects of the Exercise Result model.
@@ -22,19 +39,133 @@ export class ExerciseResultService extends BaseService {
         hiddenTableColumn('id'),
         tableColumn('id', 'Id', 'UUID'),
         tableColumn('createdAt', 'Created Date', 'DATE'),
-        tableColumn('exerciseId', 'Parent Exercise Id', 'UUID'),
+        tableColumn('parentId', 'Parent Exercise Id', 'UUID'),
         tableColumn('note', 'Note', 'TEXT'),
         tableColumn('status', 'Status', 'LIST-PRINT'),
     ]
     displayIcon = databaseIcon
     tableIcon = databaseIcon
     supportsTableColumnFilters = true
-    supportsTableCharts = false
+    supportsActivityCharts = true
     supportsCharts = false
     supportsInspect = true
     supportsCreate = true
     supportsEdit = true
     supportsDelete = true
+
+    /**
+     * Returns the parent service for this child service.
+     */
+    parentService(): ServiceType {
+        return ExerciseService.instance()
+    }
+
+    /**
+     * Returns QDialogOptions options for the chart dialog.
+     * @example $q.dialog(service.activityChartsDialogOptions(id))
+     */
+    activityChartsDialogOptions(): QDialogOptions {
+        return { component: DialogChartActivityExerciseResults }
+    }
+
+    /**
+     * Returns QDialogOptions options for the inspect dialog.
+     * @example $q.dialog(service.inspectDialogOptions(id))
+     */
+    inspectDialogOptions(id: IdType): QDialogOptions {
+        return {
+            component: DialogInspect,
+            componentProps: {
+                id,
+                service: this,
+                inspectComponents: [
+                    { component: InspectItemString, props: { label: 'Id', recordKey: 'id' } },
+                    {
+                        component: InspectItemDate,
+                        props: { label: 'Created Date', recordKey: 'createdAt' },
+                    },
+                    {
+                        component: InspectItemString,
+                        props: { label: 'Parent Example Id', recordKey: 'parentId' },
+                    },
+                    {
+                        component: InspectItemString,
+                        props: { label: 'Note', recordKey: 'note' },
+                    },
+                    {
+                        component: InspectItemList,
+                        props: { label: 'Status', recordKey: 'status' },
+                    },
+                    // TODO
+                ],
+            },
+        }
+    }
+
+    /**
+     * Returns QDialogOptions options for the create dialog.
+     * @example $q.dialog(service.createDialogOptions())
+     */
+    createDialogOptions(parentId?: IdType): QDialogOptions {
+        let record: ExerciseResult = null!
+
+        if (parentId) {
+            record = new ExerciseResult({ parentId })
+        } else {
+            record = new ExerciseResult({ parentId: undefined! })
+        }
+
+        return {
+            component: DialogCreate,
+            componentProps: {
+                service: this,
+                initialRecord: record,
+                formComponents: [
+                    { component: FormItemId },
+                    { component: FormItemParentId, props: { parentService: this.parentService() } },
+                    { component: FormItemCreatedDate },
+                    { component: FormItemNote },
+                    // TODO
+                ],
+            },
+        }
+    }
+
+    /**
+     * Returns QDialogOptions options for the edit dialog.
+     * @example $q.dialog(service.editDialogOptions(id))
+     */
+    editDialogOptions(id: IdType): QDialogOptions {
+        return {
+            component: DialogEdit,
+            componentProps: {
+                id,
+                service: this,
+                formComponents: [
+                    { component: FormItemId },
+                    { component: FormItemParentId, props: { parentService: this.parentService() } },
+                    { component: FormItemCreatedDate },
+                    { component: FormItemNote },
+                    // TODO
+                ],
+            },
+        }
+    }
+
+    /**
+     * Returns QDialogOptions options for the delete dialog.
+     * @example $q.dialog(service.deleteDialogOptions(id))
+     */
+    deleteDialogOptions(id: IdType): QDialogOptions {
+        return {
+            component: DialogDelete,
+            componentProps: {
+                id,
+                service: this,
+                useUnlock: 'ADVANCED-MODE-CONTROLLED',
+            },
+        }
+    }
 
     /**
      * Returns live query of records ordered by creation date.
@@ -51,8 +182,8 @@ export class ExerciseResultService extends BaseService {
      * Returns chart datasets for the records associated with a parent.
      * TODO: Implement for charts.
      */
-    async getChartDatasets(exerciseId: IdType) {
-        console.log('getChartDatasets', exerciseId)
+    async getChartDatasets(parentId: IdType) {
+        console.log('getChartDatasets', parentId)
         return {
             threeMonths: [],
             oneYear: [],
@@ -71,7 +202,7 @@ export class ExerciseResultService extends BaseService {
     async get(id: IdType): Promise<ExerciseResultType | Record<string, any>> {
         const recordToGet = await this.db.table(TableEnum.EXERCISE_RESULTS).get(id)
         if (!recordToGet) {
-            throw new Error(`Exercise Result ID not found: ${id}`)
+            throw new Error(`${this.labelSingular} ID not found: ${id}`)
         }
         return recordToGet
     }
@@ -89,7 +220,7 @@ export class ExerciseResultService extends BaseService {
             this.db.table(TableEnum.EXERCISES),
             async () => {
                 await this.db.table(TableEnum.EXERCISE_RESULTS).add(validatedRecord)
-                await this.updateLastChild(validatedRecord.exerciseId)
+                await this.updateLastChild(validatedRecord.parentId)
             },
         )
         return validatedRecord
@@ -108,7 +239,7 @@ export class ExerciseResultService extends BaseService {
             this.db.table(TableEnum.EXERCISES),
             async () => {
                 await this.db.table(TableEnum.EXERCISE_RESULTS).put(validatedRecord)
-                await this.updateLastChild(validatedRecord.exerciseId)
+                await this.updateLastChild(validatedRecord.parentId)
             },
         )
         return validatedRecord
@@ -127,7 +258,7 @@ export class ExerciseResultService extends BaseService {
             this.db.table(TableEnum.EXERCISES),
             async () => {
                 await this.db.table(TableEnum.EXERCISE_RESULTS).delete(id)
-                await this.updateLastChild(recordToDelete.exerciseId)
+                await this.updateLastChild(recordToDelete.parentId)
             },
         )
         return recordToDelete
@@ -160,6 +291,10 @@ export class ExerciseResultService extends BaseService {
             }
         }
 
+        // Update parent lastChild property
+        const parentIds = Array.from(new Set(validRecords.map((record) => record.parentId)))
+        await Promise.all(parentIds.map((parentId) => this.updateLastChild(parentId)))
+
         // Return results object for FE handling
         return {
             validRecords,
@@ -172,21 +307,21 @@ export class ExerciseResultService extends BaseService {
     /**
      * From Child:
      *
-     * Updates the `lastChild` property of the parent model associated with the `exerciseId` with the
+     * Updates the `lastChild` property of the parent model associated with the `parentId` with the
      * most recently created child model. Locked records are not updated.
      */
-    async updateLastChild(exerciseId: IdType) {
+    async updateLastChild(parentId: IdType) {
         const lastChild = (
             await this.db
                 .table(TableEnum.EXERCISE_RESULTS)
-                .where('exerciseId')
-                .equals(exerciseId)
+                .where('parentId')
+                .equals(parentId)
                 .sortBy('createdAt')
         )
             .filter((record) => !record.status.includes(StatusEnum.LOCKED))
             .reverse()[0]
 
-        await this.db.table(TableEnum.EXERCISES).update(exerciseId, { lastChild })
+        await this.db.table(TableEnum.EXERCISES).update(parentId, { lastChild })
     }
 
     /**
@@ -201,13 +336,13 @@ export class ExerciseResultService extends BaseService {
 
         return records.map((record) => {
             const id = truncateText(record.id, 8, '*')
-            const exerciseId = truncateText(record.exerciseId, 8, '*')
+            const parentId = truncateText(record.parentId, 8, '*')
             const locked = record.status.includes(StatusEnum.LOCKED) ? '🔒' : ''
             const disable = record.status.includes(StatusEnum.LOCKED)
 
             return {
                 value: record.id as IdType,
-                label: `${id} (${exerciseId}) ${locked}`,
+                label: `${id} (${parentId}) ${locked}`,
                 disable,
             }
         })
