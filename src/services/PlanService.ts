@@ -1,30 +1,30 @@
-import { exerciseSchema } from '@/models/Exercise'
+import { planSchema } from '@/models/Plan'
 import { TableEnum } from '@/shared/enums'
-import { databaseIcon, exercisesPageIcon } from '@/shared/icons'
+import { calendarCheckIcon, databaseIcon } from '@/shared/icons'
 import { hiddenTableColumn, tableColumn } from '@/shared/utils'
 import BaseService from './BaseService'
 
 /**
  * Singleton class for managing most aspects of the Exercise model.
  */
-export class DailyPlanService extends BaseService {
+export class PlanService extends BaseService {
     public constructor() {
         super()
     }
 
-    labelSingular = 'Exercise'
-    labelPlural = 'Exercises'
-    modelSchema = exerciseSchema
+    labelSingular = 'Plan'
+    labelPlural = 'Plans'
+    modelSchema = planSchema
     table = TableEnum.EXERCISES
     tableColumns = [
         hiddenTableColumn('id'),
         tableColumn('id', 'Id', 'UUID'),
         tableColumn('createdAt', 'Created Date', 'DATE'),
     ]
-    displayIcon = exercisesPageIcon // TODO
-    tableIcon = databaseIcon // TODO
+    displayIcon = calendarCheckIcon
+    tableIcon = databaseIcon
     supportsTableColumnFilters = false
-    supportsActivityCharts = false
+    supportsActivityCharts = true
     supportsCharts = false
     supportsInspect = false
     supportsCreate = false
@@ -35,4 +35,4 @@ export class DailyPlanService extends BaseService {
 /**
  * Singleton instance exported as default for convenience.
  */
-export default DailyPlanService.instance()
+export default PlanService.instance()

@@ -1,9 +1,9 @@
 import useLogger from '@/composables/useLogger'
-import DailyPlanService from '@/services/DailyPlanService'
 import ExerciseResultService from '@/services/ExerciseResultService'
 import ExerciseService from '@/services/ExerciseService'
 import LogService from '@/services/LogService'
 import MeasurementService from '@/services/MeasurementService'
+import PlanService from '@/services/PlanService'
 import SettingService from '@/services/SettingService'
 import WorkoutResultService from '@/services/WorkoutResultService'
 import WorkoutService from '@/services/WorkoutService'
@@ -33,8 +33,8 @@ export default function useRouting() {
         case TableEnum.LOGS:
             routeService = LogService
             break
-        case TableEnum.DAILY_PLANS:
-            routeService = DailyPlanService
+        case TableEnum.PLANS:
+            routeService = PlanService
             break
         case TableEnum.WORKOUTS:
             routeService = WorkoutService

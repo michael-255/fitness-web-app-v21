@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { RouteNameEnum } from '@/shared/enums'
 import {
+    calendarCheckIcon,
     exercisesPageIcon,
     measurementsPageIcon,
     settingsPageIcon,
@@ -20,11 +21,11 @@ const isDesktop = computed(() => $q.screen.gt.xs)
             <q-tabs class="text-caption" active-color="yellow" outside-arrows mobile-arrows>
                 <q-route-tab
                     no-caps
-                    :icon="workoutsPageIcon"
+                    :icon="calendarCheckIcon"
                     exact
-                    :to="{ name: RouteNameEnum.DAILY_PLANS_DASHBOARD }"
+                    :to="{ name: RouteNameEnum.PLANS_DASHBOARD }"
                 >
-                    <template v-if="isDesktop">Daily Plans</template>
+                    <template v-if="isDesktop">Plans</template>
                 </q-route-tab>
 
                 <q-route-tab

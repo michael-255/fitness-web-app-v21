@@ -210,7 +210,7 @@ export class WorkoutResultService extends BaseService {
     async add(record: WorkoutResultType): Promise<WorkoutResultType>
     async add(record: WorkoutResultType): Promise<Record<string, any>>
     async add(record: WorkoutResultType): Promise<WorkoutResultType | Record<string, any>> {
-        const validatedRecord = workoutResultSchema.parse(record)
+        const validatedRecord = this.modelSchema.parse(record)
         await this.db.transaction(
             'rw',
             this.db.table(TableEnum.WORKOUT_RESULTS),
@@ -229,7 +229,7 @@ export class WorkoutResultService extends BaseService {
     async put(record: WorkoutResultType): Promise<WorkoutResultType>
     async put(record: WorkoutResultType): Promise<Record<string, any>>
     async put(record: WorkoutResultType): Promise<WorkoutResultType | Record<string, any>> {
-        const validatedRecord = workoutResultSchema.parse(record)
+        const validatedRecord = this.modelSchema.parse(record)
         await this.db.transaction(
             'rw',
             this.db.table(TableEnum.WORKOUT_RESULTS),
@@ -270,8 +270,8 @@ export class WorkoutResultService extends BaseService {
 
         // Validate each record
         records.forEach((record) => {
-            if (workoutResultSchema.safeParse(record).success) {
-                validRecords.push(workoutResultSchema.parse(record)) // Clean record with parse
+            if (this.modelSchema.safeParse(record).success) {
+                validRecords.push(this.modelSchema.parse(record)) // Clean record with parse
             } else {
                 invalidRecords.push(record)
             }

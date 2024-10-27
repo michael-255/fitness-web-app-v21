@@ -1,8 +1,8 @@
-import DailyPlan from '@/models/DailyPlan'
 import Exercise from '@/models/Exercise'
 import ExerciseResult from '@/models/ExerciseResult'
 import Log from '@/models/Log'
 import Measurement from '@/models/Measurements'
+import Plan from '@/models/Plan'
 import Setting from '@/models/Setting'
 import Workout from '@/models/Workout'
 import WorkoutResult from '@/models/WorkoutResult'
@@ -22,7 +22,7 @@ export class Database extends Dexie {
     // Required for easier TypeScript usage
     [TableEnum.SETTINGS]!: Table<Setting>;
     [TableEnum.LOGS]!: Table<Log>;
-    [TableEnum.DAILY_PLANS]!: Table<DailyPlan>;
+    [TableEnum.PLANS]!: Table<Plan>;
     [TableEnum.MEASUREMENTS]!: Table<Measurement>;
     [TableEnum.WORKOUTS]!: Table<Workout>;
     [TableEnum.EXERCISES]!: Table<Exercise>;
@@ -36,7 +36,7 @@ export class Database extends Dexie {
             // Required indexes
             [TableEnum.SETTINGS]: '&key',
             [TableEnum.LOGS]: '&id, createdAt',
-            [TableEnum.DAILY_PLANS]: '&id',
+            [TableEnum.PLANS]: '&id',
             [TableEnum.MEASUREMENTS]: '&id, field, createdAt',
             [TableEnum.WORKOUTS]: '&id, name, *status',
             [TableEnum.EXERCISES]: '&id, name, *status',
@@ -47,7 +47,7 @@ export class Database extends Dexie {
         // Required for converting objects to classes
         this[TableEnum.SETTINGS].mapToClass(Setting)
         this[TableEnum.LOGS].mapToClass(Log)
-        this[TableEnum.DAILY_PLANS].mapToClass(DailyPlan)
+        this[TableEnum.PLANS].mapToClass(Plan)
         this[TableEnum.MEASUREMENTS].mapToClass(Measurement)
         this[TableEnum.WORKOUTS].mapToClass(Workout)
         this[TableEnum.EXERCISES].mapToClass(Exercise)

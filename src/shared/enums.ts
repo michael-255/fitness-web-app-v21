@@ -3,7 +3,7 @@
  */
 export enum RouteNameEnum {
     MENU_LAYOUT = 'MenuLayout',
-    DAILY_PLANS_DASHBOARD = 'DailyPlansDashboard',
+    PLANS_DASHBOARD = 'PlansDashboard',
     WORKOUTS_DASHBOARD = 'WorkoutsDashboard',
     EXERCISES_DASHBOARD = 'ExercisesDashboard',
     MEASUREMENTS_DASHBOARD = 'MeasurementsDashboard',
@@ -20,7 +20,7 @@ export enum RouteNameEnum {
 export enum TableEnum {
     SETTINGS = 'settings', // Standalone
     LOGS = 'logs', // Standalone
-    DAILY_PLANS = 'daily-plans', // Standalone
+    PLANS = 'plans', // Standalone
     MEASUREMENTS = 'measurements', // Standalone
     WORKOUTS = 'workouts', // Parent
     WORKOUT_RESULTS = 'workout-results', // Child

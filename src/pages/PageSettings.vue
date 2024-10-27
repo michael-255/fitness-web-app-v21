@@ -156,7 +156,7 @@ function onExportBackup() {
                 // Logs are ignored
                 settings: await DB.table(TableEnum.SETTINGS).toArray(),
                 // TODO
-                dailyPlans: [],
+                plans: [],
                 measurements: [],
                 workouts: [],
                 workoutResults: [],

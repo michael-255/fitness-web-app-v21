@@ -1,7 +1,7 @@
 import LayoutMenu from '@/layouts/LayoutMenu.vue'
-import PageDashboardDailyPlans from '@/pages/PageDashboardDailyPlans.vue'
 import PageDashboardExercises from '@/pages/PageDashboardExercises.vue'
 import PageDashboardMeasurements from '@/pages/PageDashboardMeasurements.vue'
+import PageDashboardPlans from '@/pages/PageDashboardPlans.vue'
 import PageDashboardWorkouts from '@/pages/PageDashboardWorkouts.vue'
 import PageTable from '@/pages/PageTable.vue'
 import { RouteNameEnum } from '@/shared/enums'
@@ -14,14 +14,14 @@ const router = createRouter({
         // Dashboard components are more unique and will likely need dedicated routes
         {
             path: '/',
-            redirect: `/daily-plans-dashboard`, // Your default route
+            redirect: `/plans-dashboard`, // Your default route
             name: RouteNameEnum.MENU_LAYOUT,
             component: LayoutMenu, // Must use a different layout for other primary routes
             children: [
                 {
-                    path: '/daily-plans-dashboard',
-                    name: RouteNameEnum.DAILY_PLANS_DASHBOARD,
-                    component: PageDashboardDailyPlans,
+                    path: '/plans-dashboard',
+                    name: RouteNameEnum.PLANS_DASHBOARD,
+                    component: PageDashboardPlans,
                 },
                 {
                     path: '/workouts-dashboard',

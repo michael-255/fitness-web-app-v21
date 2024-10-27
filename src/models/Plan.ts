@@ -12,7 +12,7 @@ import { z } from 'zod'
 // Schemas
 //
 
-export const dailyPlanSchema = z.object({
+export const planSchema = z.object({
     id: idSchema,
     createdAt: timestampSchema,
     // TODO
@@ -22,24 +22,24 @@ export const dailyPlanSchema = z.object({
 // Types
 //
 
-export type DailyPlanType = z.infer<typeof dailyPlanSchema>
+export type PlanType = z.infer<typeof planSchema>
 
-interface DailyPlanParams {
+interface PlanParams {
     id?: IdType
     createdAt?: TimestampType
 }
 
 /**
- * `Exercise` parent model.
+ * `Plan` standalone model.
  *
- *  Represents all relevant details of an exercise.
+ *  Represents all relevant details of a plan.
  */
-export default class DailyPlan {
+export default class Plan {
     id: IdType
     createdAt: TimestampType
 
-    constructor(params: DailyPlanParams) {
-        this.id = params.id ?? createId(TableEnum.DAILY_PLANS)
+    constructor(params: PlanParams) {
+        this.id = params.id ?? createId(TableEnum.PLANS)
         this.createdAt = params.createdAt ?? Date.now()
         // TODO
     }

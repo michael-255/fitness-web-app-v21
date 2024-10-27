@@ -270,7 +270,7 @@ export class WorkoutService extends BaseService {
     async add(record: WorkoutType): Promise<WorkoutType>
     async add(record: WorkoutType): Promise<Record<string, any>>
     async add(record: WorkoutType): Promise<WorkoutType | Record<string, any>> {
-        const validatedRecord = workoutSchema.parse(record)
+        const validatedRecord = this.modelSchema.parse(record)
         await this.db.table(TableEnum.WORKOUTS).add(validatedRecord)
         return validatedRecord
     }
@@ -281,7 +281,7 @@ export class WorkoutService extends BaseService {
     async put(record: WorkoutType): Promise<WorkoutType>
     async put(record: WorkoutType): Promise<Record<string, any>>
     async put(record: WorkoutType): Promise<WorkoutType | Record<string, any>> {
-        const validatedRecord = workoutSchema.parse(record)
+        const validatedRecord = this.modelSchema.parse(record)
         await this.db.table(TableEnum.WORKOUTS).put(validatedRecord)
         return validatedRecord
     }
@@ -314,8 +314,8 @@ export class WorkoutService extends BaseService {
 
         // Validate each record
         records.forEach((workout) => {
-            if (workoutSchema.safeParse(workout).success) {
-                validRecords.push(workoutSchema.parse(workout)) // Clean record with parse
+            if (this.modelSchema.safeParse(workout).success) {
+                validRecords.push(this.modelSchema.parse(workout)) // Clean record with parse
             } else {
                 invalidRecords.push(workout)
             }

@@ -1,7 +1,7 @@
-import type { DailyPlanType } from '@/models/DailyPlan'
 import type { ExerciseType } from '@/models/Exercise'
 import type { ExerciseResultType } from '@/models/ExerciseResult'
 import type { MeasurementType } from '@/models/Measurements'
+import type { PlanType } from '@/models/Plan'
 import type { SettingType } from '@/models/Setting'
 import type { WorkoutType } from '@/models/Workout'
 import type { WorkoutResultType } from '@/models/WorkoutResult'
@@ -52,7 +52,7 @@ export type BackupType = {
     createdAt: TimestampType
     // Logs are ignored
     settings: SettingType[]
-    dailyPlans: DailyPlanType[]
+    plans: PlanType[]
     measurements: MeasurementType[]
     workouts: WorkoutType[]
     workoutResults: WorkoutResultType[]

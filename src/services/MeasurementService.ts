@@ -1,8 +1,21 @@
-import { measurementSchema, type MeasurementType } from '@/models/Measurements'
+import DialogChartActivityMeasurements from '@/components/dialogs/chart/DialogChartActivityMeasurements.vue'
+import DialogChartMeasurement from '@/components/dialogs/chart/DialogChartMeasurement.vue'
+import DialogCreate from '@/components/dialogs/DialogCreate.vue'
+import DialogDelete from '@/components/dialogs/DialogDelete.vue'
+import DialogEdit from '@/components/dialogs/DialogEdit.vue'
+import DialogInspect from '@/components/dialogs/DialogInspect.vue'
+import FormItemCreatedDate from '@/components/dialogs/forms/FormItemCreatedDate.vue'
+import FormItemId from '@/components/dialogs/forms/FormItemId.vue'
+import FormItemNote from '@/components/dialogs/forms/FormItemNote.vue'
+import InspectItemDate from '@/components/dialogs/inspect/InspectItemDate.vue'
+import InspectItemString from '@/components/dialogs/inspect/InspectItemString.vue'
+import Measurement, { measurementSchema, type MeasurementType } from '@/models/Measurements'
 import { TableEnum } from '@/shared/enums'
 import { databaseIcon, measurementsPageIcon } from '@/shared/icons'
 import type { IdType } from '@/shared/types'
+import { hiddenTableColumn, tableColumn } from '@/shared/utils'
 import { liveQuery, type Observable } from 'dexie'
+import type { QDialogOptions } from 'quasar'
 import BaseService from './BaseService'
 
 /**
@@ -17,16 +30,125 @@ export class MeasurementService extends BaseService {
     labelPlural = 'Measurements'
     modelSchema = measurementSchema
     table = TableEnum.MEASUREMENTS
-    tableColumns = [] // TODO
+    tableColumns = [
+        hiddenTableColumn('id'),
+        tableColumn('id', 'Id', 'UUID'),
+        tableColumn('createdAt', 'Created Date', 'DATE'),
+        tableColumn('note', 'Note', 'TEXT'),
+        // TODO
+    ]
     displayIcon = measurementsPageIcon
     tableIcon = databaseIcon
-    supportsTableColumnFilters = false // TODO
-    supportsTableCharts = false // TODO
-    supportsCharts = false // TODO
-    supportsInspect = false // TODO
-    supportsCreate = false // TODO
-    supportsEdit = false // TODO
-    supportsDelete = false // TODO
+    supportsTableColumnFilters = true
+    supportsActivityCharts = true
+    supportsCharts = true
+    supportsInspect = true
+    supportsCreate = true
+    supportsEdit = true
+    supportsDelete = true
+
+    /**
+     * Returns QDialogOptions options for the chart dialog.
+     * @example $q.dialog(service.activityChartsDialogOptions(id))
+     */
+    activityChartsDialogOptions(): QDialogOptions {
+        return { component: DialogChartActivityMeasurements }
+    }
+
+    /**
+     * Returns QDialogOptions options for the chart dialog.
+     * @example $q.dialog(service.chartsDialogOptions(id))
+     */
+    chartsDialogOptions(id: IdType): QDialogOptions {
+        return {
+            component: DialogChartMeasurement,
+            componentProps: {
+                id,
+                service: this,
+            },
+        }
+    }
+
+    /**
+     * Returns QDialogOptions options for the inspect dialog.
+     * @example $q.dialog(service.inspectDialogOptions(id))
+     */
+    inspectDialogOptions(id: IdType): QDialogOptions {
+        return {
+            component: DialogInspect,
+            componentProps: {
+                id,
+                service: this,
+                inspectComponents: [
+                    { component: InspectItemString, props: { label: 'Id', recordKey: 'id' } },
+                    {
+                        component: InspectItemDate,
+                        props: { label: 'Created Date', recordKey: 'createdAt' },
+                    },
+                    {
+                        component: InspectItemString,
+                        props: { label: 'Note', recordKey: 'note' },
+                    },
+                    // TODO
+                ],
+            },
+        }
+    }
+
+    /**
+     * Returns QDialogOptions options for the create dialog.
+     * @example $q.dialog(service.createDialogOptions())
+     */
+    createDialogOptions(): QDialogOptions {
+        return {
+            component: DialogCreate,
+            componentProps: {
+                service: this,
+                initialRecord: new Measurement({ field: undefined! }),
+                formComponents: [
+                    { component: FormItemId },
+                    { component: FormItemCreatedDate },
+                    { component: FormItemNote },
+                    // TODO
+                ],
+            },
+        }
+    }
+
+    /**
+     * Returns QDialogOptions options for the edit dialog.
+     * @example $q.dialog(service.editDialogOptions(id))
+     */
+    editDialogOptions(id: IdType): QDialogOptions {
+        return {
+            component: DialogEdit,
+            componentProps: {
+                id,
+                service: this,
+                formComponents: [
+                    { component: FormItemId },
+                    { component: FormItemCreatedDate },
+                    { component: FormItemNote },
+                    // TODO
+                ],
+            },
+        }
+    }
+
+    /**
+     * Returns QDialogOptions options for the delete dialog.
+     * @example $q.dialog(service.deleteDialogOptions(id))
+     */
+    deleteDialogOptions(id: IdType): QDialogOptions {
+        return {
+            component: DialogDelete,
+            componentProps: {
+                id,
+                service: this,
+                useUnlock: 'ADVANCED-MODE-CONTROLLED',
+            },
+        }
+    }
 
     /**
      * Returns live query or records ordered by creation date.
@@ -47,7 +169,7 @@ export class MeasurementService extends BaseService {
     async get(id: IdType): Promise<MeasurementType | Record<string, any>> {
         const recordToGet = await this.db.table(TableEnum.MEASUREMENTS).get(id)
         if (!recordToGet) {
-            throw new Error(`Measurement ID not found: ${id}`)
+            throw new Error(`${this.labelSingular} ID not found: ${id}`)
         }
         return recordToGet!
     }
@@ -75,7 +197,7 @@ export class MeasurementService extends BaseService {
     }
 
     /**
-     * Removes the Measurement by ID.
+     * Removes the record by ID.
      */
     async remove(id: IdType): Promise<MeasurementType>
     async remove(id: IdType): Promise<Record<string, any>>
