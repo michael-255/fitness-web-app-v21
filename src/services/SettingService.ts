@@ -27,7 +27,7 @@ export class SettingService extends BaseService {
     displayIcon = settingsPageIcon
     tableIcon = settingsTableIcon
     supportsTableColumnFilters = false
-    supportsTableCharts = false
+    supportsActivityCharts = false
     supportsCharts = false
     supportsInspect = false
     supportsCreate = false
