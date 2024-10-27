@@ -8,8 +8,34 @@ your workouts, exercises, and overall fitness journey.
 
 -   Implement the `Measurements` modules for it's Dashboard
 
-    -   Collect record types together based on the category
-    -   How to handle editing a record in the module (if at all)?
+    -   Collect record types together based on the field
+    -   Only edit from the data tables
+
+-   Implement basic `Plans`
+
+    -   `Plans` are collections of ID watchers for record result to see if they are met
+    -   `Plans` work off of a set number of ID's to determine when they are watching for a result
+        -   `Monday` - Plans for each specific weekday
+        -   `Tuesday`
+        -   `Wednesday`
+        -   `Thursday`
+        -   `Friday`
+        -   `Saturday`
+        -   `Sunday`
+        -   `January` - Plans for each specific month
+        -   `February`
+        -   `March`
+        -   `April`
+        -   `May`
+        -   `June`
+        -   `July`
+        -   `August`
+        -   `September`
+        -   `October`
+        -   `November`
+        -   `December`
+        -   `Monthly` - Plans for every month
+        -   `Yearly` - Plans for every year
 
 -   `Workouts`
     -   Install Vue Draggable Next `npm i -S vuedraggable@next`
