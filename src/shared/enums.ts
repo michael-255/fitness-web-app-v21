@@ -56,6 +56,7 @@ export enum LimitEnum {
     MAX_BODY_MEASUREMENT = 999,
     MIN_BLOOD_PRESSURE = 30,
     MAX_BLOOD_PRESSURE = 300,
+    MAX_CHOLESTEROL = 999,
 }
 
 export enum DurationEnum {

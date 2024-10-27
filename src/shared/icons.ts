@@ -23,13 +23,16 @@ import {
     symRoundedInfo,
     symRoundedKeyboardArrowDown,
     symRoundedKeyboardArrowUp,
+    symRoundedLabs,
     symRoundedLanguage,
     symRoundedLibraryAdd,
     symRoundedLock,
     symRoundedLockOpenRight,
     symRoundedManageSearch,
     symRoundedMenu,
+    symRoundedMonitorHeart,
     symRoundedMonitoring,
+    symRoundedMonitorWeight,
     symRoundedMoreVert,
     symRoundedPublish,
     symRoundedRecommend,
@@ -66,6 +69,9 @@ export const settingsPageIcon = symRoundedSettings
 export const workoutsPageIcon = symRoundedAssignment
 export const exercisesPageIcon = symRoundedFitnessCenter
 export const measurementsPageIcon = symRoundedStraighten
+export const dietWeightModuleIcon = symRoundedMonitorWeight
+export const healthModuleIcon = symRoundedMonitorHeart
+export const labWorkModuleIcon = symRoundedLabs
 
 // Tables
 export const logsTableIcon = symRoundedFeatureSearch
