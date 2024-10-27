@@ -16,7 +16,6 @@ export enum MeasurementFieldEnum {
     PROTEIN = 'Protein',
     WEIGHT = 'Weight',
     BODY_FAT = 'Body Fat',
-    BODY_MASS_INDEX = 'Body Mass Index', // Based on if you have a Height measurement
     // Health
     TEMPERATURE = 'Temperature',
     BLOOD_PRESSURE = 'Blood Pressure', // Systolic/Diastolic
@@ -27,6 +26,7 @@ export enum MeasurementFieldEnum {
     SHOULDERS = 'Shoulders',
     CHEST = 'Chest',
     WAIST = 'Waist',
+    HIPS = 'Hips',
     LEFT_BICEP = 'Left Bicep',
     RIGHT_BICEP = 'Right Bicep',
     LEFT_FOREARM = 'Left Forearm',
@@ -36,7 +36,10 @@ export enum MeasurementFieldEnum {
     LEFT_CALF = 'Left Calf',
     RIGHT_CALF = 'Right Calf',
     // Lab Work
-    // TODO - A1C, Cholesterol, etc.
+    CHOLESTEROL = 'Cholesterol', // mg/dL
+    CHOLESTEROL_HDL = 'Cholesterol HDL', // mg/dL
+    CHOLESTEROL_LDL = 'Cholesterol LDL', // mg/dL
+    HEMOGLOBIN_A1C = 'Hemoglobin A1C', // Percent
 }
 
 //
@@ -50,6 +53,8 @@ export const caloriesSchema = z.number().int().min(0).max(LimitEnum.MAX_CALORIES
 export const nutritionSchema = z.number().int().min(0).max(LimitEnum.MAX_NUTRITION)
 
 export const bodyWeightSchema = z.number().positive().max(LimitEnum.MAX_BODY_WEIGHT)
+
+export const cholesterolSchema = z.number().int().min(0).max(LimitEnum.MAX_CHOLESTEROL)
 
 export const percentSchema = z.number().min(0).max(100)
 
@@ -98,10 +103,16 @@ export const measurementSchema = z.object({
     shoulders: bodyMeasurementSchema.optional(),
     chest: bodyMeasurementSchema.optional(),
     waist: bodyMeasurementSchema.optional(),
+    hips: bodyMeasurementSchema.optional(),
     biceps: sidedBodyMeasurementSchema.optional(),
     forearms: sidedBodyMeasurementSchema.optional(),
     thighs: sidedBodyMeasurementSchema.optional(),
     calfs: sidedBodyMeasurementSchema.optional(),
+    // Lab Work
+    cholesterol: cholesterolSchema.optional(),
+    cholesterolHDL: cholesterolSchema.optional(),
+    cholesterolLDL: cholesterolSchema.optional(),
+    hemoglobinA1C: percentSchema.optional(),
 })
 
 //
@@ -115,6 +126,8 @@ export type CaloriesType = z.infer<typeof caloriesSchema>
 export type NutritionType = z.infer<typeof nutritionSchema>
 
 export type BodyWeightType = z.infer<typeof bodyWeightSchema>
+
+export type CholesterolType = z.infer<typeof cholesterolSchema>
 
 export type PercentType = z.infer<typeof percentSchema>
 
@@ -152,12 +165,16 @@ interface MeasurementParams {
     shoulders?: BodyMeasurementType
     chest?: BodyMeasurementType
     waist?: BodyMeasurementType
+    hips?: BodyMeasurementType
     biceps?: SidedBodyMeasurementType
     forearms?: SidedBodyMeasurementType
     thighs?: SidedBodyMeasurementType
     calfs?: SidedBodyMeasurementType
     // Lab Work
-    // TODO
+    cholesterol?: CholesterolType
+    cholesterolHDL?: CholesterolType
+    cholesterolLDL?: CholesterolType
+    hemoglobinA1C?: PercentType
 }
 
 /**
@@ -188,12 +205,16 @@ export default class Measurement {
     shoulders?: BodyMeasurementType
     chest?: BodyMeasurementType
     waist?: BodyMeasurementType
+    hips?: BodyMeasurementType
     biceps?: SidedBodyMeasurementType
     forearms?: SidedBodyMeasurementType
     thighs?: SidedBodyMeasurementType
     calfs?: SidedBodyMeasurementType
     // Lab Work
-    // TODO
+    cholesterol?: CholesterolType
+    cholesterolHDL?: CholesterolType
+    cholesterolLDL?: CholesterolType
+    hemoglobinA1C?: PercentType
 
     constructor(params: MeasurementParams) {
         this.id = params.id ?? createId(TableEnum.MEASUREMENTS)
@@ -217,11 +238,15 @@ export default class Measurement {
         this.shoulders = params.shoulders ?? undefined
         this.chest = params.chest ?? undefined
         this.waist = params.waist ?? undefined
+        this.hips = params.hips ?? undefined
         this.biceps = params.biceps ?? undefined
         this.forearms = params.forearms ?? undefined
         this.thighs = params.thighs ?? undefined
         this.calfs = params.calfs ?? undefined
         // Lab Work
-        // TODO
+        this.cholesterol = params.cholesterol ?? undefined
+        this.cholesterolHDL = params.cholesterolHDL ?? undefined
+        this.cholesterolLDL = params.cholesterolLDL ?? undefined
+        this.hemoglobinA1C = params.hemoglobinA1C ?? undefined
     }
 }
