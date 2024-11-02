@@ -51,9 +51,33 @@ export class PlanService extends BaseService {
     liveTable(): Observable<PlanType[] | Record<string, any>[]> {
         return liveQuery(() => this.db.table(TableEnum.PLANS).toArray())
     }
+
+    /**
+     * Function that takes a type of T that has a status property and adds HIDDEN to the property
+     * and returns the type.
+     * @todo Testing out a better way to do my functions!
+     * @example
+     * ```ts
+     * type TestRecord = { status: string, id: string }
+     * const record1 = { status: 'ACTIVE'}
+     * const record2 = { status: 'ACTIVE', id: '123' }
+     * const fail = PlanService.instance().hide<TestRecord>(record1)
+     * const succeed = PlanService.instance().hide<TestRecord>(record2)
+     * ```
+     */
+    hide<T extends { status: string }>(record: T): T {
+        record.status = 'HIDDEN'
+        return record
+    }
 }
 
 /**
  * Singleton instance exported as default for convenience.
  */
 export default PlanService.instance()
+
+type TestRecord = { status: string; id: string }
+const bad = { status: 'ACTIVE' }
+const good = { status: 'ACTIVE', id: '123' }
+const fail = PlanService.instance().hide<TestRecord>(bad)
+const succeed = PlanService.instance().hide<TestRecord>(good)
